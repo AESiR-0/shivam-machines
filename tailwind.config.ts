@@ -9,79 +9,85 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Brand colors for industrial-tech luxury aesthetic
+        // Official Shivam Enterprise Brand Colors (Full Palette)
+        brand: {
+          lightGray: "#f5f5f5",    // Light Gray - Backgrounds
+          darkBlue: "#0a192f",     // Dark Blue Gray - Headers & Primary
+          orange: "#f9a826",       // Orange - Highlights & CTAs
+          gray: "#464646",         // Gray - Body text & Secondary
+          steel: "#475569",        // Steel Blue - Industrial elements
+          accent: "#1e40af",       // Deep Blue - Accent elements
+          navy: "#1e293b",         // Navy - Dark sections
+          slate: "#64748b",        // Slate - Muted text
+          zinc: "#71717a",         // Zinc - Borders & dividers
+        },
+        // Extended palette for UI components
         primary: {
-          50: "#f8fafc",
-          100: "#f1f5f9",
-          200: "#e2e8f0",
-          300: "#cbd5e1",
-          400: "#94a3b8",
-          500: "#64748b",
-          600: "#475569",
-          700: "#334155",
-          800: "#1e293b",
-          900: "#0f172a",
-          950: "#020617",
+          50: "#f5f5f5",
+          100: "#e8e8e8",
+          200: "#d1d1d1",
+          300: "#b4b4b4",
+          400: "#9a9a9a",
+          500: "#464646",
+          600: "#3a3a3a",
+          700: "#2e2e2e",
+          800: "#222222",
+          900: "#0a192f",
+          950: "#050a15",
         },
         accent: {
-          50: "#fef2f2",
-          100: "#fee2e2",
-          200: "#fecaca",
-          300: "#fca5a5",
-          400: "#f87171",
-          500: "#ef4444",
-          600: "#dc2626",
-          700: "#b91c1c",
-          800: "#991b1b",
-          900: "#7f1d1d",
-          950: "#450a0a",
+          50: "#fef7e6",
+          100: "#fdeccd",
+          200: "#fbd69b",
+          300: "#f9c069",
+          400: "#f7aa37",
+          500: "#f9a826",
+          600: "#e09722",
+          700: "#c7851e",
+          800: "#ae731a",
+          900: "#956116",
+          950: "#7c4f12",
         },
+        // Legacy colors for compatibility
         industrial: {
-          50: "#f8fafc",
-          100: "#f1f5f9",
-          200: "#e2e8f0",
-          300: "#cbd5e1",
-          400: "#94a3b8",
-          500: "#64748b",
-          600: "#475569",
-          700: "#334155",
-          800: "#1e293b",
-          900: "#0f172a",
-          950: "#020617",
+          50: "#f5f5f5",
+          100: "#e8e8e8",
+          200: "#d1d1d1",
+          300: "#b4b4b4",
+          400: "#9a9a9a",
+          500: "#464646",
+          600: "#3a3a3a",
+          700: "#2e2e2e",
+          800: "#222222",
+          900: "#0a192f",
+          950: "#050a15",
         },
         steel: {
-          50: "#f8fafc",
-          100: "#f1f5f9",
-          200: "#e2e8f0",
-          300: "#cbd5e1",
-          400: "#94a3b8",
-          500: "#64748b",
-          600: "#475569",
-          700: "#334155",
-          800: "#1e293b",
-          900: "#0f172a",
-          950: "#020617",
+          50: "#f5f5f5",
+          100: "#e8e8e8",
+          200: "#d1d1d1",
+          300: "#b4b4b4",
+          400: "#9a9a9a",
+          500: "#464646",
+          600: "#3a3a3a",
+          700: "#2e2e2e",
+          800: "#222222",
+          900: "#0a192f",
+          950: "#050a15",
         },
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "monospace"],
-      },
-      fontSize: {
-        "2xs": ["0.625rem", { lineHeight: "0.75rem" }],
-        xs: ["0.75rem", { lineHeight: "1rem" }],
-        sm: ["0.875rem", { lineHeight: "1.25rem" }],
-        base: ["1rem", { lineHeight: "1.5rem" }],
-        lg: ["1.125rem", { lineHeight: "1.75rem" }],
-        xl: ["1.25rem", { lineHeight: "1.75rem" }],
-        "2xl": ["1.5rem", { lineHeight: "2rem" }],
-        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
-        "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
-        "5xl": ["3rem", { lineHeight: "1" }],
-        "6xl": ["3.75rem", { lineHeight: "1" }],
-        "7xl": ["4.5rem", { lineHeight: "1" }],
-        "8xl": ["6rem", { lineHeight: "1" }],
-        "9xl": ["8rem", { lineHeight: "1" }],
+        // Brand typography
+        sans: ["var(--font-nunito)", "system-ui", "sans-serif"], // Body text
+        mono: ["JetBrains Mono", "monospace"],
+        // Modern header fonts
+        "inter": ["var(--font-inter)", "system-ui", "sans-serif"], // Clean headers
+        "poppins": ["var(--font-poppins)", "system-ui", "sans-serif"], // Modern headers
+        "montserrat": ["var(--font-montserrat)", "system-ui", "sans-serif"], // Industrial headers
+        "nunito": ["var(--font-nunito)", "system-ui", "sans-serif"], // Body text
+        // Legacy classes for compatibility
+        "dream-avenue": ["var(--font-poppins)", "system-ui", "sans-serif"], // Headers
+        "itc-bauhaus": ["var(--font-inter)", "system-ui", "sans-serif"], // Subheaders  
       },
       spacing: {
         "18": "4.5rem",
@@ -132,9 +138,6 @@ const config: Config = {
           "0%": { boxShadow: "0 0 5px rgba(59, 130, 246, 0.5)" },
           "100%": { boxShadow: "0 0 20px rgba(59, 130, 246, 0.8)" },
         },
-      },
-      backdropBlur: {
-        xs: "2px",
       },
       boxShadow: {
         "glass": "0 8px 32px 0 rgba(31, 38, 135, 0.37)",

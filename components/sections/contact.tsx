@@ -60,20 +60,20 @@ const Contact = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-24 bg-gradient-to-br from-brand-lightGray to-brand-steel/5">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-steel-900 mb-4">
-            Get In <span className="text-accent-600">Touch</span>
+          <h2 className="text-4xl sm:text-5xl font-bold text-brand-darkBlue mb-6 font-dream-avenue">
+            Get In <span className="text-brand-orange">Touch</span>
           </h2>
-          <p className="text-lg text-steel-600 max-w-3xl mx-auto">
+          <p className="text-xl text-brand-gray max-w-4xl mx-auto font-nunito leading-relaxed">
             Ready to find the perfect machinery solution for your business? 
             Contact our experts today for personalized assistance and quotes.
           </p>

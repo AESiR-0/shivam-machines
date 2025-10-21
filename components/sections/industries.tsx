@@ -73,20 +73,20 @@ const Industries = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-steel-50 to-steel-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-24 bg-gradient-to-br from-white to-brand-lightGray">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-steel-900 mb-4">
-            Industries We <span className="text-accent-600">Serve</span>
+          <h2 className="text-4xl sm:text-5xl font-bold text-brand-darkBlue mb-6 font-dream-avenue">
+            Industries We <span className="text-brand-orange">Serve</span>
           </h2>
-          <p className="text-lg text-steel-600 max-w-3xl mx-auto">
+          <p className="text-xl text-brand-gray max-w-4xl mx-auto font-nunito leading-relaxed">
             From automotive to aerospace, we provide precision machinery solutions 
             across diverse industries with unmatched expertise and reliability.
           </p>
@@ -102,27 +102,25 @@ const Industries = () => {
         >
           {industries.map((industry, index) => (
             <motion.div key={index} variants={itemVariants}>
-              <Card className="group hover:shadow-industrial-xl transition-all duration-300 border-0 shadow-industrial-lg hover:-translate-y-2">
-                <CardContent className="p-8">
-                  <div className="text-center">
-                    {/* Icon */}
-                    <div className={`w-20 h-20 bg-gradient-to-br ${industry.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                      <industry.icon className="w-10 h-10 text-white" />
-                    </div>
+              <Card className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20 hover:-translate-y-1">
+                <CardContent className="p-8 text-center">
+                  {/* Icon */}
+                  <div className={`w-16 h-16 bg-gradient-to-br ${industry.color} rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <industry.icon className="w-8 h-8 text-white" />
+                  </div>
 
-                    {/* Content */}
-                    <h3 className="text-xl font-semibold text-steel-900 mb-3 group-hover:text-accent-600 transition-colors">
-                      {industry.name}
-                    </h3>
-                    <p className="text-steel-600 mb-4 leading-relaxed">
-                      {industry.description}
-                    </p>
+                  {/* Content */}
+                  <h3 className="text-xl font-semibold text-brand-darkBlue mb-3 group-hover:text-brand-orange transition-colors font-itc-bauhaus">
+                    {industry.name}
+                  </h3>
+                  <p className="text-brand-gray mb-4 leading-relaxed font-nunito">
+                    {industry.description}
+                  </p>
 
-                    {/* Stats */}
-                    <div className="flex items-center justify-center space-x-2 text-sm text-steel-500">
-                      <div className="w-2 h-2 bg-accent-500 rounded-full"></div>
-                      <span className="font-medium">{industry.stats}</span>
-                    </div>
+                  {/* Stats */}
+                  <div className="flex items-center justify-center space-x-2 text-sm text-brand-orange font-nunito">
+                    <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
+                    <span className="font-medium">{industry.stats}</span>
                   </div>
                 </CardContent>
               </Card>

@@ -24,7 +24,7 @@ const Navbar = () => {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Products", href: "/products" },
-    { name: "Industries", href: "/industries" },
+    { name: "Gallery", href: "/gallery" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -47,10 +47,10 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-2"
             >
-              <div className="w-8 h-8 bg-steel-800 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-brand-darkBlue rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">SE</span>
               </div>
-              <span className="text-xl font-bold text-steel-800">
+              <span className="text-xl font-bold text-brand-darkBlue font-dream-avenue">
                 Shivam Enterprise
               </span>
             </motion.div>
@@ -62,7 +62,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-steel-700 hover:text-steel-900 font-medium transition-colors duration-200"
+                className="text-brand-gray hover:text-brand-darkBlue font-medium transition-colors duration-200 font-nunito"
               >
                 {item.name}
               </Link>
@@ -71,11 +71,11 @@ const Navbar = () => {
 
           {/* Contact Info & CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-sm text-steel-600">
+            <div className="flex items-center space-x-2 text-sm text-brand-gray font-nunito">
               <Phone className="w-4 h-4" />
-              <span>+91 98765 43210</span>
+              <span>+91-9824080055</span>
             </div>
-            <Button variant="industrial" size="sm">
+            <Button className="bg-brand-orange hover:bg-accent-600 text-white px-4 py-2 rounded-lg font-medium" size="sm">
               Get Quote
             </Button>
           </div>
@@ -112,17 +112,17 @@ const Navbar = () => {
               ))}
               
               <div className="pt-4 border-t border-primary-200 space-y-3">
-                <div className="flex items-center space-x-2 text-sm text-steel-600">
+                <div className="flex items-center space-x-2 text-sm text-brand-gray font-nunito">
                   <Phone className="w-4 h-4" />
-                  <span>+91 98765 43210</span>
+                  <span>+91-9824080055</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-steel-600">
+                <div className="flex items-center space-x-2 text-sm text-brand-gray font-nunito">
                   <Mail className="w-4 h-4" />
-                  <span>info@shivammachines.in</span>
+                  <span>shivamenterprise@yahoo.com</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-steel-600">
+                <div className="flex items-center space-x-2 text-sm text-brand-gray font-nunito">
                   <MapPin className="w-4 h-4" />
-                  <span>Mumbai, India</span>
+                  <span>Ahmedabad, Gujarat</span>
                 </div>
                 <Button variant="industrial" className="w-full">
                   Get Quote

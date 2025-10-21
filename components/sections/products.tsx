@@ -9,32 +9,52 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 const Products = () => {
   const products = [
     {
-      title: "Horizontal Boring Machines",
-      description: "Precision boring solutions for large-scale manufacturing operations with exceptional accuracy.",
+      title: "Cylindrical Grinding Machines",
+      description: "High-precision cylindrical grinding machines for external and internal grinding operations with exceptional surface finish.",
       icon: Settings,
-      features: ["High Precision", "Heavy Duty", "CNC Ready"],
-      image: "/api/placeholder/400/300",
+      features: ["Precision Grinding", "CNC Control", "Heavy Duty"],
+      category: "Grinding Machines",
+      specifications: "Max Grinding Length: 1000mm, Max Swing: 400mm"
     },
     {
-      title: "Vertical Lathe Machines",
-      description: "Advanced vertical turning centers for complex machining operations and large workpieces.",
+      title: "Horizontal Boring Machines",
+      description: "Heavy-duty horizontal boring machines for large-scale manufacturing operations with exceptional accuracy and reliability.",
       icon: Wrench,
-      features: ["Large Capacity", "High Speed", "Precision Control"],
-      image: "/api/placeholder/400/300",
+      features: ["Large Capacity", "High Precision", "Heavy Duty"],
+      category: "Boring Machines",
+      specifications: "Max Boring Diameter: 200mm, Table Size: 2000x1500mm"
     },
     {
-      title: "Gear Machines",
-      description: "Specialized gear cutting and finishing machines for automotive and industrial applications.",
+      title: "Automatic Production Bore Grinding",
+      description: "Fully automated bore grinding machines for high-volume production with consistent quality and efficiency.",
       icon: Cog,
-      features: ["Gear Cutting", "High Accuracy", "Versatile"],
-      image: "/api/placeholder/400/300",
+      features: ["Automated", "High Volume", "Consistent Quality"],
+      category: "Production Machines",
+      specifications: "Production Rate: 200 pieces/hour, Accuracy: ±0.005mm"
     },
     {
-      title: "CNC Machines",
-      description: "Computer-controlled machining centers for automated precision manufacturing processes.",
+      title: "Precision Lathe Machines",
+      description: "Advanced precision lathe machines for complex turning operations with superior accuracy and surface finish.",
+      icon: Gauge,
+      features: ["High Precision", "CNC Control", "Versatile"],
+      category: "Lathe Machines",
+      specifications: "Max Turning Length: 1500mm, Max Swing: 500mm"
+    },
+    {
+      title: "Gear Grinding Machines",
+      description: "Specialized gear grinding machines for precision gear manufacturing with exceptional accuracy and surface quality.",
+      icon: Settings,
+      features: ["Gear Grinding", "High Accuracy", "Precision"],
+      category: "Gear Machines",
+      specifications: "Max Gear Diameter: 800mm, Module Range: 1-20"
+    },
+    {
+      title: "CNC Machining Centers",
+      description: "Advanced CNC machining centers for complex manufacturing operations with automation and precision control.",
       icon: Gauge,
       features: ["CNC Control", "Automation", "High Productivity"],
-      image: "/api/placeholder/400/300",
+      category: "CNC Machines",
+      specifications: "Work Envelope: 1000x800x600mm, Spindle Speed: 8000 RPM"
     },
   ];
 
@@ -60,22 +80,23 @@ const Products = () => {
   };
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-24 bg-gradient-to-br from-brand-lightGray to-brand-steel/5">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-steel-900 mb-4">
-            Our <span className="text-accent-600">Product Range</span>
+          <h2 className="text-4xl sm:text-5xl font-bold text-brand-darkBlue mb-6 font-montserrat">
+            Our <span className="text-brand-orange">Machine Tools</span>
           </h2>
-          <p className="text-lg text-steel-600 max-w-3xl mx-auto">
-            From precision boring machines to advanced CNC centers, we offer 
-            a comprehensive range of industrial machinery to meet your manufacturing needs.
+          <p className="text-xl text-brand-gray max-w-4xl mx-auto font-nunito leading-relaxed">
+            Premium used machine tools for precision manufacturing. 
+            From cylindrical grinding to CNC machining centers, we provide 
+            reliable solutions for your industrial needs.
           </p>
         </motion.div>
 
@@ -85,42 +106,54 @@ const Products = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {products.map((product, index) => (
             <motion.div key={index} variants={itemVariants}>
-              <Card className="group hover:shadow-industrial-xl transition-all duration-300 border-0 shadow-industrial-lg">
-                <CardHeader className="pb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <product.icon className="w-8 h-8 text-white" />
+              <Card className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20">
+                <CardHeader className="p-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 bg-brand-orange/10 rounded-lg flex items-center justify-center">
+                      <product.icon className="w-6 h-6 text-brand-orange" />
+                    </div>
+                    <span className="text-sm text-brand-gray font-nunito bg-brand-lightGray px-3 py-1 rounded-full">
+                      {product.category}
+                    </span>
                   </div>
-                  <CardTitle className="text-xl font-semibold text-steel-900 group-hover:text-accent-600 transition-colors">
+                  
+                  <CardTitle className="text-xl font-semibold text-brand-darkBlue mb-3 font-inter">
                     {product.title}
                   </CardTitle>
-                  <CardDescription className="text-steel-600">
+                  
+                  <CardDescription className="text-brand-gray font-nunito leading-relaxed mb-4">
                     {product.description}
                   </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
+
                   <div className="space-y-3">
+                    <div className="text-sm text-brand-gray font-nunito">
+                      <strong>Specifications:</strong> {product.specifications}
+                    </div>
+                    
                     <div className="flex flex-wrap gap-2">
                       {product.features.map((feature, featureIndex) => (
                         <span
                           key={featureIndex}
-                          className="px-3 py-1 bg-steel-100 text-steel-700 text-sm rounded-full"
+                          className="px-3 py-1 bg-brand-orange/10 text-brand-orange text-sm rounded-full font-nunito"
                         >
                           {feature}
                         </span>
                       ))}
                     </div>
-                    <Button 
-                      variant="outline" 
-                      className="w-full group-hover:bg-accent-600 group-hover:text-white group-hover:border-accent-600 transition-all duration-300"
-                    >
-                      Learn More
-                      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
                   </div>
+                </CardHeader>
+                
+                <CardContent className="p-8 pt-0">
+                  <Button 
+                    className="w-full bg-brand-orange hover:bg-accent-600 text-white font-nunito py-3 rounded-lg transition-all duration-300"
+                  >
+                    View Details
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
                 </CardContent>
               </Card>
             </motion.div>
@@ -133,22 +166,22 @@ const Products = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center mt-16"
+          className="text-center mt-20"
         >
-          <div className="bg-gradient-to-r from-steel-800 to-steel-900 rounded-2xl p-8 lg:p-12 text-white">
-            <h3 className="text-2xl lg:text-3xl font-bold mb-4">
-              Need a Specific Machine?
+          <div className="bg-white rounded-2xl p-12 shadow-lg border border-gray-100">
+            <h3 className="text-3xl font-bold text-brand-darkBlue mb-6 font-montserrat">
+              Looking for Something Specific?
             </h3>
-            <p className="text-steel-300 mb-6 max-w-2xl mx-auto">
+            <p className="text-brand-gray mb-8 max-w-2xl mx-auto text-lg font-nunito">
               Our extensive inventory includes machines from leading manufacturers. 
               Contact us to find the perfect solution for your manufacturing needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="glass" size="lg">
+              <Button className="bg-brand-orange hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-medium text-lg" size="lg">
                 Browse All Machines
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-              <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white hover:text-steel-900">
+              <Button className="border-2 border-brand-gray text-brand-gray hover:bg-brand-gray hover:text-white px-8 py-4 rounded-lg font-medium text-lg" size="lg">
                 Request Quote
               </Button>
             </div>
