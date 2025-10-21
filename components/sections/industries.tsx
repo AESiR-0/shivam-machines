@@ -1,0 +1,173 @@
+"use client";
+
+import React from "react";
+import { motion } from "framer-motion";
+import { Car, Building2, Wrench, Plane, Ship, Zap } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+
+const Industries = () => {
+  const industries = [
+    {
+      name: "Automotive",
+      description: "Precision machining for automotive components and assembly lines.",
+      icon: Car,
+      color: "from-blue-500 to-blue-600",
+      stats: "200+ Machines",
+    },
+    {
+      name: "Construction",
+      description: "Heavy-duty equipment for construction and infrastructure projects.",
+      icon: Building2,
+      color: "from-orange-500 to-orange-600",
+      stats: "150+ Machines",
+    },
+    {
+      name: "Manufacturing",
+      description: "Industrial machinery for large-scale manufacturing operations.",
+      icon: Wrench,
+      color: "from-green-500 to-green-600",
+      stats: "300+ Machines",
+    },
+    {
+      name: "Aerospace",
+      description: "High-precision equipment for aerospace and defense applications.",
+      icon: Plane,
+      color: "from-purple-500 to-purple-600",
+      stats: "100+ Machines",
+    },
+    {
+      name: "Marine",
+      description: "Specialized machinery for shipbuilding and marine engineering.",
+      icon: Ship,
+      color: "from-cyan-500 to-cyan-600",
+      stats: "80+ Machines",
+    },
+    {
+      name: "Energy",
+      description: "Equipment for power generation and renewable energy sectors.",
+      icon: Zap,
+      color: "from-yellow-500 to-yellow-600",
+      stats: "120+ Machines",
+    },
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+      },
+    },
+  };
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-steel-50 to-steel-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-steel-900 mb-4">
+            Industries We <span className="text-accent-600">Serve</span>
+          </h2>
+          <p className="text-lg text-steel-600 max-w-3xl mx-auto">
+            From automotive to aerospace, we provide precision machinery solutions 
+            across diverse industries with unmatched expertise and reliability.
+          </p>
+        </motion.div>
+
+        {/* Industries Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {industries.map((industry, index) => (
+            <motion.div key={index} variants={itemVariants}>
+              <Card className="group hover:shadow-industrial-xl transition-all duration-300 border-0 shadow-industrial-lg hover:-translate-y-2">
+                <CardContent className="p-8">
+                  <div className="text-center">
+                    {/* Icon */}
+                    <div className={`w-20 h-20 bg-gradient-to-br ${industry.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                      <industry.icon className="w-10 h-10 text-white" />
+                    </div>
+
+                    {/* Content */}
+                    <h3 className="text-xl font-semibold text-steel-900 mb-3 group-hover:text-accent-600 transition-colors">
+                      {industry.name}
+                    </h3>
+                    <p className="text-steel-600 mb-4 leading-relaxed">
+                      {industry.description}
+                    </p>
+
+                    {/* Stats */}
+                    <div className="flex items-center justify-center space-x-2 text-sm text-steel-500">
+                      <div className="w-2 h-2 bg-accent-500 rounded-full"></div>
+                      <span className="font-medium">{industry.stats}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-center mt-16"
+        >
+          <div className="bg-white rounded-2xl p-8 lg:p-12 shadow-industrial-lg border border-primary-200">
+            <h3 className="text-2xl lg:text-3xl font-bold text-steel-900 mb-4">
+              Don't See Your Industry?
+            </h3>
+            <p className="text-steel-600 mb-6 max-w-2xl mx-auto">
+              We work with clients across various sectors. Contact us to discuss 
+              how our machinery solutions can meet your specific industry requirements.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-3 bg-accent-600 text-white rounded-lg font-medium hover:bg-accent-700 transition-colors"
+              >
+                Discuss Your Needs
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-3 border border-steel-300 text-steel-700 rounded-lg font-medium hover:bg-steel-50 transition-colors"
+              >
+                View Case Studies
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default Industries;
+
