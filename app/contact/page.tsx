@@ -1,16 +1,13 @@
+"use client";
+
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { Metadata } from "next";
+import WhatsAppButton from "@/components/ui/whatsapp-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Contact Us - Shivam Enterprise",
-  description: "Get in touch with Shivam Enterprise for premium used machine tools. Contact us for quotes, technical support, and machine inquiries.",
-};
 
 export default function Contact() {
   const contactInfo = [
@@ -256,6 +253,7 @@ export default function Contact() {
       </section>
 
       <Footer />
+      <WhatsAppButton />
     </main>
   );
 }

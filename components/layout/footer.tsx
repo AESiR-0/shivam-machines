@@ -70,15 +70,15 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-accent-400" />
-                <span className="text-steel-300">+91 98765 43210</span>
+                <span className="text-steel-300">+91-9824080055</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-accent-400" />
-                <span className="text-steel-300">info@shivammachines.in</span>
+                <span className="text-steel-300">shivamenterprise@yahoo.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-accent-400" />
-                <span className="text-steel-300">Mumbai, Maharashtra, India</span>
+                <span className="text-steel-300">Ahmedabad, Gujarat, India</span>
               </div>
             </div>
           </motion.div>
@@ -147,34 +147,6 @@ const Footer = () => {
             </ul>
           </motion.div>
         </div>
-
-        {/* Newsletter Signup */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 pt-8 border-t border-steel-800"
-        >
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 className="text-xl font-semibold mb-2">Stay Updated</h3>
-              <p className="text-steel-300">
-                Subscribe to our newsletter for the latest machinery updates and industry insights.
-              </p>
-            </div>
-            <div className="flex space-x-4">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 bg-steel-800 border border-steel-700 rounded-lg text-white placeholder-steel-400 focus:outline-none focus:ring-2 focus:ring-accent-500"
-              />
-              <button className="px-6 py-2 bg-accent-600 hover:bg-accent-700 rounded-lg font-medium transition-colors">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </motion.div>
 
         {/* Bottom Bar */}
         <motion.div

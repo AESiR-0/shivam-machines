@@ -1,11 +1,8 @@
+"use client";
+
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "About Us - Shivam Enterprise",
-  description: "Learn about Shivam Enterprise's 25+ years of experience in supplying premium used machine tools across India. Our commitment to quality and customer satisfaction.",
-};
+import WhatsAppButton from "@/components/ui/whatsapp-button";
 
 export default function About() {
   return (
@@ -126,62 +123,8 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-brand-darkBlue mb-6 font-montserrat">
-              Our Team
-            </h2>
-            <p className="text-xl text-brand-gray max-w-3xl mx-auto font-nunito">
-              Experienced professionals dedicated to serving your machine tool needs
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-32 h-32 bg-brand-orange/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl font-bold text-brand-orange font-montserrat">SE</span>
-              </div>
-              <h3 className="text-xl font-bold text-brand-darkBlue mb-2 font-inter">
-                Expert Technicians
-              </h3>
-              <p className="text-brand-gray font-nunito">
-                Our skilled technicians have decades of experience in machine tool inspection, 
-                maintenance, and installation.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-32 h-32 bg-brand-orange/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl font-bold text-brand-orange font-montserrat">CS</span>
-              </div>
-              <h3 className="text-xl font-bold text-brand-darkBlue mb-2 font-inter">
-                Customer Service
-              </h3>
-              <p className="text-brand-gray font-nunito">
-                Dedicated customer service representatives who understand your requirements 
-                and provide tailored solutions.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-32 h-32 bg-brand-orange/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl font-bold text-brand-orange font-montserrat">LS</span>
-              </div>
-              <h3 className="text-xl font-bold text-brand-darkBlue mb-2 font-inter">
-                Logistics Team
-              </h3>
-              <p className="text-brand-gray font-nunito">
-                Professional logistics team ensuring safe and timely delivery of your 
-                machinery across India.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <Footer />
+      <WhatsAppButton />
     </main>
   );
 }

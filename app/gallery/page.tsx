@@ -1,14 +1,11 @@
+"use client";
+
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { Metadata } from "next";
+import WhatsAppButton from "@/components/ui/whatsapp-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, Eye, Phone, Mail } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Machine Gallery - Shivam Enterprise",
-  description: "Browse our comprehensive gallery of used machine tools including Horizontal Boring Machines, Vertical Lathes, CNC Machines, and more. View detailed specifications and download brochures.",
-};
 
 export default function Gallery() {
   const machines = [
@@ -314,6 +311,7 @@ export default function Gallery() {
       </section>
 
       <Footer />
+      <WhatsAppButton />
     </main>
   );
 }

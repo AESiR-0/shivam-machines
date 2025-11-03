@@ -1,13 +1,10 @@
+"use client";
+
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { Metadata } from "next";
+import WhatsAppButton from "@/components/ui/whatsapp-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Car, Building2, Wrench, Plane, Ship, Zap } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Industries We Serve - Shivam Enterprise",
-  description: "We provide precision machinery solutions across diverse industries including automotive, aerospace, manufacturing, construction, marine, and energy sectors.",
-};
 
 export default function Industries() {
   const industries = [
@@ -220,6 +217,7 @@ export default function Industries() {
       </section>
 
       <Footer />
+      <WhatsAppButton />
     </main>
   );
 }

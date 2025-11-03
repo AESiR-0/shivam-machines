@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, Mail, MapPin } from "lucide-react";
+import { Menu, X, Phone, Mail, MapPin, ChevronDown, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { generateCatalogPDF } from "@/lib/pdf-generator";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [productsHover, setProductsHover] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,13 +22,34 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const productCategories = [
+    { name: "Horizontal Boring Machines", href: "/products?category=horizontal-boring" },
+    { name: "Vertical Lathe Machines", href: "/products?category=vertical-lathe" },
+    { name: "Lathe Machines", href: "/products?category=lathe" },
+    { name: "Cylindrical Grinding Machines", href: "/products?category=cylindrical-grinding" },
+    { name: "CNC Machines", href: "/products?category=cnc" },
+    { name: "Gear Machines", href: "/products?category=gear" },
+    { name: "Milling Machines", href: "/products?category=milling" },
+    { name: "Surface Grinders", href: "/products?category=grinding" },
+    { name: "View All Products", href: "/products" },
+  ];
+
   const navItems = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Products", href: "/products" },
+    { name: "Products", href: "/products", hasDropdown: true },
     { name: "Gallery", href: "/gallery" },
     { name: "Contact", href: "/contact" },
   ];
+
+  const handleDownloadCatalog = () => {
+    try {
+      generateCatalogPDF();
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    }
+  };
 
   return (
     <motion.nav
@@ -59,24 +82,60 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
-              <Link
+              <div
                 key={item.name}
-                href={item.href}
-                className="text-brand-gray hover:text-brand-darkBlue font-medium transition-colors duration-200 font-nunito"
+                className="relative"
+                onMouseEnter={() => item.hasDropdown && setProductsHover(true)}
+                onMouseLeave={() => setProductsHover(false)}
               >
-                {item.name}
-              </Link>
+                <Link
+                  href={item.href}
+                  className="text-brand-gray hover:text-brand-darkBlue font-medium transition-colors duration-200 font-nunito flex items-center space-x-1"
+                >
+                  <span>{item.name}</span>
+                  {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
+                </Link>
+
+                {/* Products Dropdown */}
+                {item.hasDropdown && (
+                  <AnimatePresence>
+                    {productsHover && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50"
+                      >
+                        {productCategories.map((category, idx) => (
+                          <Link
+                            key={idx}
+                            href={category.href}
+                            className="block px-4 py-2 text-sm text-brand-gray hover:bg-brand-orange/10 hover:text-brand-orange transition-colors font-nunito"
+                          >
+                            {category.name}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
+              </div>
             ))}
           </div>
 
           {/* Contact Info & CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-sm text-brand-gray font-nunito">
-              <Phone className="w-4 h-4" />
-              <span>+91-9824080055</span>
-            </div>
-            <Button className="bg-brand-orange hover:bg-accent-600 text-white px-4 py-2 rounded-lg font-medium" size="sm">
-              Get Quote
+            <Button
+              onClick={handleDownloadCatalog}
+              className="border border-brand-steel text-brand-steel hover:bg-brand-steel hover:text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2"
+              size="sm"
+            >
+              <Download className="w-4 h-4" />
+              <span>Catalog</span>
+            </Button>
+            <Button className="bg-gradient-to-r from-brand-orange to-brand-accent hover:from-brand-orange/90 hover:to-brand-accent/90 text-white px-4 py-2 rounded-lg font-medium" size="sm">
+              Inquire Now
             </Button>
           </div>
 
@@ -124,8 +183,15 @@ const Navbar = () => {
                   <MapPin className="w-4 h-4" />
                   <span>Ahmedabad, Gujarat</span>
                 </div>
-                <Button variant="industrial" className="w-full">
-                  Get Quote
+                <Button
+                  onClick={handleDownloadCatalog}
+                  className="w-full border border-brand-steel text-brand-steel hover:bg-brand-steel hover:text-white mb-2"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Catalog
+                </Button>
+                <Button className="w-full bg-gradient-to-r from-brand-orange to-brand-accent hover:from-brand-orange/90 hover:to-brand-accent/90 text-white">
+                  Inquire Now
                 </Button>
               </div>
             </div>
