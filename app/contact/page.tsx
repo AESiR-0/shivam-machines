@@ -92,7 +92,7 @@ export default function Contact() {
             </div>
 
             {/* Quick Stats */}
-            <Card className="bg-gradient-to-br from-brand-darkBlue to-brand-steel text-white border-0 shadow-xl">
+            <Card className="bg-brand-darkBlue text-white border-0 shadow-xl">
               <CardContent className="p-8">
                 <h4 className="text-xl font-bold mb-6 font-montserrat">Why Choose Us?</h4>
                 <div className="grid grid-cols-2 gap-6">
@@ -239,7 +239,7 @@ export default function Contact() {
           </div>
           
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div className="h-96 bg-gradient-to-br from-brand-darkBlue to-brand-steel flex items-center justify-center">
+            <div className="h-96 bg-brand-darkBlue flex items-center justify-center">
               <div className="text-center text-white">
                 <MapPin className="w-16 h-16 mx-auto mb-4 text-brand-orange" />
                 <h3 className="text-2xl font-bold mb-2 font-montserrat">Ahmedabad, Gujarat</h3>

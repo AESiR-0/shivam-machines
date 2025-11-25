@@ -12,45 +12,45 @@ const config: Config = {
         // Official Shivam Enterprise Brand Colors (Full Palette)
         brand: {
           lightGray: "#f5f5f5",    // Light Gray - Backgrounds
-          darkBlue: "#0a192f",     // Dark Blue Gray - Headers & Primary
-          orange: "#f9a826",       // Orange - Highlights & CTAs
-          gray: "#464646",         // Gray - Body text & Secondary
-          steel: "#475569",        // Steel Blue - Industrial elements
-          accent: "#1e40af",       // Deep Blue - Accent elements
-          navy: "#1e293b",         // Navy - Dark sections
-          slate: "#64748b",        // Slate - Muted text
-          zinc: "#71717a",         // Zinc - Borders & dividers
+          darkBlue: "#006bb3",      // Blue - Headers & Primary (HEX: 006bb3)
+          orange: "#006bb3",        // Blue - Highlights & CTAs (using brand blue)
+          gray: "#464646",          // Gray - Body text & Secondary (HEX: 464646)
+          steel: "#464646",         // Gray - Industrial elements (using brand gray)
+          accent: "#006bb3",        // Blue - Accent elements (using brand blue)
+          navy: "#006bb3",          // Blue - Dark sections (using brand blue)
+          slate: "#464646",         // Gray - Muted text (using brand gray)
+          zinc: "#464646",          // Gray - Borders & dividers (using brand gray)
         },
         // Extended palette for UI components
         primary: {
-          50: "#f5f5f5",
-          100: "#e8e8e8",
-          200: "#d1d1d1",
-          300: "#b4b4b4",
-          400: "#9a9a9a",
-          500: "#464646",
-          600: "#3a3a3a",
-          700: "#2e2e2e",
-          800: "#222222",
-          900: "#0a192f",
-          950: "#050a15",
+          50: "#ffffff",
+          100: "#e6f2f9",
+          200: "#cce5f3",
+          300: "#99cbe7",
+          400: "#66b1db",
+          500: "#006bb3",
+          600: "#005693",
+          700: "#004172",
+          800: "#002c52",
+          900: "#001731",
+          950: "#000b19",
         },
         accent: {
-          50: "#fef7e6",
-          100: "#fdeccd",
-          200: "#fbd69b",
-          300: "#f9c069",
-          400: "#f7aa37",
-          500: "#f9a826",
-          600: "#e09722",
-          700: "#c7851e",
-          800: "#ae731a",
-          900: "#956116",
-          950: "#7c4f12",
+          50: "#ffffff",
+          100: "#e6f2f9",
+          200: "#cce5f3",
+          300: "#99cbe7",
+          400: "#66b1db",
+          500: "#006bb3",
+          600: "#005693",
+          700: "#004172",
+          800: "#002c52",
+          900: "#001731",
+          950: "#000b19",
         },
         // Legacy colors for compatibility
         industrial: {
-          50: "#f5f5f5",
+          50: "#ffffff",
           100: "#e8e8e8",
           200: "#d1d1d1",
           300: "#b4b4b4",
@@ -59,11 +59,11 @@ const config: Config = {
           600: "#3a3a3a",
           700: "#2e2e2e",
           800: "#222222",
-          900: "#0a192f",
-          950: "#050a15",
+          900: "#1a1a1a",
+          950: "#0f0f0f",
         },
         steel: {
-          50: "#f5f5f5",
+          50: "#ffffff",
           100: "#e8e8e8",
           200: "#d1d1d1",
           300: "#b4b4b4",
@@ -72,22 +72,24 @@ const config: Config = {
           600: "#3a3a3a",
           700: "#2e2e2e",
           800: "#222222",
-          900: "#0a192f",
-          950: "#050a15",
+          900: "#1a1a1a",
+          950: "#0f0f0f",
         },
       },
       fontFamily: {
-        // Brand typography
-        sans: ["var(--font-nunito)", "system-ui", "sans-serif"], // Body text
+        // Brand typography - Candara for headings, Calibri for body
+        sans: ["var(--font-calibri)", "Calibri", "system-ui", "sans-serif"], // Body text
         mono: ["JetBrains Mono", "monospace"],
-        // Modern header fonts
-        "inter": ["var(--font-inter)", "system-ui", "sans-serif"], // Clean headers
-        "poppins": ["var(--font-poppins)", "system-ui", "sans-serif"], // Modern headers
-        "montserrat": ["var(--font-montserrat)", "system-ui", "sans-serif"], // Industrial headers
-        "nunito": ["var(--font-nunito)", "system-ui", "sans-serif"], // Body text
+        // Brand fonts
+        "candara": ["var(--font-candara)", "Candara", "system-ui", "sans-serif"], // Headings
+        "calibri": ["var(--font-calibri)", "Calibri", "system-ui", "sans-serif"], // Body text
         // Legacy classes for compatibility
-        "dream-avenue": ["var(--font-poppins)", "system-ui", "sans-serif"], // Headers
-        "itc-bauhaus": ["var(--font-inter)", "system-ui", "sans-serif"], // Subheaders  
+        "inter": ["var(--font-candara)", "Candara", "system-ui", "sans-serif"], // Headers
+        "poppins": ["var(--font-candara)", "Candara", "system-ui", "sans-serif"], // Headers
+        "montserrat": ["var(--font-candara)", "Candara", "system-ui", "sans-serif"], // Headers
+        "nunito": ["var(--font-calibri)", "Calibri", "system-ui", "sans-serif"], // Body text
+        "dream-avenue": ["var(--font-candara)", "Candara", "system-ui", "sans-serif"], // Headers
+        "itc-bauhaus": ["var(--font-candara)", "Candara", "system-ui", "sans-serif"], // Subheaders  
       },
       spacing: {
         "18": "4.5rem",

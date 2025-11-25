@@ -51,7 +51,7 @@ export default function About() {
                 </p>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-brand-navy to-brand-steel rounded-2xl p-8 text-white">
+            <div className="bg-brand-darkBlue rounded-2xl p-8 text-white">
               <div className="text-center">
                 <div className="w-24 h-24 bg-brand-orange rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-3xl font-bold text-white font-montserrat">SE</span>

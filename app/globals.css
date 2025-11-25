@@ -4,7 +4,9 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0f172a;
+  --foreground: #464646;
+  --brand-blue: #006bb3;
+  --brand-gray: #464646;
 }
 
 * {
@@ -20,10 +22,45 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-calibri), "Calibri", system-ui, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Font face declarations for Candara and Calibri */
+@font-face {
+  font-family: "Candara";
+  src: local("Candara"), local("Candara-Regular");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Candara";
+  src: local("Candara-Bold");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Calibri";
+  src: local("Calibri"), local("Calibri-Regular");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Calibri";
+  src: local("Calibri-Bold");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Set default font variables */
+:root {
+  --font-candara: "Candara", system-ui, sans-serif;
+  --font-calibri: "Calibri", system-ui, sans-serif;
 }
 
 /* Custom scrollbar */
@@ -32,32 +69,32 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #64748b;
+  background: #464646;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #006bb3;
 }
 
 /* Selection styles */
 ::selection {
-  background: #3b82f6;
+  background: #006bb3;
   color: white;
 }
 
 ::-moz-selection {
-  background: #3b82f6;
+  background: #006bb3;
   color: white;
 }
 
 /* Focus styles */
 :focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid #006bb3;
   outline-offset: 2px;
 }
 

@@ -42,7 +42,7 @@ const Hero = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="space-y-6"
             >
-              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-brand-orange/10 to-brand-accent/10 text-brand-darkBlue rounded-full text-sm font-medium mb-4 border border-brand-orange/20">
+              <div className="inline-flex items-center px-4 py-2 bg-white/10 text-brand-darkBlue rounded-full text-sm font-medium mb-4 border border-brand-darkBlue/20">
                 <span className="w-2 h-2 bg-brand-orange rounded-full mr-2"></span>
                 Trusted Since 1997
               </div>
@@ -77,14 +77,14 @@ const Hero = () => {
               className="flex flex-col sm:flex-row gap-4"
             >
               <Button 
-                className="bg-gradient-to-r from-brand-orange to-brand-accent hover:from-brand-orange/90 hover:to-brand-accent/90 text-white px-8 py-4 text-lg font-medium rounded-lg group font-inter shadow-lg"
+                className="bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white px-8 py-4 text-lg font-medium rounded-lg group font-candara shadow-lg"
                 size="xl"
               >
                 Explore Machines
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button 
-                className="border-2 border-brand-steel text-brand-steel hover:bg-gradient-to-r hover:from-brand-steel hover:to-brand-navy hover:text-white px-8 py-4 text-lg font-medium rounded-lg group font-inter"
+                className="border-2 border-brand-gray text-brand-gray hover:bg-brand-gray hover:text-white px-8 py-4 text-lg font-medium rounded-lg group font-candara"
                 size="xl"
               >
                 <Play className="mr-2 w-5 h-5" />
@@ -127,7 +127,7 @@ const Hero = () => {
             <div className="relative">
               {/* Main Image Container */}
               <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-darkBlue to-brand-steel flex items-center justify-center">
+                <div className="absolute inset-0 bg-brand-darkBlue flex items-center justify-center">
                   <div className="text-center text-white p-8">
                     <div className="w-24 h-24 mx-auto mb-6 bg-white/10 rounded-full flex items-center justify-center">
                       <span className="text-3xl font-bold font-montserrat">SE</span>

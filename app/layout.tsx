@@ -1,32 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, Inter, Poppins, Montserrat } from "next/font/google";
 import "./globals.css";
-
-// Brand typography - Nunito for body text
-const nunito = Nunito({
-  variable: "--font-nunito",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-});
-
-// Modern header fonts
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-});
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-});
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -102,9 +75,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${nunito.variable} ${inter.variable} ${poppins.variable} ${montserrat.variable} antialiased`}
-      >
+      <body className="antialiased">
         {children}
       </body>
     </html>

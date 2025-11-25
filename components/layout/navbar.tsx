@@ -128,13 +128,13 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center space-x-4">
             <Button
               onClick={handleDownloadCatalog}
-              className="border border-brand-steel text-brand-steel hover:bg-brand-steel hover:text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2"
+              className=" text-white bg-brand-steel hover:text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2"
               size="sm"
             >
               <Download className="w-4 h-4" />
               <span>Catalog</span>
             </Button>
-            <Button className="bg-gradient-to-r from-brand-orange to-brand-accent hover:from-brand-orange/90 hover:to-brand-accent/90 text-white px-4 py-2 rounded-lg font-medium" size="sm">
+            <Button className="bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white px-4 py-2 rounded-lg font-medium font-candara" size="sm">
               Inquire Now
             </Button>
           </div>
@@ -190,7 +190,7 @@ const Navbar = () => {
                   <Download className="w-4 h-4 mr-2" />
                   Download Catalog
                 </Button>
-                <Button className="w-full bg-gradient-to-r from-brand-orange to-brand-accent hover:from-brand-orange/90 hover:to-brand-accent/90 text-white">
+                <Button className="w-full bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white font-candara">
                   Inquire Now
                 </Button>
               </div>

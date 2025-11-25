@@ -2,11 +2,11 @@ import jsPDF from 'jspdf';
 
 // Brand colors
 const brandColors = {
-  darkBlue: '#0a192f',
-  orange: '#f9a826',
-  gray: '#464646',
+  darkBlue: '#006bb3',  // Brand blue
+  orange: '#006bb3',    // Using brand blue for highlights
+  gray: '#464646',      // Brand gray
   lightGray: '#f5f5f5',
-  steel: '#475569',
+  steel: '#464646',      // Using brand gray
 };
 
 export function generateCatalogPDF() {
