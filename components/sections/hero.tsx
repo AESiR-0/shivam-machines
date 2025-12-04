@@ -77,15 +77,17 @@ const Hero = () => {
               className="flex flex-col sm:flex-row gap-4"
             >
               <Button 
-                className="bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white px-8 py-4 text-lg font-medium rounded-lg group font-candara shadow-lg"
+                variant="primary"
                 size="xl"
+                className="group font-candara shadow-lg"
               >
                 Explore Machines
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button 
-                className="border-2 border-brand-gray text-brand-gray hover:bg-brand-gray hover:text-white px-8 py-4 text-lg font-medium rounded-lg group font-candara"
+                variant="secondary"
                 size="xl"
+                className="group font-candara"
               >
                 <Play className="mr-2 w-5 h-5" />
                 Watch Demo

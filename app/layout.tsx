@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { VisualEditing } from "next-sanity/visual-editing";
+import { draftMode } from "next/headers";
+import { DisableDraftMode } from "@/components/DisableDraftMode";
+import { checkVisualEditingSetup } from "@/lib/sanity/visual-editing-debug";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -68,15 +72,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const draftModeStatus = await draftMode()
+  const isDraftModeEnabled = draftModeStatus.isEnabled
+
+  // Debug: Check Visual Editing setup when draft mode is enabled
+  if (isDraftModeEnabled && process.env.NODE_ENV === 'development') {
+    checkVisualEditingSetup()
+  }
+
   return (
     <html lang="en">
       <body className="antialiased">
         {children}
+        {isDraftModeEnabled && (
+          <>
+            <VisualEditing />
+            <DisableDraftMode />
+          </>
+        )}
       </body>
     </html>
   );

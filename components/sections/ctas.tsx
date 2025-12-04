@@ -94,7 +94,7 @@ const CTAs = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button className="flex-1 bg-white hover:bg-white/90 text-brand-darkBlue font-candara group relative overflow-hidden">
+                      <Button variant="secondary" className="flex-1 font-candara group relative overflow-hidden">
                         <span className="relative z-10 flex items-center">
                           Browse Machines
                           <motion.span
@@ -114,7 +114,7 @@ const CTAs = () => {
                       </Button>
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button className="flex-1 border-2 border-brand-gray text-white hover:bg-brand-gray hover:text-white font-candara group relative overflow-hidden">
+                      <Button variant="primary" className="flex-1 font-candara group relative overflow-hidden">
                         <motion.span
                           className="flex items-center relative z-10"
                           whileHover={{ scale: 1.05 }}
@@ -222,7 +222,7 @@ const CTAs = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button className="flex-1 bg-white hover:bg-white/90 text-brand-darkBlue font-candara group relative overflow-hidden">
+                      <Button variant="secondary" className="flex-1 font-candara group relative overflow-hidden">
                         <span className="relative z-10 flex items-center">
                           Sell Your Machine
                           <motion.span
@@ -242,7 +242,7 @@ const CTAs = () => {
                       </Button>
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button className="flex-1 border-2 border-brand-gray text-white hover:bg-brand-gray hover:text-white font-candara group relative overflow-hidden">
+                      <Button variant="primary" className="flex-1 font-candara group relative overflow-hidden">
                         <motion.span
                           className="flex items-center relative z-10"
                           whileHover={{ scale: 1.05 }}

@@ -121,11 +121,11 @@ const Hero = () => {
                       </p>
 
                       <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                        <Button className="bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white px-8 py-4 text-lg font-medium rounded-lg group font-candara shadow-lg transition-all">
+                        <Button variant="primary" size="xl" className="group font-candara shadow-lg">
                           Explore Machines
                           <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </Button>
-                        <Button className="border-2 border-brand-darkBlue text-brand-darkBlue hover:bg-brand-darkBlue hover:text-white px-8 py-4 text-lg font-medium rounded-lg font-candara transition-all">
+                        <Button variant="secondary" size="xl" className="font-candara">
                           Get Quote
                         </Button>
                       </div>
@@ -168,7 +168,7 @@ const Hero = () => {
                           </div>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
               </div>

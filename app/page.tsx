@@ -1,22 +1,22 @@
 import Navbar from "@/components/layout/navbar";
-import Hero from "@/components/sections/hero-carousel";
-import RecentlyAdded from "@/components/sections/recently-added";
-import MachineTools from "@/components/sections/machine-tools";
-import About from "@/components/sections/about";
-import CTAs from "@/components/sections/ctas";
-import Footer from "@/components/layout/footer";
+import HeroSection from "@/components/sections/hero-section";
+import RecentlyAddedSection from "@/components/sections/recently-added-section";
+import MachineToolsSection from "@/components/sections/machine-tools-section";
+import AboutSection from "@/components/sections/about-section";
+import CTAsSection from "@/components/sections/ctas-section";
+import FooterSection from "@/components/layout/footer-section";
 import WhatsAppButton from "@/components/ui/whatsapp-button";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="min-h-screen">
       <Navbar />
-      <Hero />
-      <RecentlyAdded />
-      <MachineTools />
-      <About />
-      <CTAs />
-      <Footer />
+      <HeroSection />
+      <RecentlyAddedSection />
+      <MachineToolsSection />
+      <AboutSection />
+      <CTAsSection />
+      <FooterSection />
       <WhatsAppButton />
     </main>
   );

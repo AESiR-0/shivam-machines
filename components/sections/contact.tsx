@@ -248,7 +248,7 @@ const Contact = () => {
 
                     <Button
                       type="submit"
-                      variant="industrial"
+                      variant="primary"
                       size="lg"
                       className="w-full group"
                     >

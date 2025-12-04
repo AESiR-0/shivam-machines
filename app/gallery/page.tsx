@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import WhatsAppButton from "@/components/ui/whatsapp-button";
@@ -181,7 +183,12 @@ export default function Gallery() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {machines.map((machine, index) => (
-              <Card key={index} className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20">
+              <motion.div
+                key={index}
+                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <Card className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20">
                 <div className="relative overflow-hidden rounded-t-lg">
                   <img
                     src={machine.image}
@@ -189,7 +196,7 @@ export default function Gallery() {
                     className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                    <Button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white text-brand-darkBlue hover:bg-brand-lightGray">
+                    <Button variant="secondary" className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <Eye className="w-4 h-4 mr-2" />
                       View Details
                     </Button>
@@ -220,17 +227,18 @@ export default function Gallery() {
                 
                 <CardContent className="p-6 pt-0">
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Button className="flex-1 bg-brand-orange hover:bg-red-700 text-white font-nunito py-2 rounded-lg">
+                    <Button variant="primary" className="flex-1 font-nunito">
                       <Phone className="w-4 h-4 mr-2" />
                       Quick Inquiry
                     </Button>
-                    <Button className="flex-1 border-2 border-brand-steel text-brand-steel hover:bg-brand-steel hover:text-white font-nunito py-2 rounded-lg">
+                    <Button variant="secondary" className="flex-1 font-nunito">
                       <Eye className="w-4 h-4 mr-2" />
                       More Details
                     </Button>
                   </div>
                 </CardContent>
               </Card>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -259,7 +267,7 @@ export default function Gallery() {
                 </div>
               </div>
               
-              <Button className="bg-brand-orange hover:bg-red-700 text-white px-8 py-4 rounded-lg font-inter">
+              <Button variant="primary" className="font-inter">
                 <Download className="w-5 h-5 mr-2" />
                 Download PDF
               </Button>

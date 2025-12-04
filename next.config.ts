@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+      },
+    ],
   },
   compress: true,
   poweredByHeader: false,
@@ -15,16 +21,18 @@ const nextConfig: NextConfig = {
   httpAgentOptions: {
     keepAlive: true,
   },
-  experimental: {
-    optimizePackageImports: ['framer-motion', 'lucide-react'],
-  },
+  
   headers: async () => [
     {
       source: '/(.*)',
       headers: [
         {
           key: 'X-Frame-Options',
-          value: 'DENY',
+          value: 'SAMEORIGIN', // Changed from DENY to allow Sanity Presentation Tool iframe
+        },
+        {
+          key: 'Content-Security-Policy',
+          value: "frame-ancestors 'self' https://*.sanity.studio http://localhost:* https://*.sanity.io;",
         },
         {
           key: 'X-Content-Type-Options',

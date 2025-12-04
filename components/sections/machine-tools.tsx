@@ -122,7 +122,7 @@ const MachineTools = () => {
                       <span className="font-medium">{group.count}</span>
                     </div>
 
-                    <Button className="w-full bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white font-calibri py-2 rounded-lg transition-all duration-300 text-sm">
+                    <Button variant="primary" className="w-full font-calibri text-sm">
                       View Category
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>

@@ -261,7 +261,7 @@ function ProductsContent() {
                   </CardHeader>
                   
                   <CardContent className="p-8 pt-0">
-                    <Button className="w-full bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white font-calibri py-3 rounded-lg transition-all duration-300">
+                    <Button variant="primary" className="w-full font-calibri">
                       View Details
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>

@@ -90,10 +90,12 @@ const Navbar = () => {
               >
                 <Link
                   href={item.href}
-                  className="text-brand-gray hover:text-brand-darkBlue font-medium transition-colors duration-200 font-nunito flex items-center space-x-1"
+                  className="text-brand-gray hover:text-brand-darkBlue font-medium transition-all duration-200 font-nunito flex items-center space-x-1 hover:scale-105"
                 >
-                  <span>{item.name}</span>
-                  {item.hasDropdown && <ChevronDown className="w-4 h-4" />}
+                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand-darkBlue after:transition-all after:duration-300 hover:after:w-full">
+                    {item.name}
+                  </span>
+                  {item.hasDropdown && <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />}
                 </Link>
 
                 {/* Products Dropdown */}
@@ -134,7 +136,7 @@ const Navbar = () => {
               <Download className="w-4 h-4" />
               <span>Catalog</span>
             </Button>
-            <Button className="bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white px-4 py-2 rounded-lg font-medium font-candara" size="sm">
+            <Button variant="primary" size="sm" className="font-candara">
               Inquire Now
             </Button>
           </div>
@@ -190,7 +192,7 @@ const Navbar = () => {
                   <Download className="w-4 h-4 mr-2" />
                   Download Catalog
                 </Button>
-                <Button className="w-full bg-brand-darkBlue hover:bg-brand-darkBlue/90 text-white font-candara">
+                <Button variant="primary" className="w-full font-candara">
                   Inquire Now
                 </Button>
               </div>
