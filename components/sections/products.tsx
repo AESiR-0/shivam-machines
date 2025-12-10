@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Settings, Wrench, Cog, Gauge } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -80,7 +81,7 @@ const Products = () => {
   };
 
   return (
-        <section className="py-24 bg-gradient-to-br from-brand-lightGray to-brand-steel/5">
+    <section className="py-24 bg-gradient-to-br from-brand-lightGray to-brand-steel/5">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div
@@ -94,8 +95,8 @@ const Products = () => {
             Our <span className="text-brand-orange">Machine Tools</span>
           </h2>
           <p className="text-xl text-brand-gray max-w-4xl mx-auto font-nunito leading-relaxed">
-            Premium used machine tools for precision manufacturing. 
-            From cylindrical grinding to CNC machining centers, we provide 
+            Premium used machine tools for precision manufacturing.
+            From cylindrical grinding to CNC machining centers, we provide
             reliable solutions for your industrial needs.
           </p>
         </motion.div>
@@ -120,11 +121,11 @@ const Products = () => {
                       {product.category}
                     </span>
                   </div>
-                  
+
                   <CardTitle className="text-xl font-semibold text-brand-darkBlue mb-3 font-inter">
                     {product.title}
                   </CardTitle>
-                  
+
                   <CardDescription className="text-brand-gray font-nunito leading-relaxed mb-4">
                     {product.description}
                   </CardDescription>
@@ -133,7 +134,7 @@ const Products = () => {
                     <div className="text-sm text-brand-gray font-nunito">
                       <strong>Specifications:</strong> {product.specifications}
                     </div>
-                    
+
                     <div className="flex flex-wrap gap-2">
                       {product.features.map((feature, featureIndex) => (
                         <span
@@ -146,17 +147,23 @@ const Products = () => {
                     </div>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent className="p-8 pt-0">
-                  <Button 
-                    className="w-full bg-brand-orange hover:bg-accent-600 text-white font-nunito py-3 rounded-lg transition-all duration-300"
+                  <Button
+                    variant="primary"
+                    className="w-full flex items-center gap-2 font-nunito"
+                    asChild
                   >
-                    View Details
-                    <ArrowRight className="ml-2 w-4 h-4" />
+                    <Link href={`/products/${product.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
+
+                      <div className="flex items-center gap-2"> <span className="text-brand-darkBlue">View Details</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </div>
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
-            </motion.div>
+            </motion.div> 
           ))}
         </motion.div>
 
@@ -173,13 +180,13 @@ const Products = () => {
               Looking for Something Specific?
             </h3>
             <p className="text-brand-gray mb-8 max-w-2xl mx-auto text-lg font-nunito">
-              Our extensive inventory includes machines from leading manufacturers. 
+              Our extensive inventory includes machines from leading manufacturers.
               Contact us to find the perfect solution for your manufacturing needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-brand-orange hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-medium text-lg" size="lg">
+              <Button className="bg-brand-orange hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-medium text-lg flex items-center gap-2" size="lg">
                 Browse All Machines
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="w-5 h-5" />
               </Button>
               <Button className="border-2 border-brand-gray text-brand-gray hover:bg-brand-gray hover:text-white px-8 py-4 rounded-lg font-medium text-lg" size="lg">
                 Request Quote

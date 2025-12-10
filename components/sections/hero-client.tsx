@@ -111,9 +111,9 @@ const HeroClient = ({ data }: HeroClientProps) => {
                 className="group font-candara shadow-lg"
                 asChild
               >
-                <a href={primaryButtonLink}>
+                <a className="flex items-center gap-2" href={primaryButtonLink}>
                   {primaryButtonText}
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </a>
               </Button>
               <Button 

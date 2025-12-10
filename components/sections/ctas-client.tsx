@@ -142,10 +142,10 @@ const CTAsClient = ({ ctas }: CTAsClientProps) => {
                   )}
                   <div className="flex flex-col sm:flex-row gap-4">
                     {cta.primaryButtonText && (
-                      <Button variant="secondary" className="flex-1 font-candara" asChild>
+                      <Button variant="secondary" className="flex-1 flex items-center gap-2 font-candara" asChild>
                         <Link href={cta.primaryButtonLink || "#"}>
                           {cta.primaryButtonText}
-                          <ArrowRight className="ml-2 w-4 h-4" />
+                          <ArrowRight className="w-4 h-4" />
                         </Link>
                       </Button>
                     )}

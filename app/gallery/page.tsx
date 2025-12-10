@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import WhatsAppButton from "@/components/ui/whatsapp-button";
@@ -196,9 +197,11 @@ export default function Gallery() {
                     className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                    <Button variant="secondary" className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Eye className="w-4 h-4 mr-2" />
-                      View Details
+                    <Button variant="secondary" className="opacity-0 group-hover:opacity-100 flex transition-opacity duration-300" asChild>
+                      <Link href={`/products/${machine.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        View Details
+                      </Link>
                     </Button>
                   </div>
                 </div>
@@ -227,13 +230,17 @@ export default function Gallery() {
                 
                 <CardContent className="p-6 pt-0">
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Button variant="primary" className="flex-1 font-nunito">
-                      <Phone className="w-4 h-4 mr-2" />
-                      Quick Inquiry
+                    <Button variant="primary" className="flex-1 font-nunito" asChild>
+                      <a href={`https://wa.me/919876543210?text=${encodeURIComponent(`Hi, I'm interested in ${machine.title}. Can you provide more details?`)}`} target="_blank" rel="noopener noreferrer">
+                        <Phone className="w-4 h-4 mr-2" />
+                        Quick Inquiry
+                      </a>
                     </Button>
-                    <Button variant="secondary" className="flex-1 font-nunito">
-                      <Eye className="w-4 h-4 mr-2" />
-                      More Details
+                    <Button variant="secondary" className="flex-1 font-nunito" asChild>
+                      <Link href={`/products/${machine.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        More Details
+                      </Link>
                     </Button>
                   </div>
                 </CardContent>

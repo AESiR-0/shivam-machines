@@ -95,10 +95,9 @@ const CTAs = () => {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                       <Button variant="secondary" className="flex-1 font-candara group relative overflow-hidden">
-                        <span className="relative z-10 flex items-center">
+                        <span className="relative z-10 flex items-center gap-2">
                           Browse Machines
                           <motion.span
-                            className="ml-2"
                             whileHover={{ x: 4 }}
                             transition={{ type: "spring", stiffness: 400 }}
                           >
@@ -223,10 +222,9 @@ const CTAs = () => {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                       <Button variant="secondary" className="flex-1 font-candara group relative overflow-hidden">
-                        <span className="relative z-10 flex items-center">
+                        <span className="relative z-10 flex items-center gap-2">
                           Sell Your Machine
                           <motion.span
-                            className="ml-2"
                             whileHover={{ x: 4 }}
                             transition={{ type: "spring", stiffness: 400 }}
                           >

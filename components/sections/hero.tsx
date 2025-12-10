@@ -79,10 +79,10 @@ const Hero = () => {
               <Button 
                 variant="primary"
                 size="xl"
-                className="group font-candara shadow-lg"
+                className="group flex items-center gap-2 font-candara shadow-lg"
               >
                 Explore Machines
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button 
                 variant="secondary"

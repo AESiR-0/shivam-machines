@@ -155,9 +155,9 @@ const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
                         <span className="font-medium">{group.count}</span>
                       </div>
 
-                      <Button variant="primary" className="w-full font-calibri text-sm">
+                      <Button variant="primary" className="w-full flex items-center gap-2 font-calibri text-sm">
                         View Category
-                        <ArrowRight className="ml-2 w-4 h-4" />
+                        <ArrowRight className="w-4 h-4" />
                       </Button>
                     </CardContent>
                   </Card>

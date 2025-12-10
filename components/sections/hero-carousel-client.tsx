@@ -145,9 +145,9 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
                           className="group font-candara shadow-lg"
                           asChild
                         >
-                          <a className="flex" href={data?.primaryButtonLink || "/products"}>
+                          <a className="flex items-center gap-2" href={data?.primaryButtonLink || "/products"}>
                             {data?.primaryButtonText || "Explore Machines"}
-                            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                           </a>
                         </Button>
                         <Button 

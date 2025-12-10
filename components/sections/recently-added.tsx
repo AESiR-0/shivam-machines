@@ -101,12 +101,12 @@ const RecentlyAdded = () => {
                 </CardHeader>
                 
                 <CardContent className="p-6 pt-0 mt-auto">
-                  <Link href={`/products?machine=${encodeURIComponent(machine.title)}`}>
-                    <Button variant="primary" className="w-full font-calibri text-sm">
+                  <Button variant="primary" className="w-full flex items-center gap-2 font-calibri text-sm" asChild>
+                    <Link href={`/products/${machine.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
                       View Details
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </Link>
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </Button>
                 </CardContent>
               </Card>
             </motion.div>

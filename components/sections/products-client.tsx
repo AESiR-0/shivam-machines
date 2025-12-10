@@ -139,12 +139,12 @@ const ProductsClient = ({ products, cta }: ProductsClientProps) => {
                     <CardContent className="p-8 pt-0">
                       <Button 
                         variant="primary"
-                        className="w-full font-nunito"
+                        className="w-full flex items-center gap-2 font-nunito"
                         asChild
                       >
                         <Link href={`/products/${product.slug?.current || '#'}`}>
                           View Details
-                          <ArrowRight className="ml-2 w-4 h-4" />
+                          <ArrowRight className="w-4 h-4" />
                         </Link>
                       </Button>
                     </CardContent>
@@ -178,13 +178,13 @@ const ProductsClient = ({ products, cta }: ProductsClientProps) => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 {cta.primaryButtonText && (
                   <Button 
-                    className="bg-brand-orange hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-medium text-lg" 
+                    className="bg-brand-orange hover:bg-accent-600 text-white px-8 py-4 rounded-lg font-medium text-lg flex items-center gap-2" 
                     size="lg"
                     asChild
                   >
                     <a href={cta.primaryButtonLink || "/products"}>
                       {cta.primaryButtonText}
-                      <ArrowRight className="ml-2 w-5 h-5" />
+                      <ArrowRight className="w-5 h-5" />
                     </a>
                   </Button>
                 )}

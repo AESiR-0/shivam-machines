@@ -121,9 +121,9 @@ const Hero = () => {
                       </p>
 
                       <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                        <Button variant="primary" size="xl" className="group font-candara shadow-lg">
+                        <Button variant="primary" size="xl" className="group flex items-center gap-2 font-candara shadow-lg">
                           Explore Machines
-                          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </Button>
                         <Button variant="secondary" size="xl" className="font-candara">
                           Get Quote
