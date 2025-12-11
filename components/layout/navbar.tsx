@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, Mail, MapPin, ChevronDown, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -70,8 +71,15 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-2"
             >
-              <div className="w-8 h-8 bg-brand-darkBlue rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">SE</span>
+              <div className="w-10 h-10 relative">
+                <Image
+                  src="/static/logo_1.png"
+                  alt="Shivam Enterprise logo"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="40px"
+                />
               </div>
               <span className="text-xl font-bold text-brand-darkBlue font-dream-avenue">
                 Shivam Enterprise

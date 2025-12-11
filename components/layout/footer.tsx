@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 
@@ -54,9 +55,16 @@ const Footer = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-2"
           >
-            <div className="flex items-center space-x-2 mb-6">
-              <div className="w-8 h-8 bg-accent-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">SE</span>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-12 h-12 relative">
+                <Image
+                  src="/static/logo_1.png"
+                  alt="Shivam Enterprise logo"
+                  fill
+                  className="object-contain"
+                  sizes="48px"
+                  priority
+                />
               </div>
               <span className="text-xl font-bold">Shivam Enterprise</span>
             </div>
