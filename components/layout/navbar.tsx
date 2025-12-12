@@ -4,7 +4,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, Mail, MapPin, ChevronDown, Download } from "lucide-react";
+import {
+  Menu,
+  X,
+  Phone,
+  Mail,
+  MapPin,
+  ChevronDown,
+  Download,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { generateCatalogPDF } from "@/lib/pdf-generator";
@@ -24,10 +32,19 @@ const Navbar = () => {
   }, []);
 
   const productCategories = [
-    { name: "Horizontal Boring Machines", href: "/products?category=horizontal-boring" },
-    { name: "Vertical Lathe Machines", href: "/products?category=vertical-lathe" },
+    {
+      name: "Horizontal Boring Machines",
+      href: "/products?category=horizontal-boring",
+    },
+    {
+      name: "Vertical Lathe Machines",
+      href: "/products?category=vertical-lathe",
+    },
     { name: "Lathe Machines", href: "/products?category=lathe" },
-    { name: "Cylindrical Grinding Machines", href: "/products?category=cylindrical-grinding" },
+    {
+      name: "Cylindrical Grinding Machines",
+      href: "/products?category=cylindrical-grinding",
+    },
     { name: "CNC Machines", href: "/products?category=cnc" },
     { name: "Gear Machines", href: "/products?category=gear" },
     { name: "Milling Machines", href: "/products?category=milling" },
@@ -47,8 +64,8 @@ const Navbar = () => {
     try {
       generateCatalogPDF();
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Error generating PDF. Please try again.');
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
     }
   };
 
@@ -71,19 +88,16 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-2"
             >
-              <div className="w-10 h-10 relative">
+              <div className="w-24 h-24 relative">
                 <Image
                   src="/static/logo_1.png"
                   alt="Shivam Enterprise logo"
                   fill
                   className="object-contain"
                   priority
-                  sizes="40px"
+                  sizes="64px"
                 />
               </div>
-              <span className="text-xl font-bold text-brand-darkBlue font-dream-avenue">
-                Shivam Enterprise
-              </span>
             </motion.div>
           </Link>
 
@@ -103,7 +117,9 @@ const Navbar = () => {
                   <span className="relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand-darkBlue after:transition-all after:duration-300 hover:after:w-full">
                     {item.name}
                   </span>
-                  {item.hasDropdown && <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />}
+                  {item.hasDropdown && (
+                    <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
+                  )}
                 </Link>
 
                 {/* Products Dropdown */}
@@ -179,7 +195,7 @@ const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
-              
+
               <div className="pt-4 border-t border-primary-200 space-y-3">
                 <div className="flex items-center space-x-2 text-sm text-brand-gray font-nunito">
                   <Phone className="w-4 h-4" />
@@ -213,4 +229,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

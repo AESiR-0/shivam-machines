@@ -4,7 +4,15 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+} from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -37,10 +45,25 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { name: "Facebook", icon: Facebook, href: "#", color: "hover:text-blue-600" },
+    {
+      name: "Facebook",
+      icon: Facebook,
+      href: "#",
+      color: "hover:text-blue-600",
+    },
     { name: "Twitter", icon: Twitter, href: "#", color: "hover:text-blue-400" },
-    { name: "LinkedIn", icon: Linkedin, href: "#", color: "hover:text-blue-700" },
-    { name: "Instagram", icon: Instagram, href: "#", color: "hover:text-pink-600" },
+    {
+      name: "LinkedIn",
+      icon: Linkedin,
+      href: "#",
+      color: "hover:text-blue-700",
+    },
+    {
+      name: "Instagram",
+      icon: Instagram,
+      href: "#",
+      color: "hover:text-pink-600",
+    },
   ];
 
   return (
@@ -66,14 +89,13 @@ const Footer = () => {
                   priority
                 />
               </div>
-              <span className="text-xl font-bold">Shivam Enterprise</span>
             </div>
             <p className="text-steel-300 mb-6 leading-relaxed">
-              Leading supplier of premium used machine tools since 1997. 
-              We deliver precision, reliability, and innovation to industries 
+              Leading supplier of premium used machine tools since 1997. We
+              deliver precision, reliability, and innovation to industries
               across India with our extensive inventory and expert service.
             </p>
-            
+
             {/* Contact Info */}
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
@@ -82,11 +104,15 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-accent-400" />
-                <span className="text-steel-300">shivamenterprise@yahoo.com</span>
+                <span className="text-steel-300">
+                  shivamenterprise@yahoo.com
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-accent-400" />
-                <span className="text-steel-300">Ahmedabad, Gujarat, India</span>
+                <span className="text-steel-300">
+                  Ahmedabad, Gujarat, India
+                </span>
               </div>
             </div>
           </motion.div>
@@ -168,7 +194,7 @@ const Footer = () => {
             <div className="text-steel-400 text-sm">
               © {currentYear} Shivam Enterprise. All rights reserved.
             </div>
-            
+
             {/* Social Links */}
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (

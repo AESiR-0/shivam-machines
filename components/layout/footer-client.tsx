@@ -1,16 +1,28 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+} from "lucide-react";
 import type { Footer } from "@/lib/sanity/types";
 
 interface FooterClientProps {
   data: Footer | null;
 }
 
-const socialIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const socialIconMap: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   Facebook,
   Twitter,
   LinkedIn: Linkedin,
@@ -56,11 +68,13 @@ const FooterClient = ({ data }: FooterClientProps) => {
   ];
 
   const companyName = data?.companyName || "Shivam Enterprise";
-  const description = data?.description || "Leading supplier of premium used machine tools since 1997. We deliver precision, reliability, and innovation to industries across India with our extensive inventory and expert service.";
+  const description =
+    data?.description ||
+    "Leading supplier of premium used machine tools since 1997. We deliver precision, reliability, and innovation to industries across India with our extensive inventory and expert service.";
   const phone = data?.phone || "+91-9824080055";
   const email = data?.email || "shivamenterprise@yahoo.com";
   const address = data?.address || "Ahmedabad, Gujarat, India";
-  
+
   const footerLinks = {
     company: data?.companyLinks || defaultFooterLinks.company,
     products: data?.productLinks || defaultFooterLinks.products,
@@ -83,21 +97,28 @@ const FooterClient = ({ data }: FooterClientProps) => {
             className="lg:col-span-2"
           >
             <div className="flex items-center space-x-2 mb-6">
-              <div className="w-8 h-8 bg-accent-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">SE</span>
+              <div className="w-24 h-24 relative">
+                <Image
+                  src="/static/logo_1.png"
+                  alt="Shivam Enterprise logo"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="64px"
+                />
               </div>
-              <span className="text-xl font-bold">{companyName}</span>
             </div>
-            <p className="text-steel-300 mb-6 leading-relaxed">
-              {description}
-            </p>
-            
+            <p className="text-steel-300 mb-6 leading-relaxed">{description}</p>
+
             {/* Contact Info */}
             <div className="space-y-3">
               {phone && (
                 <div className="flex items-center space-x-3">
                   <Phone className="w-5 h-5 text-accent-400" />
-                  <a href={`tel:${phone}`} className="text-steel-300 hover:text-accent-400 transition-colors">
+                  <a
+                    href={`tel:${phone}`}
+                    className="text-steel-300 hover:text-accent-400 transition-colors"
+                  >
                     {phone}
                   </a>
                 </div>
@@ -105,7 +126,10 @@ const FooterClient = ({ data }: FooterClientProps) => {
               {email && (
                 <div className="flex items-center space-x-3">
                   <Mail className="w-5 h-5 text-accent-400" />
-                  <a href={`mailto:${email}`} className="text-steel-300 hover:text-accent-400 transition-colors">
+                  <a
+                    href={`mailto:${email}`}
+                    className="text-steel-300 hover:text-accent-400 transition-colors"
+                  >
                     {email}
                   </a>
                 </div>
@@ -196,11 +220,12 @@ const FooterClient = ({ data }: FooterClientProps) => {
             <div className="text-steel-400 text-sm">
               © {currentYear} {companyName}. All rights reserved.
             </div>
-            
+
             {/* Social Links */}
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => {
-                const IconComponent = socialIconMap[social.platform] || Facebook;
+                const IconComponent =
+                  socialIconMap[social.platform] || Facebook;
                 return (
                   <motion.a
                     key={index}
@@ -223,4 +248,3 @@ const FooterClient = ({ data }: FooterClientProps) => {
 };
 
 export default FooterClient;
-
