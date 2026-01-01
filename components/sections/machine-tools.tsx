@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Settings, Wrench, Cog, Gauge, Drill, Layers, Factory } from "lucide-react";
@@ -104,28 +105,48 @@ const MachineTools = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
               <Link href={group.href}>
-                <Card className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20 hover:-translate-y-2 cursor-pointer h-full">
-                  <CardContent className="p-6 text-center">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${group.color} rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <group.icon className="w-8 h-8 text-white" />
-                    </div>
-
-                    <h3 className="text-lg font-semibold text-brand-darkBlue mb-2 group-hover:text-brand-orange transition-colors font-inter">
+                <Card className="group hover:shadow-2xl transition-all duration-500 bg-white border-0 shadow-xl hover:shadow-2xl cursor-pointer h-full flex flex-col overflow-hidden rounded-3xl hover:-translate-y-1">
+                  {/* Hero Icon Section - More Compact */}
+                  <div className={`relative w-full h-40 overflow-hidden bg-gradient-to-br ${group.color} p-6 flex items-center justify-center`}>
+                    {/* Subtle animated gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/3 to-white/8 group-hover:from-white/5 group-hover:via-white/10 group-hover:to-white/15 transition-all duration-700"></div>
+                    
+                    {/* Icon with refined glassmorphism */}
+                    <motion.div
+                      className={`w-20 h-20 bg-white/30 backdrop-blur-2xl rounded-2xl flex items-center justify-center shadow-[0_4px_20px_0_rgba(0,0,0,0.25)] border border-white/50 group-hover:scale-105 group-hover:rotate-2 transition-all duration-300`}
+                      whileHover={{ scale: 1.1, rotate: 3 }}
+                    >
+                      <group.icon className="w-10 h-10 text-white drop-shadow-lg" />
+                    </motion.div>
+                    
+                    {/* Subtle decorative elements */}
+                    <div className="absolute top-3 right-3 w-12 h-12 bg-white/8 rounded-full blur-xl"></div>
+                    <div className="absolute bottom-3 left-3 w-10 h-10 bg-white/6 rounded-full blur-lg"></div>
+                  </div>
+                  
+                  <CardContent className="p-6 text-center flex flex-col flex-1 bg-white">
+                    <h3 className="text-lg font-bold text-brand-darkBlue mb-2.5 group-hover:text-brand-orange transition-colors duration-300 font-inter">
                       {group.name}
                     </h3>
-                    <p className="text-brand-gray text-sm mb-4 leading-relaxed font-nunito line-clamp-2">
+                    <p className="text-brand-gray text-sm mb-4 leading-relaxed font-nunito line-clamp-2 flex-1 min-h-[2.5rem]">
                       {group.description}
                     </p>
 
-                    <div className="flex items-center justify-center space-x-2 text-sm text-brand-orange font-nunito mb-4">
-                      <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
-                      <span className="font-medium">{group.count}</span>
+                    <div className="flex items-center justify-center mb-5">
+                      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-orange/8 rounded-full border border-brand-orange/20 group-hover:bg-brand-orange/12 group-hover:border-brand-orange/30 transition-all">
+                        <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
+                        <span className="text-xs font-semibold text-brand-orange font-nunito">{group.count}</span>
+                      </div>
                     </div>
 
-                    <Button variant="primary" className="w-full flex items-center gap-2 font-calibri text-sm">
-                      View Category
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
+                    <div className="mt-auto pt-2">
+                      <Button variant="primary" className="w-full flex items-center justify-center gap-2 font-candara text-sm rounded-xl group-hover:shadow-lg transition-all" asChild>
+                        <Link href={group.href} className="flex gap-2">
+                          <span>View Category</span>
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               </Link>

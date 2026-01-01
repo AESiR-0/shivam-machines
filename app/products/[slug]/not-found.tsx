@@ -8,7 +8,7 @@ export default function ProductNotFound() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-white to-brand-lightGray">
       <Navbar />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
         <div className="bg-white rounded-lg shadow-lg p-8 lg:p-12">
           <h1 className="text-6xl font-bold text-brand-darkBlue mb-4 font-candara">404</h1>
           <h2 className="text-3xl font-bold text-brand-darkBlue mb-4 font-candara">

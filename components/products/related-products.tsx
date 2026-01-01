@@ -77,13 +77,13 @@ export default function RelatedProducts({
                     <CardContent className="p-4 pt-0 mt-auto">
                       <Button
                         variant="primary"
-                        className="w-full flex items-center gap-2 font-calibri text-sm"
+                        className="w-full flex items-center justify-center gap-2 font-calibri text-sm"
                         asChild
                       >
-                        <div>
-                          View Details
+                        <Link href={`/products/${product.slug?.current || product._id}`} className="flex gap-2">
+                          <span>View Details</span>
                           <ArrowRight className="w-4 h-4" />
-                        </div>
+                        </Link>
                       </Button>
                     </CardContent>
                   </Card>

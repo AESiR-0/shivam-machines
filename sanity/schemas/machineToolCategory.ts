@@ -56,6 +56,15 @@ export default defineType({
       type: 'number',
       description: 'Order in which categories appear',
     }),
+    defineField({
+      name: 'image',
+      title: 'Category Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      description: 'Hero image for this category (optional)',
+    }),
   ],
   preview: {
     select: {

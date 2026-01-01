@@ -154,11 +154,9 @@ const Products = () => {
                     className="w-full flex items-center gap-2 font-nunito"
                     asChild
                   >
-                    <Link href={`/products/${product.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
-
-                      <div className="flex items-center gap-2"> <span className="text-brand-darkBlue">View Details</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
+                    <Link href={`/products/${product.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`} className="flex gap-2">
+                      <span>View Details</span>
+                      <ArrowRight className="w-4 h-4" />
                     </Link>
                   </Button>
                 </CardContent>

@@ -81,7 +81,7 @@ const Navbar = () => {
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 lg:h-20">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <motion.div
@@ -95,7 +95,7 @@ const Navbar = () => {
                   fill
                   className="object-contain"
                   priority
-                  sizes="64px"
+                  sizes="96px"
                 />
               </div>
             </motion.div>
@@ -216,8 +216,8 @@ const Navbar = () => {
                   <Download className="w-4 h-4 mr-2" />
                   Download Catalog
                 </Button>
-                <Button variant="primary" className="w-full font-candara">
-                  Inquire Now
+                <Button variant="primary" className="w-full font-candara" asChild>
+                  <Link href="/contact">Inquire Now</Link>
                 </Button>
               </div>
             </div>

@@ -102,8 +102,8 @@ const RecentlyAdded = () => {
                 
                 <CardContent className="p-6 pt-0 mt-auto">
                   <Button variant="primary" className="w-full flex items-center gap-2 font-calibri text-sm" asChild>
-                    <Link href={`/products/${machine.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
-                      View Details
+                    <Link href={`/products/${machine.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`} className="flex gap-2">
+                      <span>View Details</span>
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </Button>

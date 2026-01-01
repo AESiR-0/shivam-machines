@@ -10,7 +10,7 @@ export default function About() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-lightGray py-24">
+      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-lightGray py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-bold text-brand-darkBlue mb-6 font-montserrat">
@@ -25,7 +25,7 @@ export default function About() {
       </section>
 
       {/* Company Story */}
-      <section className="py-24 bg-white">
+      <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -69,7 +69,7 @@ export default function About() {
       </section>
 
       {/* Mission & Values */}
-      <section className="py-24 bg-brand-lightGray">
+      <section className="py-12 bg-brand-lightGray">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-brand-darkBlue mb-6 font-montserrat">

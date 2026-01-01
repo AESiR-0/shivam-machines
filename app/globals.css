@@ -63,22 +63,36 @@ body {
   --font-calibri: "Calibri", system-ui, sans-serif;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Modern and Aesthetic */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+  border-left: 1px solid #e5e7eb;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #464646;
-  border-radius: 4px;
+  background: linear-gradient(to bottom, #006bb3, #005a9e);
+  border-radius: 10px;
+  border: 2px solid #ffffff;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #006bb3;
+  background: linear-gradient(to bottom, #0080d4, #006bb3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(to bottom, #005a9e, #004d85);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #006bb3 #f8f9fa;
 }
 
 /* Selection styles */

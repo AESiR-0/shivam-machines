@@ -164,7 +164,7 @@ export default function Gallery() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 py-24">
+      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-bold text-brand-darkBlue mb-6 font-montserrat">
@@ -180,7 +180,7 @@ export default function Gallery() {
       </section>
 
       {/* Gallery Grid */}
-      <section className="py-24 bg-gradient-to-br from-white to-brand-lightGray">
+      <section className="py-12 bg-gradient-to-br from-white to-brand-lightGray">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {machines.map((machine, index) => (
@@ -252,7 +252,7 @@ export default function Gallery() {
       </section>
 
       {/* Download PDF Section */}
-      <section className="py-24 bg-brand-lightGray">
+      <section className="py-12 bg-brand-lightGray">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-brand-darkBlue mb-6 font-montserrat">
             Download Our Complete Catalog
@@ -284,7 +284,7 @@ export default function Gallery() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-24 bg-white">
+      <section className="py-12 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-brand-darkBlue mb-6 font-montserrat">
             Need More Information?

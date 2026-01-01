@@ -139,11 +139,11 @@ const ProductsClient = ({ products, cta }: ProductsClientProps) => {
                     <CardContent className="p-8 pt-0">
                       <Button 
                         variant="primary"
-                        className="w-full flex items-center gap-2 font-nunito"
+                        className="w-full flex items-center justify-center gap-2 font-nunito"
                         asChild
                       >
-                        <Link href={`/products/${product.slug?.current || '#'}`}>
-                          View Details
+                        <Link href={`/products/${product.slug?.current || product._id}`} className="flex gap-2">
+                          <span>View Details</span>
                           <ArrowRight className="w-4 h-4" />
                         </Link>
                       </Button>

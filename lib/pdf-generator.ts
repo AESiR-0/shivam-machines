@@ -149,3 +149,190 @@ export function generateCatalogPDF() {
   // Download
   doc.save('Shivam_Enterprise_Catalog.pdf');
 }
+
+export function generateProductPDF(product: {
+  title: string;
+  description?: string;
+  category?: string;
+  specifications?: string;
+  features?: string[];
+  price?: string;
+  manufacturer?: string;
+  year?: number;
+  condition?: string;
+  isInStock?: boolean;
+}) {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  
+  // Helper to convert hex to RGB
+  const hexToRgb = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 10, g: 25, b: 47 };
+  };
+
+  // Set brand colors
+  const darkBlue = hexToRgb(brandColors.darkBlue);
+  const gray = hexToRgb(brandColors.gray);
+
+  // Header
+  doc.setFillColor(darkBlue.r, darkBlue.g, darkBlue.b);
+  doc.rect(0, 0, pageWidth, 40, 'F');
+  
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(24);
+  doc.setFont('helvetica', 'bold');
+  doc.text('SHIVAM ENTERPRISE', pageWidth / 2, 20, { align: 'center' });
+  
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Product Details', pageWidth / 2, 32, { align: 'center' });
+
+  // Company Info
+  let yPos = 55;
+  doc.setTextColor(gray.r, gray.g, gray.b);
+  doc.setFontSize(9);
+  doc.text('Contact: +91-9824080055 | Email: shivamenterprise@yahoo.com', pageWidth / 2, yPos, { align: 'center' });
+  yPos += 6;
+  doc.text('Address: 6- Ganpat Colony, Opp, Civil Hospital, Shahibaug, Ahmedabad, Gujarat - 380016', pageWidth / 2, yPos, { align: 'center' });
+  yPos += 15;
+
+  // Product Title
+  doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  const titleLines = doc.splitTextToSize(product.title, pageWidth - 40);
+  doc.text(titleLines, 20, yPos);
+  yPos += titleLines.length * 8 + 10;
+
+  // Category and Stock Status
+  if (product.category) {
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.text(`Category: ${product.category.charAt(0).toUpperCase() + product.category.slice(1)}`, 20, yPos);
+    yPos += 8;
+  }
+
+  if (product.isInStock !== undefined) {
+    doc.setTextColor(product.isInStock ? 0 : 255, product.isInStock ? 150 : 0, 0);
+    doc.text(`Status: ${product.isInStock ? 'In Stock' : 'Out of Stock'}`, 20, yPos);
+    yPos += 10;
+  }
+
+  // Price
+  if (product.price) {
+    doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Price: ${product.price}`, 20, yPos);
+    yPos += 12;
+  }
+
+  // Product Details Grid
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(gray.r, gray.g, gray.b);
+  
+  if (product.manufacturer) {
+    doc.text(`Manufacturer: ${product.manufacturer}`, 20, yPos);
+    yPos += 7;
+  }
+  if (product.year) {
+    doc.text(`Year: ${product.year}`, 20, yPos);
+    yPos += 7;
+  }
+  if (product.condition) {
+    const conditionLabel = product.condition.charAt(0).toUpperCase() + product.condition.slice(1).replace('-', ' ');
+    doc.text(`Condition: ${conditionLabel}`, 20, yPos);
+    yPos += 10;
+  }
+
+  // Description
+  if (product.description) {
+    if (yPos > pageHeight - 60) {
+      doc.addPage();
+      yPos = 20;
+    }
+    
+    doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Description', 20, yPos);
+    yPos += 8;
+    
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    const descLines = doc.splitTextToSize(product.description, pageWidth - 40);
+    doc.text(descLines, 20, yPos);
+    yPos += descLines.length * 5 + 10;
+  }
+
+  // Specifications
+  if (product.specifications) {
+    if (yPos > pageHeight - 60) {
+      doc.addPage();
+      yPos = 20;
+    }
+    
+    doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Specifications', 20, yPos);
+    yPos += 8;
+    
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    const specLines = doc.splitTextToSize(product.specifications, pageWidth - 40);
+    doc.text(specLines, 20, yPos);
+    yPos += specLines.length * 5 + 10;
+  }
+
+  // Features
+  if (product.features && product.features.length > 0) {
+    if (yPos > pageHeight - 60) {
+      doc.addPage();
+      yPos = 20;
+    }
+    
+    doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Key Features', 20, yPos);
+    yPos += 8;
+    
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    product.features.forEach((feature) => {
+      if (yPos > pageHeight - 30) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.text(`• ${feature}`, 20, yPos);
+      yPos += 7;
+    });
+    yPos += 5;
+  }
+
+  // Footer
+  const footerY = pageHeight - 15;
+  doc.setFillColor(darkBlue.r, darkBlue.g, darkBlue.b);
+  doc.rect(0, footerY, pageWidth, 15, 'F');
+  
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.text('For more information, visit shivammachines.in or contact us at +91-9824080055', pageWidth / 2, footerY + 10, { align: 'center' });
+
+  // Download
+  const fileName = product.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  doc.save(`${fileName}_details.pdf`);
+}

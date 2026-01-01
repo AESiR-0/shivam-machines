@@ -91,6 +91,7 @@ export interface MachineToolCategory {
   href?: string
   color?: string
   order?: number
+  image?: SanityImageSource
 }
 
 export interface RecentlyAdded {

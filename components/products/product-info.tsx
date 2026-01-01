@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, MessageCircle, CheckCircle, XCircle, Calendar, Building2, Tag } from "lucide-react";
+import { Phone, Mail, MessageCircle, CheckCircle, XCircle, Calendar, Building2, Tag, Download } from "lucide-react";
 import Link from "next/link";
+import { generateProductPDF } from "@/lib/pdf-generator";
 import type { Product } from "@/lib/sanity/types";
 
 interface ProductInfoProps {
@@ -36,6 +37,26 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     `Hi, I'm interested in ${product.title}. Can you provide more details?`
   );
   const whatsappUrl = `https://wa.me/919876543210?text=${whatsappMessage}`;
+
+  const handleDownloadProductDetails = () => {
+    try {
+      generateProductPDF({
+        title: product.title,
+        description: product.description,
+        category: product.category,
+        specifications: product.specifications,
+        features: product.features,
+        price: product.price,
+        manufacturer: product.manufacturer,
+        year: product.year,
+        condition: product.condition,
+        isInStock: product.isInStock,
+      });
+    } catch (error) {
+      console.error("Error generating product PDF:", error);
+      alert("Error generating PDF. Please try again.");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -127,6 +148,18 @@ export default function ProductInfo({ product }: ProductInfoProps) {
               <MessageCircle className="w-5 h-5" />
               Quick Inquiry via WhatsApp
             </Link>
+          </Button>
+        </motion.div>
+
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Button
+            variant="secondary"
+            size="lg"
+            className="w-full flex items-center justify-center gap-2 font-candara"
+            onClick={handleDownloadProductDetails}
+          >
+            <Download className="w-4 h-4" />
+            Download Product Details
           </Button>
         </motion.div>
 
