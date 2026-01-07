@@ -9,10 +9,14 @@ export const aboutQuery = groq`*[_type == "about"][0]{..., _id}`
 export const footerQuery = groq`*[_type == "footer"][0]{..., _id}`
 export const contactQuery = groq`*[_type == "contact"][0]{..., _id}`
 export const machineToolCategoriesQuery = groq`*[_type == "machineToolCategory"] | order(order asc){..., _id}`
-export const recentlyAddedQuery = groq`*[_type == "recentlyAdded"][0]{
-  ...,
-  _id,
-  machines[]->{
+export const recentlyAddedQuery = groq`{
+  "section": *[_type == "recentlyAdded"][0]{
+    title,
+    titleHighlight,
+    description,
+    _id
+  },
+  "machines": *[_type == "product"] | order(dateAdded desc)[0...10]{
     _id,
     title,
     slug,

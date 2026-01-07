@@ -88,7 +88,7 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-2"
             >
-              <div className="w-24 h-24 relative">
+              <div className="w-32 h-32 relative">
                 <Image
                   src="/static/logo_1.png"
                   alt="Shivam Enterprise logo"

@@ -124,9 +124,9 @@ const AboutClient = ({ data }: AboutClientProps) => {
                 Trusted Since 1997
               </span>
             </div>
-            <h2 className="text-5xl sm:text-6xl font-bold text-brand-darkBlue leading-tight font-montserrat">
+            {/* <h2 className="text-5xl sm:text-6xl font-bold text-brand-darkBlue leading-tight font-montserrat">
               {title} <span className="text-brand-orange block">{titleHighlight}</span>
-            </h2>
+            </h2> */}
             <p className="text-xl text-brand-gray leading-relaxed font-nunito">
               {description}
             </p>

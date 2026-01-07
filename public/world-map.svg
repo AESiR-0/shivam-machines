@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500">
+  <!-- Ocean -->
+  <rect width="1000" height="500" fill="#e8f4f8"/>
+  
+  <!-- World Map Continents - Simplified but accurate representation -->
+  <!-- Europe -->
+  <path d="M 480 100 L 520 95 L 550 100 L 545 135 L 525 145 L 495 140 L 470 130 Z" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.5"/>
+  <path d="M 520 95 L 540 90 L 560 95 L 555 125 L 540 130 L 520 125 Z" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.5"/>
+  
+  <!-- Asia -->
+  <path d="M 550 100 L 850 85 L 900 105 L 890 280 L 780 300 L 650 285 L 545 135 Z" fill="#fff7ed" stroke="#fdba74" stroke-width="0.5"/>
+  
+  <!-- Africa -->
+  <path d="M 525 145 L 560 140 L 575 240 L 550 280 L 510 260 L 500 200 Z" fill="#f3e8ff" stroke="#c4b5fd" stroke-width="0.5" opacity="0.7"/>
+  
+  <!-- North America -->
+  <path d="M 150 110 L 350 100 L 400 180 L 350 230 L 200 220 L 120 180 Z" fill="#ecfdf5" stroke="#86efac" stroke-width="0.5" opacity="0.7"/>
+  
+  <!-- South America -->
+  <path d="M 300 240 L 380 235 L 400 320 L 350 360 L 280 350 L 260 300 Z" fill="#f0fdf4" stroke="#86efac" stroke-width="0.5" opacity="0.7"/>
+  
+  <!-- Australia -->
+  <path d="M 820 320 L 920 315 L 940 350 L 900 370 L 850 365 Z" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="0.5" opacity="0.7"/>
+</svg>
+

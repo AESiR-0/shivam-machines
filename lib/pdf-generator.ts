@@ -9,6 +9,54 @@ const brandColors = {
   steel: '#464646',      // Using brand gray
 };
 
+// Letterhead area height (in mm)
+const LETTERHEAD_HEIGHT = 30;
+
+// Helper function to add watermark and letterhead to all pages
+function addWatermarkAndLetterhead(doc: jsPDF, pageWidth: number, pageHeight: number, isFirstPage: boolean = false) {
+  // Add letterhead area at the top (reserved space for future letterhead)
+  if (isFirstPage) {
+    // Draw a subtle border to indicate letterhead area
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.1);
+    doc.rect(0, 0, pageWidth, LETTERHEAD_HEIGHT);
+    
+    // Optional: Add placeholder text (can be removed later)
+    doc.setTextColor(180, 180, 180);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'italic');
+    doc.text('Letterhead Area', pageWidth / 2, LETTERHEAD_HEIGHT / 2, { align: 'center' });
+  }
+  
+  // Add diagonal watermark (logo)
+  // Since we can't directly load images in jsPDF without additional setup,
+  // we'll create a text-based watermark for now
+  // In production, you can load the logo image and use addImage()
+  
+  // Rotate for diagonal watermark
+  const centerX = pageWidth / 2;
+  const centerY = pageHeight / 2;
+  const rotation = -45; // 45 degrees diagonal
+  
+  // Set watermark properties (low opacity using light color)
+  doc.setTextColor(200, 210, 220); // Very light blue-gray for watermark effect
+  doc.setFontSize(60);
+  doc.setFont('helvetica', 'bold');
+  
+  // Rotate and position watermark
+  doc.text('SHIVAM', centerX, centerY, {
+    align: 'center',
+    angle: rotation,
+  });
+  
+  doc.setFontSize(40);
+  doc.text('ENTERPRISE', centerX, centerY + 15, {
+    align: 'center',
+    angle: rotation,
+  });
+}
+
+
 export function generateCatalogPDF() {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -29,21 +77,24 @@ export function generateCatalogPDF() {
   const orange = hexToRgb(brandColors.orange);
   const gray = hexToRgb(brandColors.gray);
 
-  // Header
+  // Add watermark and letterhead to first page
+  addWatermarkAndLetterhead(doc, pageWidth, pageHeight, true);
+
+  // Header (below letterhead area)
   doc.setFillColor(darkBlue.r, darkBlue.g, darkBlue.b);
-  doc.rect(0, 0, pageWidth, 40, 'F');
+  doc.rect(0, LETTERHEAD_HEIGHT, pageWidth, 40, 'F');
   
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
-  doc.text('SHIVAM ENTERPRISE', pageWidth / 2, 20, { align: 'center' });
+  doc.text('SHIVAM ENTERPRISE', pageWidth / 2, LETTERHEAD_HEIGHT + 20, { align: 'center' });
   
   doc.setFontSize(14);
   doc.setFont('helvetica', 'normal');
-  doc.text('Machine Tools Catalog', pageWidth / 2, 32, { align: 'center' });
+  doc.text('Machine Tools Catalog', pageWidth / 2, LETTERHEAD_HEIGHT + 32, { align: 'center' });
 
   // Company Info
-  let yPos = 55;
+  let yPos = LETTERHEAD_HEIGHT + 55;
   doc.setTextColor(gray.r, gray.g, gray.b);
   doc.setFontSize(10);
   doc.text('Established in 1997 | Leading Supplier of Used Machine Tools', pageWidth / 2, yPos, { align: 'center' });
@@ -96,7 +147,9 @@ export function generateCatalogPDF() {
     // Check if new page needed
     if (yPos > pageHeight - 60) {
       doc.addPage();
-      yPos = 20;
+      // Add watermark to new page
+      addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
+      yPos = LETTERHEAD_HEIGHT + 20;
     }
 
     // Category header
@@ -114,7 +167,9 @@ export function generateCatalogPDF() {
     category.machines.forEach((machine) => {
       if (yPos > pageHeight - 40) {
         doc.addPage();
-        yPos = 20;
+        // Add watermark to new page
+        addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
+        yPos = LETTERHEAD_HEIGHT + 20;
       }
 
       doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
@@ -180,21 +235,24 @@ export function generateProductPDF(product: {
   const darkBlue = hexToRgb(brandColors.darkBlue);
   const gray = hexToRgb(brandColors.gray);
 
-  // Header
+  // Add watermark and letterhead to first page
+  addWatermarkAndLetterhead(doc, pageWidth, pageHeight, true);
+
+  // Header (below letterhead area)
   doc.setFillColor(darkBlue.r, darkBlue.g, darkBlue.b);
-  doc.rect(0, 0, pageWidth, 40, 'F');
+  doc.rect(0, LETTERHEAD_HEIGHT, pageWidth, 40, 'F');
   
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
-  doc.text('SHIVAM ENTERPRISE', pageWidth / 2, 20, { align: 'center' });
+  doc.text('SHIVAM ENTERPRISE', pageWidth / 2, LETTERHEAD_HEIGHT + 20, { align: 'center' });
   
   doc.setFontSize(14);
   doc.setFont('helvetica', 'normal');
-  doc.text('Product Details', pageWidth / 2, 32, { align: 'center' });
+  doc.text('Product Details', pageWidth / 2, LETTERHEAD_HEIGHT + 32, { align: 'center' });
 
   // Company Info
-  let yPos = 55;
+  let yPos = LETTERHEAD_HEIGHT + 55;
   doc.setTextColor(gray.r, gray.g, gray.b);
   doc.setFontSize(9);
   doc.text('Contact: +91-9824080055 | Email: shivamenterprise@yahoo.com', pageWidth / 2, yPos, { align: 'center' });
@@ -257,7 +315,9 @@ export function generateProductPDF(product: {
   if (product.description) {
     if (yPos > pageHeight - 60) {
       doc.addPage();
-      yPos = 20;
+      // Add watermark to new page
+      addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
+      yPos = LETTERHEAD_HEIGHT + 20;
     }
     
     doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
@@ -278,7 +338,9 @@ export function generateProductPDF(product: {
   if (product.specifications) {
     if (yPos > pageHeight - 60) {
       doc.addPage();
-      yPos = 20;
+      // Add watermark to new page
+      addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
+      yPos = LETTERHEAD_HEIGHT + 20;
     }
     
     doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
@@ -299,7 +361,9 @@ export function generateProductPDF(product: {
   if (product.features && product.features.length > 0) {
     if (yPos > pageHeight - 60) {
       doc.addPage();
-      yPos = 20;
+      // Add watermark to new page
+      addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
+      yPos = LETTERHEAD_HEIGHT + 20;
     }
     
     doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
@@ -314,7 +378,9 @@ export function generateProductPDF(product: {
     product.features.forEach((feature) => {
       if (yPos > pageHeight - 30) {
         doc.addPage();
-        yPos = 20;
+        // Add watermark to new page
+        addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
+        yPos = LETTERHEAD_HEIGHT + 20;
       }
       doc.text(`• ${feature}`, 20, yPos);
       yPos += 7;

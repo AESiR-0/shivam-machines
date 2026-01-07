@@ -1,8 +1,7 @@
-"use client";
-
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import WhatsAppButton from "@/components/ui/whatsapp-button";
+import AboutSection from "@/components/sections/about-section";
 
 export default function About() {
   return (
@@ -122,6 +121,9 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* About Section from Homepage */}
+      <AboutSection />
 
       <Footer />
       <WhatsAppButton />
