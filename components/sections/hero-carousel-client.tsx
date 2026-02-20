@@ -20,8 +20,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
     align: "start",
     duration: 25,
     dragFree: false,
@@ -30,49 +30,49 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Create slides from products or use default
-  const slides = products.length > 0 
+  const slides = products.length > 0
     ? products.slice(0, 4).map((product) => ({
-        title: product.title,
-        subtitle: product.category || "Premium Quality",
-        description: product.description,
-        specs: product.specifications || "",
-        badge: product.isInStock ? "In Stock" : "Available Soon",
-        image: product.images && product.images.length > 0 ? product.images[0] : null,
-      }))
+      title: product.title,
+      subtitle: product.category || "Premium Quality",
+      description: product.description,
+      specs: product.specifications || "",
+      badge: product.isInStock ? "In Stock" : "Available Soon",
+      image: product.images && product.images.length > 0 ? product.images[0] : null,
+    }))
     : [
-        {
-          title: "Horizontal Boring Machine",
-          subtitle: "Table Type",
-          description: "High-precision horizontal boring machines for large-scale manufacturing operations with exceptional accuracy and reliability.",
-          specs: "X-2200, Y-2000 | Table: 1500 x 1800 | Spindle: 125",
-          badge: "Premium Quality",
-          image: null,
-        },
-        {
-          title: "Cylindrical Grinding Machine",
-          subtitle: "Premium Quality",
-          description: "Advanced cylindrical grinding machines for external and internal grinding operations with superior precision and surface finish.",
-          specs: "Max Length: 1000mm | Max Swing: 400mm | CNC Control",
-          badge: "New Arrival",
-          image: null,
-        },
-        {
-          title: "Vertical Lathe Machine",
-          subtitle: "Heavy Duty",
-          description: "Heavy-duty vertical lathe machines for complex turning operations with exceptional accuracy and surface finish capabilities.",
-          specs: "Max Turning: 1500mm | Max Swing: 500mm | Precision",
-          badge: "Best Seller",
-          image: null,
-        },
-        {
-          title: "CNC Machining Centers",
-          subtitle: "Automation Ready",
-          description: "Advanced CNC machining centers for complex manufacturing operations with automation and precision control systems.",
-          specs: "Work Envelope: 1000x800x600mm | Spindle: 8000 RPM",
-          badge: "Featured",
-          image: null,
-        },
-      ];
+      {
+        title: "Horizontal Boring Machine",
+        subtitle: "Table Type",
+        description: "High-precision horizontal boring machines for large-scale manufacturing operations with exceptional accuracy and reliability.",
+        specs: "X-2200, Y-2000 | Table: 1500 x 1800 | Spindle: 125",
+        badge: "Premium Quality",
+        image: null,
+      },
+      {
+        title: "Cylindrical Grinding Machine",
+        subtitle: "Premium Quality",
+        description: "Advanced cylindrical grinding machines for external and internal grinding operations with superior precision and surface finish.",
+        specs: "Max Length: 1000mm | Max Swing: 400mm | CNC Control",
+        badge: "New Arrival",
+        image: null,
+      },
+      {
+        title: "Vertical Lathe Machine",
+        subtitle: "Heavy Duty",
+        description: "Heavy-duty vertical lathe machines for complex turning operations with exceptional accuracy and surface finish capabilities.",
+        specs: "Max Turning: 1500mm | Max Swing: 500mm | Precision",
+        badge: "Best Seller",
+        image: null,
+      },
+      {
+        title: "CNC Machining Centers",
+        subtitle: "Automation Ready",
+        description: "Advanced CNC machining centers for complex manufacturing operations with automation and precision control systems.",
+        specs: "Work Envelope: 1000x800x600mm | Spindle: 8000 RPM",
+        badge: "Featured",
+        image: null,
+      },
+    ];
 
   // Use Sanity stats or defaults
   const stats = data?.stats || [
@@ -126,7 +126,7 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
         <div className="flex">
           {slides.map((slide, index) => {
             const imageUrl = slide.image ? urlFor(slide.image).width(1920).height(1080).url() : null;
-            
+
             return (
               <div key={index} className="min-w-0 flex-shrink-0 w-full">
                 <div className="relative h-[85vh] flex items-center overflow-hidden">
@@ -147,7 +147,7 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-brand-darkBlue via-brand-darkBlue/90 to-brand-darkBlue/80" />
                   )}
-                  
+
                   {/* Content */}
                   <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="flex items-center justify-between gap-8">
@@ -157,18 +157,17 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
                           <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
                           {slide.badge}
                         </div>
-                        
+
                         <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight font-candara text-white">
                           {slide.title}
-                          <span className="block text-white/90 mt-2 text-3xl sm:text-4xl lg:text-5xl">{slide.subtitle}</span>
                         </h1>
-                        
+
                         <p className="text-lg lg:text-xl text-white/90 max-w-2xl leading-relaxed font-calibri">
                           {slide.description}
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                          <Button 
+                          <Button
                             variant="primary"
                             size="xl"
                             className="group font-candara shadow-lg flex items-center gap-2"
@@ -179,7 +178,7 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
                               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </a>
                           </Button>
-                          <Button 
+                          <Button
                             variant="secondary"
                             size="xl"
                             className="font-candara flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20"
@@ -193,13 +192,13 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
                       </div>
 
                       {/* Compact Stats */}
-                      <div className="hidden lg:flex items-center gap-6 border-l border-white/30 pl-6">
+                      {/* <div className="hidden lg:flex items-center gap-6 border-l border-white/30 pl-6">
                         {stats.slice(0, 3).map((stat, statIndex) => {
                           const IconComponent: React.ComponentType<{ className?: string }> = 'icon' in stat && typeof stat.icon === 'string'
                             ? iconMap[stat.icon] || Star
                             : 'icon' in stat && stat.icon
-                            ? (stat.icon as React.ComponentType<{ className?: string }>)
-                            : Star;
+                              ? (stat.icon as React.ComponentType<{ className?: string }>)
+                              : Star;
                           return (
                             <div key={statIndex} className="text-center">
                               <div className="flex justify-center mb-2">
@@ -216,7 +215,7 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
                             </div>
                           );
                         })}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -247,11 +246,10 @@ const HeroCarouselClient = ({ data, products = [] }: HeroCarouselClientProps) =>
             <button
               key={index}
               onClick={() => scrollTo(index)}
-              className={`h-3 rounded-full transition-all duration-300 ${
-                index === selectedIndex 
-                  ? "bg-white w-10 shadow-lg" 
-                  : "bg-white/40 w-3 hover:bg-white/60"
-              }`}
+              className={`h-3 rounded-full transition-all duration-300 ${index === selectedIndex
+                ? "bg-white w-10 shadow-lg"
+                : "bg-white/40 w-3 hover:bg-white/60"
+                }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

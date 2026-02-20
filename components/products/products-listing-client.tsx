@@ -36,12 +36,10 @@ function ProductsContent({ products }: ProductsListingClientProps) {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [dateFilter, setDateFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
-  const [specFilters, setSpecFilters] = useState({
-    maxLength: "",
-    maxSwing: "",
-    spindleSpeed: "",
-    hasCNC: false,
-  });
+
+  // Dynamic Specification Filters State Map
+  const [specFilters, setSpecFilters] = useState<Record<string, string>>({});
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [gridColumns, setGridColumns] = useState<3 | 4>(3);
@@ -69,38 +67,54 @@ function ProductsContent({ products }: ProductsListingClientProps) {
     return `${month}/${day}/${year}`;
   };
 
-  // Extract common specification values for filters
-  const extractSpecValue = (specs: string | undefined, pattern: RegExp): string => {
-    if (!specs) return "";
-    const match = specs.match(pattern);
-    return match ? match[1] : "";
-  };
-
-  // Parse specifications to extract common values
-  const parseSpecifications = (specs: string | undefined) => {
-    if (!specs) return { hasCNC: false };
-    const specObj: Record<string, string | boolean> = {};
-    
-    // Common patterns in specifications
-    const patterns = {
-      maxLength: /(?:Max|Maximum).*?(?:Length|Grinding Length|Turning Length)[:\s]*(\d+)/i,
-      maxSwing: /(?:Max|Maximum).*?(?:Swing|Diameter)[:\s]*(\d+)/i,
-      spindleSpeed: /(?:Spindle|Speed)[:\s]*(\d+)\s*(?:RPM|rpm)/i,
-      workEnvelope: /(?:Work Envelope|Table Size)[:\s]*(\d+)/i,
-    };
-
-    for (const [key, pattern] of Object.entries(patterns)) {
-      const match = specs.match(pattern);
-      if (match) {
-        specObj[key] = match[1];
-      }
-    }
+  // Parse specifications into generic key-value pairs
+  const parseSpecifications = (specs: string | undefined): Record<string, string | boolean> => {
+    const specObj: Record<string, string | boolean> = { hasCNC: false };
+    if (!specs) return specObj;
 
     // Check for CNC
     specObj.hasCNC = /CNC|cnc/i.test(specs);
 
+    // Split by comma or pipe
+    const parts = specs.split(/[,|]/);
+    parts.forEach(part => {
+      // Split by colon
+      const kv = part.split(":");
+      if (kv.length === 2) {
+        let key = kv[0].trim();
+        const valueStr = kv[1].trim();
+
+        // Simplify key names slightly for grouping (optional but good for UI)
+        key = key.replace(/^(Max|Maximum)\s+/i, "Max ");
+
+        // Extract numeric part from value
+        const numericMatch = valueStr.match(/(\d+(?:\.\d+)?)/);
+        if (numericMatch) {
+          specObj[key] = numericMatch[1];
+        } else {
+          // Keep strings too for potential future non-numeric exact match filters
+          specObj[key] = valueStr;
+        }
+      }
+    });
+
     return specObj;
   };
+
+  // Get unique dynamically available numeric specifications
+  const availableSpecKeys = useMemo(() => {
+    const keys = new Set<string>();
+    products.forEach(p => {
+      const parsed = parseSpecifications(p.specifications);
+      Object.entries(parsed).forEach(([key, val]) => {
+        // Only add to dynamic inputs if we successfully parsed a numeric value to filter on (and it's not the boolean hasCNC flag)
+        if (key !== "hasCNC" && !isNaN(parseFloat(String(val)))) {
+          keys.add(key);
+        }
+      });
+    });
+    return Array.from(keys).sort(); // Alphabetical sort
+  }, [products]);
 
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
@@ -125,34 +139,30 @@ function ProductsContent({ products }: ProductsListingClientProps) {
       });
     }
 
-    // Specification filters
-    if (specFilters.maxLength) {
-      filtered = filtered.filter((product) => {
-        const specs = parseSpecifications(product.specifications);
-        return typeof specs.maxLength === 'string' && parseInt(specs.maxLength) >= parseInt(specFilters.maxLength);
-      });
-    }
-
-    if (specFilters.maxSwing) {
-      filtered = filtered.filter((product) => {
-        const specs = parseSpecifications(product.specifications);
-        return typeof specs.maxSwing === 'string' && parseInt(specs.maxSwing) >= parseInt(specFilters.maxSwing);
-      });
-    }
-
-    if (specFilters.spindleSpeed) {
-      filtered = filtered.filter((product) => {
-        const specs = parseSpecifications(product.specifications);
-        return typeof specs.spindleSpeed === 'string' && parseInt(specs.spindleSpeed) >= parseInt(specFilters.spindleSpeed);
-      });
-    }
-
-    if (specFilters.hasCNC) {
-      filtered = filtered.filter((product) => {
-        const specs = parseSpecifications(product.specifications);
-        return (specs.hasCNC === true) || /CNC|cnc/i.test(product.category) || /CNC|cnc/i.test(product.title);
-      });
-    }
+    // Dynamic Specification filters
+    // We only keep products that have the parsed specification AND the value is >= the filtered value
+    Object.entries(specFilters).forEach(([filterKey, filterVal]) => {
+      if (filterVal) { // skip empty values
+        if (filterKey === "hasCNC") {
+          // Special handling for the boolean CNC filter
+          filtered = filtered.filter((product) => {
+            const specs = parseSpecifications(product.specifications);
+            return specs.hasCNC || /CNC|cnc/i.test(product.category) || /CNC|cnc/i.test(product.title);
+          });
+        } else {
+          const filterNum = parseFloat(filterVal);
+          if (!isNaN(filterNum)) {
+            filtered = filtered.filter((product) => {
+              const specs = parseSpecifications(product.specifications);
+              const prodSpecVal = parseFloat(String(specs[filterKey]));
+              // If product doesn't have the spec or it's unparseable, we reject it from the filter.
+              // If it does have it, it must be greater than or equal to user input constraint.
+              return !isNaN(prodSpecVal) && prodSpecVal >= filterNum;
+            });
+          }
+        }
+      }
+    });
 
     // Sorting
     if (sortBy === "newest") {
@@ -187,6 +197,9 @@ function ProductsContent({ products }: ProductsListingClientProps) {
         })),
     ];
   }, [products]);
+
+  // Derived state to check if ANY spec filter is active
+  const hasActiveSpecFilters = Object.values(specFilters).some(v => v !== "");
 
   return (
     <main className="min-h-screen">
@@ -287,7 +300,7 @@ function ProductsContent({ products }: ProductsListingClientProps) {
           {/* Active Filters Count */}
           {!sidebarCollapsed && (
             <>
-              {(selectedCategory !== "all" || dateFilter !== "all" || specFilters.maxLength || specFilters.maxSwing || specFilters.spindleSpeed || specFilters.hasCNC) && (
+              {(selectedCategory !== "all" || dateFilter !== "all" || hasActiveSpecFilters) && (
                 <div className="mb-4 p-3 bg-brand-orange/10 rounded-lg border border-brand-orange/20">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-brand-darkBlue font-nunito">
@@ -297,12 +310,7 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                       onClick={() => {
                         setSelectedCategory("all");
                         setDateFilter("all");
-                        setSpecFilters({
-                          maxLength: "",
-                          maxSwing: "",
-                          spindleSpeed: "",
-                          hasCNC: false,
-                        });
+                        setSpecFilters({});
                       }}
                       className="text-xs text-brand-orange hover:text-brand-darkBlue font-nunito flex items-center gap-1 transition-colors"
                     >
@@ -447,127 +455,89 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                 </div>
 
                 {/* Specification Filters - Collapsible */}
-                <div className="bg-white/80 rounded-lg border border-gray-200/50 overflow-hidden shadow-sm">
-                  <button
-                    onClick={() => toggleSection("specs")}
-                    className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <SlidersHorizontal className="w-4 h-4 text-brand-orange" />
-                      <span className="text-sm font-semibold text-brand-darkBlue font-inter">
-                        Specifications
-                      </span>
-                      {(specFilters.maxLength || specFilters.maxSwing || specFilters.spindleSpeed || specFilters.hasCNC) && (
-                        <span className="ml-2 px-2 py-0.5 bg-brand-orange/20 text-brand-orange text-xs rounded-full font-nunito">
-                          Active
+                {availableSpecKeys.length > 0 && (
+                  <div className="bg-white/80 rounded-lg border border-gray-200/50 overflow-hidden shadow-sm">
+                    <button
+                      onClick={() => toggleSection("specs")}
+                      className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <SlidersHorizontal className="w-4 h-4 text-brand-orange" />
+                        <span className="text-sm font-semibold text-brand-darkBlue font-inter">
+                          Specifications
                         </span>
+                        {hasActiveSpecFilters && (
+                          <span className="ml-2 px-2 py-0.5 bg-brand-orange/20 text-brand-orange text-xs rounded-full font-nunito">
+                            Active
+                          </span>
+                        )}
+                      </div>
+                      {expandedSections.specs ? (
+                        <ChevronUp className="w-4 h-4 text-brand-gray" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-brand-gray" />
                       )}
-                    </div>
-                    {expandedSections.specs ? (
-                      <ChevronUp className="w-4 h-4 text-brand-gray" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-brand-gray" />
-                    )}
-                  </button>
-                  <AnimatePresence>
-                    {expandedSections.specs && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-4 pb-4 space-y-4 pt-2">
-                          {/* Max Length Filter */}
-                          <div>
-                            <label className="block text-xs text-brand-gray mb-1.5 font-nunito font-medium">
-                              Min Length (mm)
-                            </label>
-                            <input
-                              type="number"
-                              placeholder="e.g. 1000"
-                              value={specFilters.maxLength}
-                              onChange={(e) =>
-                                setSpecFilters({ ...specFilters, maxLength: e.target.value })
-                              }
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent font-nunito text-sm bg-white"
-                            />
-                          </div>
+                    </button>
+                    <AnimatePresence>
+                      {expandedSections.specs && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-4 pb-4 space-y-4 pt-2">
+                            {/* Dynamic Filters */}
+                            {availableSpecKeys.map((key) => (
+                              <div key={key}>
+                                <label className="block text-xs text-brand-gray mb-1.5 font-nunito font-medium">
+                                  Min {key}
+                                </label>
+                                <input
+                                  type="number"
+                                  placeholder={`e.g. 100`}
+                                  value={specFilters[key] || ""}
+                                  onChange={(e) =>
+                                    setSpecFilters({ ...specFilters, [key]: e.target.value })
+                                  }
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent font-nunito text-sm bg-white"
+                                />
+                              </div>
+                            ))}
 
-                          {/* Max Swing Filter */}
-                          <div>
-                            <label className="block text-xs text-brand-gray mb-1.5 font-nunito font-medium">
-                              Min Swing (mm)
-                            </label>
-                            <input
-                              type="number"
-                              placeholder="e.g. 400"
-                              value={specFilters.maxSwing}
-                              onChange={(e) =>
-                                setSpecFilters({ ...specFilters, maxSwing: e.target.value })
-                              }
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent font-nunito text-sm bg-white"
-                            />
-                          </div>
+                            {/* CNC Filter */}
+                            <div>
+                              <label className="flex items-center space-x-2 cursor-pointer group">
+                                <input
+                                  type="checkbox"
+                                  checked={specFilters.hasCNC === "true"}
+                                  onChange={(e) =>
+                                    setSpecFilters({ ...specFilters, hasCNC: e.target.checked ? "true" : "" })
+                                  }
+                                  className="w-4 h-4 text-brand-orange border-gray-300 rounded focus:ring-brand-orange focus:ring-2"
+                                />
+                                <span className="text-sm text-brand-gray font-nunito group-hover:text-brand-darkBlue transition-colors">
+                                  CNC Only
+                                </span>
+                              </label>
+                            </div>
 
-                          {/* Spindle Speed Filter */}
-                          <div>
-                            <label className="block text-xs text-brand-gray mb-1.5 font-nunito font-medium">
-                              Min RPM
-                            </label>
-                            <input
-                              type="number"
-                              placeholder="e.g. 5000"
-                              value={specFilters.spindleSpeed}
-                              onChange={(e) =>
-                                setSpecFilters({ ...specFilters, spindleSpeed: e.target.value })
-                              }
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent font-nunito text-sm bg-white"
-                            />
+                            {/* Clear Spec Filters */}
+                            {hasActiveSpecFilters && (
+                              <button
+                                onClick={() => setSpecFilters({})}
+                                className="w-full px-3 py-2 text-sm text-brand-orange hover:text-white hover:bg-brand-orange rounded-lg font-nunito transition-all duration-200 border border-brand-orange/30"
+                              >
+                                Clear Spec Filters
+                              </button>
+                            )}
                           </div>
-
-                          {/* CNC Filter */}
-                          <div>
-                            <label className="flex items-center space-x-2 cursor-pointer group">
-                              <input
-                                type="checkbox"
-                                checked={specFilters.hasCNC}
-                                onChange={(e) =>
-                                  setSpecFilters({ ...specFilters, hasCNC: e.target.checked })
-                                }
-                                className="w-4 h-4 text-brand-orange border-gray-300 rounded focus:ring-brand-orange focus:ring-2"
-                              />
-                              <span className="text-sm text-brand-gray font-nunito group-hover:text-brand-darkBlue transition-colors">
-                                CNC Only
-                              </span>
-                            </label>
-                          </div>
-
-                          {/* Clear Spec Filters */}
-                          {(specFilters.maxLength ||
-                            specFilters.maxSwing ||
-                            specFilters.spindleSpeed ||
-                            specFilters.hasCNC) && (
-                            <button
-                              onClick={() =>
-                                setSpecFilters({
-                                  maxLength: "",
-                                  maxSwing: "",
-                                  spindleSpeed: "",
-                                  hasCNC: false,
-                                })
-                              }
-                              className="w-full px-3 py-2 text-sm text-brand-orange hover:text-white hover:bg-brand-orange rounded-lg font-nunito transition-all duration-200 border border-brand-orange/30"
-                            >
-                              Clear Spec Filters
-                            </button>
-                          )}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                )}
               </div>
             </>
           )}
@@ -595,22 +565,20 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                     <div className="flex items-center gap-1 bg-white rounded-lg border border-gray-200 p-1">
                       <button
                         onClick={() => setMobileGridColumns(1)}
-                        className={`p-2 rounded transition-all ${
-                          mobileGridColumns === 1
-                            ? "bg-brand-orange text-white shadow-sm"
-                            : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
-                        }`}
+                        className={`p-2 rounded transition-all ${mobileGridColumns === 1
+                          ? "bg-brand-orange text-white shadow-sm"
+                          : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
+                          }`}
                         title="1 Column"
                       >
                         <Grid className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setMobileGridColumns(2)}
-                        className={`p-2 rounded transition-all ${
-                          mobileGridColumns === 2
-                            ? "bg-brand-orange text-white shadow-sm"
-                            : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
-                        }`}
+                        className={`p-2 rounded transition-all ${mobileGridColumns === 2
+                          ? "bg-brand-orange text-white shadow-sm"
+                          : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
+                          }`}
                         title="2 Columns"
                       >
                         <LayoutGrid className="w-4 h-4" />
@@ -623,22 +591,20 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                     <div className="flex items-center gap-1 bg-white rounded-lg border border-gray-200 p-1">
                       <button
                         onClick={() => setGridColumns(3)}
-                        className={`p-2 rounded transition-all ${
-                          gridColumns === 3
-                            ? "bg-brand-orange text-white shadow-sm"
-                            : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
-                        }`}
+                        className={`p-2 rounded transition-all ${gridColumns === 3
+                          ? "bg-brand-orange text-white shadow-sm"
+                          : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
+                          }`}
                         title="3 Columns"
                       >
                         <Grid className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setGridColumns(4)}
-                        className={`p-2 rounded transition-all ${
-                          gridColumns === 4
-                            ? "bg-brand-orange text-white shadow-sm"
-                            : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
-                        }`}
+                        className={`p-2 rounded transition-all ${gridColumns === 4
+                          ? "bg-brand-orange text-white shadow-sm"
+                          : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
+                          }`}
                         title="4 Columns"
                       >
                         <LayoutGrid className="w-4 h-4" />
@@ -647,22 +613,20 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                   </div>
                 </div>
               </div>
-              <div className={`grid gap-8 ${
-                mobileGridColumns === 1 
-                  ? "grid-cols-1" 
-                  : "grid-cols-2"
-              } md:grid-cols-2 ${
-                gridColumns === 3 
-                  ? "xl:grid-cols-3" 
+              <div className={`grid gap-8 ${mobileGridColumns === 1
+                ? "grid-cols-1"
+                : "grid-cols-2"
+                } md:grid-cols-2 ${gridColumns === 3
+                  ? "xl:grid-cols-3"
                   : "xl:grid-cols-4"
-              }`}>
+                }`}>
                 {filteredAndSortedProducts.map((product) => {
                   const IconComponent =
                     categoryIconMap[product.category] || Settings;
                   const imageUrl = product.images?.[0]
                     ? urlFor(product.images[0]).width(600).height(400).url()
                     : null;
-                  
+
                   return (
                     <Card
                       key={product._id}
@@ -687,14 +651,14 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                             <IconComponent className="w-20 h-20 text-gray-300" />
                           </div>
                         )}
-                        
+
                         {/* Category Badge Overlay */}
                         <div className="absolute top-4 left-4">
                           <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-brand-darkBlue text-xs font-semibold rounded-full capitalize shadow-sm font-nunito">
                             {product.category}
                           </span>
                         </div>
-                        
+
                         {/* Icon Badge Overlay */}
                         <div className="absolute top-4 right-4">
                           <div className="w-10 h-10 bg-white/95 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm">
@@ -702,7 +666,7 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                           </div>
                         </div>
                       </div>
-                      
+
                       <CardHeader className="p-6 flex-1 flex flex-col">
                         <CardTitle className="text-lg font-bold text-brand-darkBlue mb-2 font-inter line-clamp-2 group-hover:text-brand-orange transition-colors">
                           {product.title}

@@ -79,14 +79,14 @@ const Footer = () => {
             className="lg:col-span-2"
           >
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 relative">
+              <div className="w-32 h-32 relative">
                 <Image
                   src="/static/logo_1.png"
                   alt="Shivam Enterprise logo"
                   fill
                   className="object-contain"
-                  sizes="48px"
                   priority
+                  sizes="96px"
                 />
               </div>
             </div>

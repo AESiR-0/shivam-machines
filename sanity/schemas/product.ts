@@ -31,19 +31,8 @@ export default defineType({
       name: 'category',
       title: 'Category',
       type: 'string',
-      options: {
-        list: [
-          { title: 'Boring Machines', value: 'boring' },
-          { title: 'Grinding Machines', value: 'grinding' },
-          { title: 'Lathe Machines', value: 'lathe' },
-          { title: 'CNC Machines', value: 'cnc' },
-          { title: 'Gear Machines', value: 'gear' },
-          { title: 'Milling Machines', value: 'milling' },
-          { title: 'Drill Machines', value: 'drill' },
-          { title: 'Others', value: 'others' },
-        ],
-      },
       validation: (Rule) => Rule.required(),
+      description: 'Enter category name (e.g. boring, grinding). This will automatically appear in the filter.',
     }),
     defineField({
       name: 'specifications',
