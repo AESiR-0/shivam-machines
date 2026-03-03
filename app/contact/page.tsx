@@ -40,16 +40,16 @@ export default function Contact() {
   return (
     <main className="min-h-screen">
       <Navbar />
-      
+
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 py-12">
+      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-bold text-brand-darkBlue mb-6 font-montserrat">
               Get In <span className="text-brand-orange">Touch</span>
             </h1>
             <p className="text-xl text-brand-gray max-w-4xl mx-auto font-nunito leading-relaxed">
-              Ready to find the perfect machinery solution for your business? 
+              Ready to find the perfect machinery solution for your business?
               Contact our experts today for personalized assistance and quotes.
             </p>
           </div>
@@ -124,7 +124,7 @@ export default function Contact() {
                 <h3 className="text-2xl font-bold text-brand-darkBlue mb-6 font-montserrat">
                   Send us a Message
                 </h3>
-                
+
                 <form className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
@@ -237,7 +237,7 @@ export default function Contact() {
               Located in Ahmedabad, Gujarat - India's manufacturing hub
             </p>
           </div>
-          
+
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="h-96 bg-brand-darkBlue flex items-center justify-center">
               <div className="text-center text-white">

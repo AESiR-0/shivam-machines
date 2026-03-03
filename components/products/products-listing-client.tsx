@@ -7,7 +7,7 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Settings, Wrench, Cog, Gauge, Filter, Calendar, SortAsc, X, ChevronDown, ChevronUp, Tag, SlidersHorizontal, RotateCcw, Grid, LayoutGrid } from "lucide-react";
+import { ArrowRight, Settings, Wrench, Cog, Gauge, Filter, X, ChevronDown, ChevronUp, Tag, SlidersHorizontal, RotateCcw, Grid, LayoutGrid } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import WhatsAppButton from "@/components/ui/whatsapp-button";
@@ -34,8 +34,6 @@ function ProductsContent({ products }: ProductsListingClientProps) {
   const initialCategory = searchParams.get("category") || "all";
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [dateFilter, setDateFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("newest");
 
   // Dynamic Specification Filters State Map
   const [specFilters, setSpecFilters] = useState<Record<string, string>>({});
@@ -46,8 +44,6 @@ function ProductsContent({ products }: ProductsListingClientProps) {
   const [mobileGridColumns, setMobileGridColumns] = useState<1 | 2>(1);
   const [expandedSections, setExpandedSections] = useState({
     category: true,
-    date: true,
-    sort: true,
     specs: false,
   });
 
@@ -124,27 +120,10 @@ function ProductsContent({ products }: ProductsListingClientProps) {
       filtered = filtered.filter((product) => product.category === selectedCategory);
     }
 
-    // Date filter
-    if (dateFilter !== "all" && products.length > 0) {
-      const now = new Date();
-      filtered = filtered.filter((product) => {
-        if (!product.dateAdded) return false;
-        const productDate = new Date(product.dateAdded);
-        const diffDays = Math.floor((now.getTime() - productDate.getTime()) / (1000 * 60 * 60 * 24));
-
-        if (dateFilter === "week") return diffDays <= 7;
-        if (dateFilter === "month") return diffDays <= 30;
-        if (dateFilter === "quarter") return diffDays <= 90;
-        return true;
-      });
-    }
-
     // Dynamic Specification filters
-    // We only keep products that have the parsed specification AND the value is >= the filtered value
     Object.entries(specFilters).forEach(([filterKey, filterVal]) => {
-      if (filterVal) { // skip empty values
+      if (filterVal) {
         if (filterKey === "hasCNC") {
-          // Special handling for the boolean CNC filter
           filtered = filtered.filter((product) => {
             const specs = parseSpecifications(product.specifications);
             return specs.hasCNC || /CNC|cnc/i.test(product.category) || /CNC|cnc/i.test(product.title);
@@ -155,8 +134,6 @@ function ProductsContent({ products }: ProductsListingClientProps) {
             filtered = filtered.filter((product) => {
               const specs = parseSpecifications(product.specifications);
               const prodSpecVal = parseFloat(String(specs[filterKey]));
-              // If product doesn't have the spec or it's unparseable, we reject it from the filter.
-              // If it does have it, it must be greater than or equal to user input constraint.
               return !isNaN(prodSpecVal) && prodSpecVal >= filterNum;
             });
           }
@@ -164,25 +141,8 @@ function ProductsContent({ products }: ProductsListingClientProps) {
       }
     });
 
-    // Sorting
-    if (sortBy === "newest") {
-      filtered.sort((a, b) => {
-        const dateA = a.dateAdded ? new Date(a.dateAdded).getTime() : 0;
-        const dateB = b.dateAdded ? new Date(b.dateAdded).getTime() : 0;
-        return dateB - dateA;
-      });
-    } else if (sortBy === "oldest") {
-      filtered.sort((a, b) => {
-        const dateA = a.dateAdded ? new Date(a.dateAdded).getTime() : 0;
-        const dateB = b.dateAdded ? new Date(b.dateAdded).getTime() : 0;
-        return dateA - dateB;
-      });
-    } else if (sortBy === "name") {
-      filtered.sort((a, b) => a.title.localeCompare(b.title));
-    }
-
     return filtered;
-  }, [products, selectedCategory, dateFilter, sortBy, specFilters]);
+  }, [products, selectedCategory, specFilters]);
 
   // Get unique categories from products
   const categories = useMemo(() => {
@@ -206,7 +166,7 @@ function ProductsContent({ products }: ProductsListingClientProps) {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 py-12">
+      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-bold text-brand-darkBlue mb-6 font-montserrat">
@@ -300,7 +260,7 @@ function ProductsContent({ products }: ProductsListingClientProps) {
           {/* Active Filters Count */}
           {!sidebarCollapsed && (
             <>
-              {(selectedCategory !== "all" || dateFilter !== "all" || hasActiveSpecFilters) && (
+              {(selectedCategory !== "all" || hasActiveSpecFilters) && (
                 <div className="mb-4 p-3 bg-brand-orange/10 rounded-lg border border-brand-orange/20">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-brand-darkBlue font-nunito">
@@ -309,7 +269,6 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                     <button
                       onClick={() => {
                         setSelectedCategory("all");
-                        setDateFilter("all");
                         setSpecFilters({});
                       }}
                       className="text-xs text-brand-orange hover:text-brand-darkBlue font-nunito flex items-center gap-1 transition-colors"
@@ -360,93 +319,6 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                                 {cat.name}
                               </option>
                             ))}
-                          </select>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Date Filter - Collapsible */}
-                <div className="bg-white/80 rounded-lg border border-gray-200/50 overflow-hidden shadow-sm">
-                  <button
-                    onClick={() => toggleSection("date")}
-                    className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-brand-orange" />
-                      <span className="text-sm font-semibold text-brand-darkBlue font-inter">
-                        Date Added
-                      </span>
-                    </div>
-                    {expandedSections.date ? (
-                      <ChevronUp className="w-4 h-4 text-brand-gray" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-brand-gray" />
-                    )}
-                  </button>
-                  <AnimatePresence>
-                    {expandedSections.date && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-4 pb-4">
-                          <select
-                            value={dateFilter}
-                            onChange={(e) => setDateFilter(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent font-nunito text-sm bg-white"
-                          >
-                            <option value="all">All Dates</option>
-                            <option value="week">Last Week</option>
-                            <option value="month">Last Month</option>
-                            <option value="quarter">Last 3 Months</option>
-                          </select>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Sort Filter - Collapsible */}
-                <div className="bg-white/80 rounded-lg border border-gray-200/50 overflow-hidden shadow-sm">
-                  <button
-                    onClick={() => toggleSection("sort")}
-                    className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <SortAsc className="w-4 h-4 text-brand-orange" />
-                      <span className="text-sm font-semibold text-brand-darkBlue font-inter">
-                        Sort By
-                      </span>
-                    </div>
-                    {expandedSections.sort ? (
-                      <ChevronUp className="w-4 h-4 text-brand-gray" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-brand-gray" />
-                    )}
-                  </button>
-                  <AnimatePresence>
-                    {expandedSections.sort && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-4 pb-4">
-                          <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent font-nunito text-sm bg-white"
-                          >
-                            <option value="newest">Newest First</option>
-                            <option value="oldest">Oldest First</option>
-                            <option value="name">Name (A-Z)</option>
                           </select>
                         </div>
                       </motion.div>
@@ -706,12 +578,7 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                             </div>
                           )}
 
-                          {product.dateAdded && (
-                            <div className="text-xs text-gray-500 font-nunito pt-3 border-t border-gray-100 mt-auto flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
-                              <span>Added {formatDate(product.dateAdded)}</span>
-                            </div>
-                          )}
+
                         </div>
                       </CardHeader>
 

@@ -70,19 +70,8 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         {product.title}
       </h1>
 
-      {/* Price and Stock Status */}
-      <div className="flex items-center justify-between py-4 border-y border-gray-200">
-        <div>
-          {product.price ? (
-            <div className="text-3xl font-bold text-brand-darkBlue font-candara">
-              {product.price}
-            </div>
-          ) : (
-            <div className="text-xl font-semibold text-brand-gray font-candara">
-              Price on Request
-            </div>
-          )}
-        </div>
+      {/* Stock Status */}
+      <div className="flex items-center py-4 border-y border-gray-200">
         <div className="flex items-center space-x-2">
           {product.isInStock ? (
             <>
@@ -183,23 +172,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         </div>
       </div>
 
-      {/* Trust Badges */}
-      <div className="pt-6 border-t border-gray-200">
-        <div className="flex items-center justify-around text-center">
-          <div>
-            <div className="text-2xl font-bold text-brand-darkBlue font-candara">25+</div>
-            <div className="text-xs text-brand-gray font-nunito">Years Experience</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-brand-darkBlue font-candara">1000+</div>
-            <div className="text-xs text-brand-gray font-nunito">Machines Supplied</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-brand-darkBlue font-candara">500+</div>
-            <div className="text-xs text-brand-gray font-nunito">Happy Clients</div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 }

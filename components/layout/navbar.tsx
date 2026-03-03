@@ -56,11 +56,12 @@ const Navbar = () => {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Products", href: "/products", hasDropdown: true },
-    { name: "Gallery", href: "/gallery" },
+    // { name: "Gallery", href: "/gallery" },
     { name: "Contact", href: "/contact" },
   ];
 
   const handleDownloadCatalog = () => {
+    ``
     try {
       generateCatalogPDF();
     } catch (error) {
