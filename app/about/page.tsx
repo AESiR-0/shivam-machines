@@ -2,8 +2,6 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import WhatsAppButton from "@/components/ui/whatsapp-button";
 import AboutSection from "@/components/sections/about-section";
-import WorldMapSection from "@/components/sections/world-map-section";
-
 export default function About() {
   return (
     <main className="min-h-screen">
@@ -79,9 +77,6 @@ export default function About() {
 
       {/* About Section from Homepage (stats/features) */}
       <AboutSection />
-
-      {/* Global Import Network */}
-      <WorldMapSection />
 
       <Footer />
       <WhatsAppButton />

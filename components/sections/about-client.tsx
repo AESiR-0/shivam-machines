@@ -146,11 +146,11 @@ const AboutClient = ({ data }: AboutClientProps) => {
                 <div className="text-center text-white p-8">
                   <motion.div
                     className="w-32 h-32 mx-auto mb-6 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center border-2 border-white/20 shadow-2xl"
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.05, 1],
                       rotate: [0, 5, -5, 0]
                     }}
-                    transition={{ 
+                    transition={{
                       duration: 4,
                       repeat: Infinity,
                       ease: "easeInOut"
@@ -169,57 +169,7 @@ const AboutClient = ({ data }: AboutClientProps) => {
           </motion.div>
         </div>
 
-        {/* Stats Cards - Modern Grid Design */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20"
-        >
-          {stats.map((stat, index) => {
-            const IconComponent = stat.icon || Award;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 * index }}
-                whileHover={{ y: -10, scale: 1.03 }}
-                className="group"
-              >
-                <Card className="relative bg-white border-0 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden h-full">
-                  {/* Animated background gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${stat.color || 'from-brand-darkBlue to-primary-700'} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
-                  
-                  {/* Decorative corner element */}
-                  <div className={`absolute top-0 right-0 w-32 h-32 ${stat.bgColor || 'bg-primary-100'} rounded-bl-full opacity-50`}></div>
-                  
-                  <CardContent className="p-8 relative z-10">
-                    <motion.div
-                      className={`w-20 h-20 bg-gradient-to-br ${stat.color || 'from-brand-darkBlue to-primary-700'} rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300`}
-                      whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <IconComponent className="w-10 h-10 text-white drop-shadow-lg" />
-                    </motion.div>
-                    
-                    <div className="text-5xl font-bold text-brand-darkBlue mb-3 font-montserrat group-hover:text-brand-orange transition-colors duration-300">
-                      {stat.value}
-                    </div>
-                    <h3 className="text-lg font-bold text-brand-darkBlue mb-2 font-inter">
-                      {stat.title}
-                    </h3>
-                    <p className="text-brand-gray text-sm font-nunito leading-relaxed">
-                      {stat.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+
 
         {/* Features Grid - Enhanced Card Design */}
         <motion.div
@@ -244,10 +194,10 @@ const AboutClient = ({ data }: AboutClientProps) => {
                 <Card className="relative bg-white border border-brand-lightGray hover:border-brand-darkBlue/30 hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden h-full">
                   {/* Gradient accent bar */}
                   <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.gradient || 'from-brand-darkBlue to-primary-600'}`}></div>
-                  
+
                   {/* Decorative background */}
                   <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-brand-darkBlue/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
+
                   <CardContent className="p-8 relative z-10">
                     <div className="flex items-start gap-6">
                       <motion.div

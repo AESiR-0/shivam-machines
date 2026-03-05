@@ -7,6 +7,7 @@ import WhatsAppButton from '@/components/ui/whatsapp-button'
 import ProductImageGallery from '@/components/products/product-image-gallery'
 import ProductInfo from '@/components/products/product-info'
 import ProductSpecifications from '@/components/products/product-specifications'
+import ProductSpecsTable from '@/components/products/product-specs-table'
 import type { Product } from '@/lib/sanity/types'
 
 interface ProductPageProps {
@@ -77,9 +78,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         {/* Specifications */}
-        {product.specifications && (
+        {(product.technicalSpecs || product.specifications) && (
           <div className="bg-white rounded-lg shadow-lg p-6 lg:p-8 mb-8">
-            <ProductSpecifications specifications={product.specifications} />
+            {product.technicalSpecs && (
+              <ProductSpecsTable technicalSpecs={product.technicalSpecs} />
+            )}
+            {product.specifications && (
+              <ProductSpecifications specifications={product.specifications} />
+            )}
           </div>
         )}
 

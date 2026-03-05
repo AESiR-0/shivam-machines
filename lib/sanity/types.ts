@@ -33,6 +33,9 @@ export interface Product {
   manufacturer?: string
   year?: number
   condition?: string
+  technicalSpecs?: {
+    [key: string]: string | number | undefined
+  }
 }
 
 export interface About {

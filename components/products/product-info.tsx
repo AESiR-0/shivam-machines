@@ -71,7 +71,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </h1>
 
       {/* Stock Status */}
-      <div className="flex items-center py-4 border-y border-gray-200">
+      {/* <div className="flex items-center py-4 border-y border-gray-200">
         <div className="flex items-center space-x-2">
           {product.isInStock ? (
             <>
@@ -85,7 +85,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             </>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* Product Details Grid */}
       <div className="grid grid-cols-2 gap-4 py-4">

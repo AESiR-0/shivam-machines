@@ -63,48 +63,17 @@ function ProductsContent({ products }: ProductsListingClientProps) {
     return `${month}/${day}/${year}`;
   };
 
-  // Parse specifications into generic key-value pairs
-  const parseSpecifications = (specs: string | undefined): Record<string, string | boolean> => {
-    const specObj: Record<string, string | boolean> = { hasCNC: false };
-    if (!specs) return specObj;
-
-    // Check for CNC
-    specObj.hasCNC = /CNC|cnc/i.test(specs);
-
-    // Split by comma or pipe
-    const parts = specs.split(/[,|]/);
-    parts.forEach(part => {
-      // Split by colon
-      const kv = part.split(":");
-      if (kv.length === 2) {
-        let key = kv[0].trim();
-        const valueStr = kv[1].trim();
-
-        // Simplify key names slightly for grouping (optional but good for UI)
-        key = key.replace(/^(Max|Maximum)\s+/i, "Max ");
-
-        // Extract numeric part from value
-        const numericMatch = valueStr.match(/(\d+(?:\.\d+)?)/);
-        if (numericMatch) {
-          specObj[key] = numericMatch[1];
-        } else {
-          // Keep strings too for potential future non-numeric exact match filters
-          specObj[key] = valueStr;
-        }
-      }
-    });
-
-    return specObj;
-  };
-
   // Get unique dynamically available numeric specifications
   const availableSpecKeys = useMemo(() => {
     const keys = new Set<string>();
     products.forEach(p => {
-      const parsed = parseSpecifications(p.specifications);
-      Object.entries(parsed).forEach(([key, val]) => {
-        // Only add to dynamic inputs if we successfully parsed a numeric value to filter on (and it's not the boolean hasCNC flag)
-        if (key !== "hasCNC" && !isNaN(parseFloat(String(val)))) {
+      // Safely access technical specs
+      const techSpecs = (p.technicalSpecs as Record<string, string>) || {};
+      Object.entries(techSpecs).forEach(([key, val]) => {
+        // Strip string components from numeric specs and parse
+        // e.g. "1000 mm" -> 1000
+        const numericMatch = val?.match(/(\d+(?:\.\d+)?)/);
+        if (numericMatch) {
           keys.add(key);
         }
       });
@@ -125,15 +94,29 @@ function ProductsContent({ products }: ProductsListingClientProps) {
       if (filterVal) {
         if (filterKey === "hasCNC") {
           filtered = filtered.filter((product) => {
-            const specs = parseSpecifications(product.specifications);
-            return specs.hasCNC || /CNC|cnc/i.test(product.category) || /CNC|cnc/i.test(product.title);
+            const techSpecs = (product.technicalSpecs as Record<string, string>) || {};
+            const oldSpecs = product.specifications || "";
+            const title = product.title || "";
+            const cat = product.category || "";
+
+            return techSpecs.controlSystem?.toLowerCase().includes("cnc") ||
+              oldSpecs.toLowerCase().includes("cnc") ||
+              title.toLowerCase().includes("cnc") ||
+              cat.toLowerCase().includes("cnc");
           });
         } else {
           const filterNum = parseFloat(filterVal);
           if (!isNaN(filterNum)) {
             filtered = filtered.filter((product) => {
-              const specs = parseSpecifications(product.specifications);
-              const prodSpecVal = parseFloat(String(specs[filterKey]));
+              const techSpecs = (product.technicalSpecs as Record<string, string>) || {};
+              const rawSpecVal = techSpecs[filterKey];
+
+              if (!rawSpecVal) return false;
+
+              const numericMatch = rawSpecVal.match(/(\d+(?:\.\d+)?)/);
+              if (!numericMatch) return false;
+
+              const prodSpecVal = parseFloat(numericMatch[1]);
               return !isNaN(prodSpecVal) && prodSpecVal >= filterNum;
             });
           }
