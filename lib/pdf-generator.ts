@@ -1,404 +1,555 @@
-import jsPDF from 'jspdf';
+import jsPDF from "jspdf";
+import { companyInfo } from "@/lib/company";
 
-// Brand colors
 const brandColors = {
-  darkBlue: '#006bb3',  // Brand blue
-  orange: '#006bb3',    // Using brand blue for highlights
-  gray: '#464646',      // Brand gray
-  lightGray: '#f5f5f5',
-  steel: '#464646',      // Using brand gray
-};
+  darkBlue: "#006bb3",
+  gray: "#464646",
+  lightGray: "#f5f5f5",
+  border: "#d7d7d7",
+  white: "#ffffff",
+  slate: "#667085",
+  softBlue: "#eaf4fb",
+} as const;
 
-// Letterhead area height (in mm)
-const LETTERHEAD_HEIGHT = 30;
+const LETTERHEAD_HEIGHT = 34;
+const PAGE_MARGIN = 15;
+const CONTENT_TOP_PADDING = 12;
+const IMAGE_HEIGHT = 62;
 
-// Helper function to add watermark and letterhead to all pages
-function addWatermarkAndLetterhead(doc: jsPDF, pageWidth: number, pageHeight: number, isFirstPage: boolean = false) {
-  // Add letterhead area at the top (reserved space for future letterhead)
-  if (isFirstPage) {
-    // Draw a subtle border to indicate letterhead area
-    doc.setDrawColor(200, 200, 200);
-    doc.setLineWidth(0.1);
-    doc.rect(0, 0, pageWidth, LETTERHEAD_HEIGHT);
-    
-    // Optional: Add placeholder text (can be removed later)
-    doc.setTextColor(180, 180, 180);
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'italic');
-    doc.text('Letterhead Area', pageWidth / 2, LETTERHEAD_HEIGHT / 2, { align: 'center' });
-  }
-  
-  // Add diagonal watermark (logo)
-  // Since we can't directly load images in jsPDF without additional setup,
-  // we'll create a text-based watermark for now
-  // In production, you can load the logo image and use addImage()
-  
-  // Rotate for diagonal watermark
-  const centerX = pageWidth / 2;
-  const centerY = pageHeight / 2;
-  const rotation = -45; // 45 degrees diagonal
-  
-  // Set watermark properties (low opacity using light color)
-  doc.setTextColor(200, 210, 220); // Very light blue-gray for watermark effect
-  doc.setFontSize(60);
-  doc.setFont('helvetica', 'bold');
-  
-  // Rotate and position watermark
-  doc.text('SHIVAM', centerX, centerY, {
-    align: 'center',
-    angle: rotation,
-  });
-  
-  doc.setFontSize(40);
-  doc.text('ENTERPRISE', centerX, centerY + 15, {
-    align: 'center',
-    angle: rotation,
-  });
-}
-
-
-export function generateCatalogPDF() {
-  const doc = new jsPDF();
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  
-  // Helper to convert hex to RGB
-  const hexToRgb = (hex: string) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : { r: 10, g: 25, b: 47 };
-  };
-
-  // Set brand colors
-  const darkBlue = hexToRgb(brandColors.darkBlue);
-  const orange = hexToRgb(brandColors.orange);
-  const gray = hexToRgb(brandColors.gray);
-
-  // Add watermark and letterhead to first page
-  addWatermarkAndLetterhead(doc, pageWidth, pageHeight, true);
-
-  // Header (below letterhead area)
-  doc.setFillColor(darkBlue.r, darkBlue.g, darkBlue.b);
-  doc.rect(0, LETTERHEAD_HEIGHT, pageWidth, 40, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
-  doc.setFont('helvetica', 'bold');
-  doc.text('SHIVAM ENTERPRISE', pageWidth / 2, LETTERHEAD_HEIGHT + 20, { align: 'center' });
-  
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Machine Tools Catalog', pageWidth / 2, LETTERHEAD_HEIGHT + 32, { align: 'center' });
-
-  // Company Info
-  let yPos = LETTERHEAD_HEIGHT + 55;
-  doc.setTextColor(gray.r, gray.g, gray.b);
-  doc.setFontSize(10);
-  doc.text('Established in 1997 | Leading Supplier of Used Machine Tools', pageWidth / 2, yPos, { align: 'center' });
-  yPos += 10;
-  
-  doc.setFontSize(9);
-  doc.text('Contact: +91-9824080055 | Email: shivamenterprise@yahoo.com', pageWidth / 2, yPos, { align: 'center' });
-  yPos += 8;
-  doc.text('Address: 6- Ganpat Colony, Opp, Civil Hospital, Shahibaug, Ahmedabad, Gujarat - 380016', pageWidth / 2, yPos, { align: 'center' });
-  yPos += 15;
-
-  // Machines list
-  const machines = [
-    { name: "Horizontal Boring Machine - Table Type", specs: "X-2200, Y-2000 | Table: 1500 x 1800 | Spindle: 125" },
-    { name: "Floor Type Boring Machine", specs: "Altezza Punte: 1.000 mm | Passaggio tra i Montanti: 1.000 mm" },
-    { name: "Vertical Lathe Machine", specs: "Max Turning: 1500mm | Max Swing: 500mm" },
-    { name: "Lathe Machine", specs: "Various configurations available" },
-    { name: "Plano Miller Machine", specs: "Large surface milling operations" },
-    { name: "Planning Machine", specs: "Surface planning operations" },
-    { name: "Milling Machine", specs: "Versatile machining operations" },
-    { name: "Grinding Machine - Surface Grinder", specs: "High-precision surface grinding" },
-    { name: "Cylindrical Grinding Machine", specs: "Max Length: 1000mm | Max Swing: 400mm" },
-    { name: "Roll Grinder", specs: "Precision roll grinding" },
-    { name: "Drill Machine", specs: "Radial and precision drilling" },
-    { name: "Gear Machines", specs: "Max Gear Diameter: 800mm | Module Range: 1-20" },
-    { name: "CNC Machines - Horizontal Machining Centre", specs: "Work Envelope: 1000x800x600mm" },
-    { name: "Vertical Machining Center", specs: "High-performance CNC control" },
-    { name: "Turning Center", specs: "Precision turning operations" },
-    { name: "Accessories/Others", specs: "Various machine accessories" },
-  ];
-
-  // Category sections
-  const categories = [
-    { name: "Boring Machines", machines: machines.filter(m => m.name.includes('Boring')) },
-    { name: "Grinding Machines", machines: machines.filter(m => m.name.includes('Grinding') || m.name.includes('Grinder')) },
-    { name: "Lathe Machines", machines: machines.filter(m => m.name.includes('Lathe') || m.name.includes('Turning')) },
-    { name: "CNC Machines", machines: machines.filter(m => m.name.includes('CNC') || m.name.includes('Machining')) },
-    { name: "Other Machines", machines: machines.filter(m => 
-      !m.name.includes('Boring') && !m.name.includes('Grinding') && 
-      !m.name.includes('Grinder') && !m.name.includes('Lathe') && 
-      !m.name.includes('Turning') && !m.name.includes('CNC') && 
-      !m.name.includes('Machining') && !m.name.includes('Accessories')
-    )},
-    { name: "Accessories", machines: machines.filter(m => m.name.includes('Accessories')) },
-  ];
-
-  categories.forEach((category, catIndex) => {
-    if (category.machines.length === 0) return;
-
-    // Check if new page needed
-    if (yPos > pageHeight - 60) {
-      doc.addPage();
-      // Add watermark to new page
-      addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
-      yPos = LETTERHEAD_HEIGHT + 20;
-    }
-
-    // Category header
-    doc.setFillColor(orange.r, orange.g, orange.b);
-    doc.roundedRect(10, yPos - 8, pageWidth - 20, 12, 3, 3, 'F');
-    
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text(category.name, 15, yPos);
-    
-    yPos += 10;
-
-    // Machines in category
-    category.machines.forEach((machine) => {
-      if (yPos > pageHeight - 40) {
-        doc.addPage();
-        // Add watermark to new page
-        addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
-        yPos = LETTERHEAD_HEIGHT + 20;
-      }
-
-      doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.text(`• ${machine.name}`, 15, yPos);
-      
-      yPos += 7;
-      
-      doc.setTextColor(gray.r, gray.g, gray.b);
-      doc.setFontSize(9);
-      doc.setFont('helvetica', 'normal');
-      const splitSpecs = doc.splitTextToSize(machine.specs, pageWidth - 30);
-      doc.text(splitSpecs, 20, yPos);
-      
-      yPos += splitSpecs.length * 5 + 5;
-    });
-
-    yPos += 5;
-  });
-
-  // Footer
-  const footerY = pageHeight - 15;
-  doc.setFillColor(darkBlue.r, darkBlue.g, darkBlue.b);
-  doc.rect(0, footerY, pageWidth, 15, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.text('For more information, visit shivammachines.in or contact us at +91-9824080055', pageWidth / 2, footerY + 10, { align: 'center' });
-
-  // Download
-  doc.save('Shivam_Enterprise_Catalog.pdf');
-}
-
-export function generateProductPDF(product: {
+export interface CatalogPdfProduct {
+  id?: string;
   title: string;
-  description?: string;
   category?: string;
+  imageUrl?: string;
   specifications?: string;
+  description?: string;
   features?: string[];
+  technicalSpecs?: Record<string, string | number | undefined>;
   price?: string;
   manufacturer?: string;
   year?: number;
   condition?: string;
   isInStock?: boolean;
-}) {
+}
+
+const specMapping: Record<string, string> = {
+  controlSystem: "Control system",
+  workingSpindleDiameter: "Working spindle diameter",
+  travelX: "Travel X-axis",
+  travelY: "Travel Y-axis",
+  spindleSpeed: "Spindle speed",
+  travelW: "Spindle travel - W axis",
+  coolingThroughSpindle: "Cooling through spindle",
+  coolingPressure: "Cooling pressure",
+  toolMagazine: "Tool magazine",
+  spindleTaper: "Spindle taper",
+  travelZ: "Travel Z-axis",
+  axisV: "Axis V",
+  clampingAreaOfTable: "Clamping area of table",
+  maxLoadOfTable: "Max. load of table",
+  mainMotorPower: "Main motor power",
+  machineDimensions: "Machine dimensions",
+  machineWeight: "Machine weight",
+  clampingAreaOfRotaryTable: "Rotary table clamping area",
+  numberOfPositionsInMagazine: "Magazine positions",
+  totalInput: "Total input",
+  facePlateDiameter: "Face plate diameter",
+  maxDiameterOfFaceTurning: "Max. face turning diameter",
+  rapidFeed: "Rapid feed",
+  tableDimensions: "Table dimensions",
+  ramDimensions: "Ram dimensions",
+  ramTravelZ: "Ram travel (Z)",
+  maxDiameterOfMilledWheel: "Max. milled wheel diameter",
+  rapidFeedX: "X-axis rapid feed",
+  rapidFeedY: "Y-axis rapid feed",
+  rapidFeedZ: "Z-axis rapid feed",
+  numberOfDrivenAxes: "Driven axes",
+  maxWeightOfWorkpiece: "Max. workpiece weight",
+  numberOfPallets: "Pallets",
+  axisB: "Axis B",
+  axisC: "Axis C",
+  spaceOfMachine: "Machine space",
+  accuracyRepeatability: "Accuracy - repeatability",
+  accuracyPositioning: "Accuracy - positioning",
+  maxDiameterOfWorkpiece: "Max. workpiece diameter",
+  maxLengthOfWorkpiece: "Max. workpiece length",
+  maxWorkpieceHeight: "Max. workpiece height",
+  drivenTools: "Driven tools",
+  axisW: "Axis W",
+  tableRotation: "Table rotation",
+  turretHead: "Turret head",
+  clampingDiameterOfRotaryTable: "Rotary table clamping diameter",
+  maxTorqueOfSpindle: "Max. spindle torque",
+  swingOverCrossSlide: "Swing over cross slide",
+  spindleBore: "Spindle bore",
+  rotationsOfClampingPlate: "Clamping plate rotations",
+  feedingSpeed: "Feeding speed",
+  numberOfToolPositionsDriven: "Driven tool positions",
+  speedDrivenTools: "Driven tool speed",
+  turnTableDiameter: "Turn table diameter",
+  turningLength: "Turning length",
+  barLoader: "Bar loader",
+  slopingBed: "Sloping bed",
+  maxBarDiameter: "Max. bar diameter",
+  swingOverBed: "Swing over bed",
+  chuckDiameter: "Chuck diameter",
+  distanceBetweenCentres: "Distance between centres",
+  millingHead: "Milling head",
+  counterspindle: "Counterspindle",
+  travelYLathe: "Travel Y-axis (lathe)",
+  maxDrillingDiameter: "Max. drilling diameter",
+  grindingSpindleSpeed: "Grinding spindle speed",
+};
+
+const imageCache = new Map<string, Promise<string | null>>();
+
+function hexToRgb(hex: string) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+  return result
+    ? {
+      r: Number.parseInt(result[1], 16),
+      g: Number.parseInt(result[2], 16),
+      b: Number.parseInt(result[3], 16),
+    }
+    : { r: 0, g: 107, b: 179 };
+}
+
+function getContentStartY() {
+  return LETTERHEAD_HEIGHT + CONTENT_TOP_PADDING;
+}
+
+function formatCategoryName(category?: string) {
+  if (!category) {
+    return "Other Machines";
+  }
+
+  return category
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function formatCondition(condition?: string) {
+  if (!condition) {
+    return undefined;
+  }
+
+  return condition
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function normalizeSpecRows(technicalSpecs?: Record<string, string | number | undefined>) {
+  if (!technicalSpecs) {
+    return [];
+  }
+
+  return Object.entries(technicalSpecs)
+    .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== "")
+    .map(([key, value]) => ({
+      label: specMapping[key] || key,
+      value: String(value),
+    }));
+}
+
+async function loadOptimizedImageDataUrl(
+  imageUrl: string,
+  options?: { maxWidth?: number; quality?: number }
+) {
+  const cacheKey = `${imageUrl}|${options?.maxWidth || 0}|${options?.quality || 0}`;
+
+  if (!imageCache.has(cacheKey)) {
+    imageCache.set(
+      cacheKey,
+      fetch(imageUrl)
+        .then(async (response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to load image: ${response.status}`);
+          }
+
+          const blob = await response.blob();
+
+          return await new Promise<string>((resolve, reject) => {
+            const objectUrl = URL.createObjectURL(blob);
+            const image = new Image();
+
+            image.onload = () => {
+              const maxWidth = options?.maxWidth || 640;
+              const quality = options?.quality || 0.72;
+              const scale = Math.min(1, maxWidth / image.width);
+              const canvas = document.createElement("canvas");
+              const context = canvas.getContext("2d");
+
+              canvas.width = Math.max(1, Math.round(image.width * scale));
+              canvas.height = Math.max(1, Math.round(image.height * scale));
+
+              if (!context) {
+                URL.revokeObjectURL(objectUrl);
+                reject(new Error("Unable to optimize image"));
+                return;
+              }
+
+              context.fillStyle = "#ffffff";
+              context.fillRect(0, 0, canvas.width, canvas.height);
+              context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+              const optimizedDataUrl = canvas.toDataURL("image/jpeg", quality);
+              URL.revokeObjectURL(objectUrl);
+              resolve(optimizedDataUrl);
+            };
+
+            image.onerror = () => {
+              URL.revokeObjectURL(objectUrl);
+              reject(new Error("Unable to load image"));
+            };
+
+            image.src = objectUrl;
+          });
+        })
+        .catch(() => null)
+    );
+  }
+
+  return imageCache.get(cacheKey)!;
+}
+
+async function addLetterhead(doc: jsPDF, pageWidth: number) {
+  const blue = hexToRgb(brandColors.darkBlue);
+  const gray = hexToRgb(brandColors.gray);
+  const border = hexToRgb(brandColors.border);
+  const logoDataUrl = await loadOptimizedImageDataUrl(companyInfo.pdfLogoPath, {
+    maxWidth: 360,
+    quality: 0.7,
+  });
+
+  doc.setFillColor(255, 255, 255);
+  doc.rect(0, 0, pageWidth, LETTERHEAD_HEIGHT, "F");
+  doc.setDrawColor(border.r, border.g, border.b);
+  doc.setLineWidth(0.3);
+  doc.line(PAGE_MARGIN, LETTERHEAD_HEIGHT, pageWidth - PAGE_MARGIN, LETTERHEAD_HEIGHT);
+
+  doc.setTextColor(gray.r, gray.g, gray.b);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+
+  const leftText = [
+    companyInfo.addressLines[0],
+    companyInfo.addressLines[1],
+    companyInfo.addressLines[2],
+    `Mobile: ${companyInfo.phone}`,
+    `Web: ${companyInfo.website}`,
+    `E-mail: ${companyInfo.primaryEmail}`,
+    `       ${companyInfo.secondaryEmail}`,
+    "Dealer and Consultant in Industrial Machinery",
+  ];
+
+  let textY = 7;
+  for (const line of leftText) {
+    doc.text(line, PAGE_MARGIN, textY);
+    textY += 3.6;
+  }
+
+  if (logoDataUrl) {
+    const logoWidth = 48;
+    const logoHeight = 32;
+    const logoX = pageWidth - PAGE_MARGIN - logoWidth;
+    const logoY = 8;
+
+    doc.addImage(logoDataUrl, "JPEG", logoX, logoY, logoWidth, logoHeight);
+  } else {
+    doc.setTextColor(blue.r, blue.g, blue.b);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text(companyInfo.name.toUpperCase(), pageWidth - PAGE_MARGIN, 15, {
+      align: "right",
+    });
+  }
+}
+
+function addFooter(doc: jsPDF, pageWidth: number, pageHeight: number) {
+  const blue = hexToRgb(brandColors.darkBlue);
+
+  const footerY = pageHeight - 15;
+  doc.setFillColor(blue.r, blue.g, blue.b);
+  doc.rect(0, footerY, pageWidth, 15, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.text(
+    `For more information, visit ${companyInfo.website} or contact us at ${companyInfo.phone}`,
+    pageWidth / 2,
+    footerY + 9.5,
+    { align: "center" }
+  );
+}
+
+function drawSectionTitle(doc: jsPDF, title: string, yPos: number) {
+  const blue = hexToRgb(brandColors.darkBlue);
+  const softBlue = hexToRgb(brandColors.softBlue);
+
+  doc.setFillColor(softBlue.r, softBlue.g, softBlue.b);
+  doc.roundedRect(PAGE_MARGIN, yPos - 5, 70, 9, 2, 2, "F");
+  doc.setTextColor(blue.r, blue.g, blue.b);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.text(title, PAGE_MARGIN + 4, yPos);
+}
+
+function drawMetaPill(
+  doc: jsPDF,
+  text: string,
+  xPos: number,
+  yPos: number,
+  colors?: { fill: string; text: string }
+) {
+  const fill = hexToRgb(colors?.fill || brandColors.softBlue);
+  const textColor = hexToRgb(colors?.text || brandColors.darkBlue);
+  const width = Math.min(54, doc.getTextWidth(text) + 10);
+
+  doc.setFillColor(fill.r, fill.g, fill.b);
+  doc.roundedRect(xPos, yPos - 4.5, width, 8, 4, 4, "F");
+  doc.setTextColor(textColor.r, textColor.g, textColor.b);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.text(text, xPos + 5, yPos);
+
+  return width;
+}
+
+function addWrappedText(
+  doc: jsPDF,
+  text: string,
+  xPos: number,
+  yPos: number,
+  maxWidth: number,
+  lineHeight = 5
+) {
+  const lines = doc.splitTextToSize(text, maxWidth);
+  doc.text(lines, xPos, yPos);
+  return yPos + lines.length * lineHeight;
+}
+
+async function renderCatalogProductPage(
+  doc: jsPDF,
+  product: CatalogPdfProduct,
+  isFirstPage: boolean
+) {
+  if (!isFirstPage) {
+    doc.addPage();
+  }
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const blue = hexToRgb(brandColors.darkBlue);
+  const gray = hexToRgb(brandColors.gray);
+  const lightGray = hexToRgb(brandColors.lightGray);
+  const border = hexToRgb(brandColors.border);
+
+  await addLetterhead(doc, pageWidth);
+
+  let yPos = getContentStartY();
+
+  drawSectionTitle(doc, formatCategoryName(product.category), yPos);
+  yPos += 14;
+
+  doc.setTextColor(blue.r, blue.g, blue.b);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  yPos = addWrappedText(doc, product.title, PAGE_MARGIN, yPos, pageWidth - PAGE_MARGIN * 2, 7);
+
+  yPos += 3;
+  let pillX = PAGE_MARGIN;
+  pillX += drawMetaPill(doc, formatCategoryName(product.category), pillX, yPos) + 3;
+
+  if (product.isInStock !== undefined) {
+    pillX +=
+      drawMetaPill(doc, product.isInStock ? "In Stock" : "Out of Stock", pillX, yPos, {
+        fill: product.isInStock ? "#e8f7ec" : "#fdecea",
+        text: product.isInStock ? brandColors.darkBlue : brandColors.slate,
+      }) + 3;
+  }
+
+  if (product.condition) {
+    drawMetaPill(doc, formatCondition(product.condition) || "", pillX, yPos);
+  }
+
+  yPos += 12;
+
+  const imageWidth = 78;
+  const imageX = PAGE_MARGIN;
+  const imageY = yPos;
+  const rightColumnX = PAGE_MARGIN + imageWidth + 8;
+  const rightColumnWidth = pageWidth - rightColumnX - PAGE_MARGIN;
+
+  doc.setDrawColor(border.r, border.g, border.b);
+  doc.setFillColor(lightGray.r, lightGray.g, lightGray.b);
+  doc.roundedRect(imageX, imageY, imageWidth, IMAGE_HEIGHT, 3, 3, "FD");
+
+  if (product.imageUrl) {
+    const productImageDataUrl = await loadOptimizedImageDataUrl(product.imageUrl, {
+      maxWidth: 900,
+      quality: 0.68,
+    });
+
+    if (productImageDataUrl) {
+      doc.addImage(productImageDataUrl, "JPEG", imageX + 2, imageY + 2, imageWidth - 4, IMAGE_HEIGHT - 4);
+    } else {
+      doc.setTextColor(gray.r, gray.g, gray.b);
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(10);
+      doc.text("Image unavailable", imageX + 16, imageY + IMAGE_HEIGHT / 2);
+    }
+  } else {
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(10);
+    doc.text("No image", imageX + 25, imageY + IMAGE_HEIGHT / 2);
+  }
+
+  doc.setTextColor(gray.r, gray.g, gray.b);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+
+  const summaryRows = [
+    ["Manufacturer", product.manufacturer || "Available on request"],
+    ["Year", product.year ? String(product.year) : "Available on request"],
+    ["Price", product.price || "Price on request"],
+  ];
+
+  let metaY = imageY + 4;
+  for (const [label, value] of summaryRows) {
+    doc.setTextColor(blue.r, blue.g, blue.b);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${label}:`, rightColumnX, metaY);
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFont("helvetica", "normal");
+    metaY = addWrappedText(doc, value, rightColumnX + 22, metaY, rightColumnWidth - 22, 4.6);
+    metaY += 2;
+  }
+
+  yPos += IMAGE_HEIGHT + 10;
+
+  if (product.description) {
+    drawSectionTitle(doc, "Overview", yPos);
+    yPos += 10;
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    yPos = addWrappedText(doc, product.description, PAGE_MARGIN, yPos, pageWidth - PAGE_MARGIN * 2, 5);
+    yPos += 6;
+  }
+
+  if (product.features?.length) {
+    drawSectionTitle(doc, "Key Features", yPos);
+    yPos += 10;
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    for (const feature of product.features) {
+      if (yPos > pageHeight - 28) {
+        doc.addPage();
+        await addLetterhead(doc, pageWidth);
+        yPos = getContentStartY();
+      }
+
+      yPos = addWrappedText(doc, `- ${feature}`, PAGE_MARGIN, yPos, pageWidth - PAGE_MARGIN * 2, 5);
+      yPos += 1;
+    }
+
+    yPos += 4;
+  }
+
+  if (product.specifications) {
+    drawSectionTitle(doc, "Specifications", yPos);
+    yPos += 10;
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    yPos = addWrappedText(doc, product.specifications, PAGE_MARGIN, yPos, pageWidth - PAGE_MARGIN * 2, 5);
+    yPos += 6;
+  }
+
+  const specRows = normalizeSpecRows(product.technicalSpecs);
+  if (specRows.length) {
+    if (yPos > pageHeight - 55) {
+      doc.addPage();
+      await addLetterhead(doc, pageWidth);
+      yPos = getContentStartY();
+    }
+
+    drawSectionTitle(doc, "Technical Specifications", yPos);
+    yPos += 10;
+
+    const leftX = PAGE_MARGIN;
+    const leftWidth = 58;
+    const rowWidth = pageWidth - PAGE_MARGIN * 2;
+
+    for (let index = 0; index < specRows.length; index += 1) {
+      const spec = specRows[index];
+      const rowHeight = 8;
+
+      if (yPos > pageHeight - 24) {
+        doc.addPage();
+        await addLetterhead(doc, pageWidth);
+        yPos = getContentStartY();
+      }
+
+      if (index % 2 === 0) {
+        doc.setFillColor(lightGray.r, lightGray.g, lightGray.b);
+        doc.rect(leftX, yPos - 5.5, rowWidth, rowHeight, "F");
+      }
+
+      doc.setTextColor(blue.r, blue.g, blue.b);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8.5);
+      doc.text(spec.label, leftX + 3, yPos);
+
+      doc.setTextColor(gray.r, gray.g, gray.b);
+      doc.setFont("helvetica", "normal");
+      doc.text(doc.splitTextToSize(spec.value, rowWidth - leftWidth - 8), leftX + leftWidth, yPos);
+
+      yPos += rowHeight;
+    }
+  }
+
+  addFooter(doc, pageWidth, pageHeight);
+}
+
+export async function generateCatalogPDF(products: CatalogPdfProduct[] = []) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  
-  // Helper to convert hex to RGB
-  const hexToRgb = (hex: string) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : { r: 10, g: 25, b: 47 };
-  };
-
-  // Set brand colors
-  const darkBlue = hexToRgb(brandColors.darkBlue);
   const gray = hexToRgb(brandColors.gray);
 
-  // Add watermark and letterhead to first page
-  addWatermarkAndLetterhead(doc, pageWidth, pageHeight, true);
-
-  // Header (below letterhead area)
-  doc.setFillColor(darkBlue.r, darkBlue.g, darkBlue.b);
-  doc.rect(0, LETTERHEAD_HEIGHT, pageWidth, 40, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
-  doc.setFont('helvetica', 'bold');
-  doc.text('SHIVAM ENTERPRISE', pageWidth / 2, LETTERHEAD_HEIGHT + 20, { align: 'center' });
-  
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Product Details', pageWidth / 2, LETTERHEAD_HEIGHT + 32, { align: 'center' });
-
-  // Company Info
-  let yPos = LETTERHEAD_HEIGHT + 55;
-  doc.setTextColor(gray.r, gray.g, gray.b);
-  doc.setFontSize(9);
-  doc.text('Contact: +91-9824080055 | Email: shivamenterprise@yahoo.com', pageWidth / 2, yPos, { align: 'center' });
-  yPos += 6;
-  doc.text('Address: 6- Ganpat Colony, Opp, Civil Hospital, Shahibaug, Ahmedabad, Gujarat - 380016', pageWidth / 2, yPos, { align: 'center' });
-  yPos += 15;
-
-  // Product Title
-  doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
-  doc.setFontSize(18);
-  doc.setFont('helvetica', 'bold');
-  const titleLines = doc.splitTextToSize(product.title, pageWidth - 40);
-  doc.text(titleLines, 20, yPos);
-  yPos += titleLines.length * 8 + 10;
-
-  // Category and Stock Status
-  if (product.category) {
+  if (products.length === 0) {
+    await addLetterhead(doc, pageWidth);
+    doc.setTextColor(gray.r, gray.g, gray.b);
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(11);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(gray.r, gray.g, gray.b);
-    doc.text(`Category: ${product.category.charAt(0).toUpperCase() + product.category.slice(1)}`, 20, yPos);
-    yPos += 8;
+    doc.text("No catalog products are available right now.", PAGE_MARGIN, getContentStartY());
+    addFooter(doc, pageWidth, pageHeight);
+    doc.save("Shivam_Enterprise_Catalog.pdf");
+    return;
   }
 
-  if (product.isInStock !== undefined) {
-    doc.setTextColor(product.isInStock ? 0 : 255, product.isInStock ? 150 : 0, 0);
-    doc.text(`Status: ${product.isInStock ? 'In Stock' : 'Out of Stock'}`, 20, yPos);
-    yPos += 10;
+  for (let index = 0; index < products.length; index += 1) {
+    await renderCatalogProductPage(doc, products[index], index === 0);
   }
 
-  // Price
-  if (product.price) {
-    doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Price: ${product.price}`, 20, yPos);
-    yPos += 12;
-  }
+  doc.save("Shivam_Enterprise_Catalog.pdf");
+}
 
-  // Product Details Grid
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(gray.r, gray.g, gray.b);
-  
-  if (product.manufacturer) {
-    doc.text(`Manufacturer: ${product.manufacturer}`, 20, yPos);
-    yPos += 7;
+export async function generateProductPDF(
+  product: CatalogPdfProduct & {
+    title: string;
   }
-  if (product.year) {
-    doc.text(`Year: ${product.year}`, 20, yPos);
-    yPos += 7;
-  }
-  if (product.condition) {
-    const conditionLabel = product.condition.charAt(0).toUpperCase() + product.condition.slice(1).replace('-', ' ');
-    doc.text(`Condition: ${conditionLabel}`, 20, yPos);
-    yPos += 10;
-  }
-
-  // Description
-  if (product.description) {
-    if (yPos > pageHeight - 60) {
-      doc.addPage();
-      // Add watermark to new page
-      addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
-      yPos = LETTERHEAD_HEIGHT + 20;
-    }
-    
-    doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Description', 20, yPos);
-    yPos += 8;
-    
-    doc.setTextColor(gray.r, gray.g, gray.b);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    const descLines = doc.splitTextToSize(product.description, pageWidth - 40);
-    doc.text(descLines, 20, yPos);
-    yPos += descLines.length * 5 + 10;
-  }
-
-  // Specifications
-  if (product.specifications) {
-    if (yPos > pageHeight - 60) {
-      doc.addPage();
-      // Add watermark to new page
-      addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
-      yPos = LETTERHEAD_HEIGHT + 20;
-    }
-    
-    doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Specifications', 20, yPos);
-    yPos += 8;
-    
-    doc.setTextColor(gray.r, gray.g, gray.b);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    const specLines = doc.splitTextToSize(product.specifications, pageWidth - 40);
-    doc.text(specLines, 20, yPos);
-    yPos += specLines.length * 5 + 10;
-  }
-
-  // Features
-  if (product.features && product.features.length > 0) {
-    if (yPos > pageHeight - 60) {
-      doc.addPage();
-      // Add watermark to new page
-      addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
-      yPos = LETTERHEAD_HEIGHT + 20;
-    }
-    
-    doc.setTextColor(darkBlue.r, darkBlue.g, darkBlue.b);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Key Features', 20, yPos);
-    yPos += 8;
-    
-    doc.setTextColor(gray.r, gray.g, gray.b);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    product.features.forEach((feature) => {
-      if (yPos > pageHeight - 30) {
-        doc.addPage();
-        // Add watermark to new page
-        addWatermarkAndLetterhead(doc, pageWidth, pageHeight, false);
-        yPos = LETTERHEAD_HEIGHT + 20;
-      }
-      doc.text(`• ${feature}`, 20, yPos);
-      yPos += 7;
-    });
-    yPos += 5;
-  }
-
-  // Footer
-  const footerY = pageHeight - 15;
-  doc.setFillColor(darkBlue.r, darkBlue.g, darkBlue.b);
-  doc.rect(0, footerY, pageWidth, 15, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.text('For more information, visit shivammachines.in or contact us at +91-9824080055', pageWidth / 2, footerY + 10, { align: 'center' });
-
-  // Download
-  const fileName = product.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+) {
+  const doc = new jsPDF();
+  await renderCatalogProductPage(doc, product, true);
+  const fileName = product.title.replace(/[^a-z0-9]/gi, "_").toLowerCase();
   doc.save(`${fileName}_details.pdf`);
 }

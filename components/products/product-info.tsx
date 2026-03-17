@@ -1,10 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Phone, Mail, MessageCircle, CheckCircle, XCircle, Calendar, Building2, Tag, Download } from "lucide-react";
+import { Building2, Calendar, Download, Mail, MessageCircle, Phone, Tag } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { companyInfo } from "@/lib/company";
 import { generateProductPDF } from "@/lib/pdf-generator";
+import { urlFor } from "@/lib/sanity/image";
 import type { Product } from "@/lib/sanity/types";
 
 interface ProductInfoProps {
@@ -12,16 +14,6 @@ interface ProductInfoProps {
 }
 
 export default function ProductInfo({ product }: ProductInfoProps) {
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   const getConditionBadge = (condition?: string) => {
     const conditions: Record<string, { label: string; color: string }> = {
       excellent: { label: "Excellent", color: "bg-green-100 text-green-800" },
@@ -36,16 +28,18 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   const whatsappMessage = encodeURIComponent(
     `Hi, I'm interested in ${product.title}. Can you provide more details?`
   );
-  const whatsappUrl = `https://wa.me/919876543210?text=${whatsappMessage}`;
+  const whatsappUrl = `${companyInfo.whatsappHref}?text=${whatsappMessage}`;
 
-  const handleDownloadProductDetails = () => {
+  const handleDownloadProductDetails = async () => {
     try {
-      generateProductPDF({
+      await generateProductPDF({
         title: product.title,
+        imageUrl: product.images?.[0] ? urlFor(product.images[0]).width(1200).height(900).fit("max").url() : undefined,
         description: product.description,
         category: product.category,
         specifications: product.specifications,
         features: product.features,
+        technicalSpecs: product.technicalSpecs,
         price: product.price,
         manufacturer: product.manufacturer,
         year: product.year,
@@ -155,7 +149,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         <div className="grid grid-cols-2 gap-3">
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button variant="secondary" className="w-full flex items-center justify-center gap-2 font-candara py-3" asChild>
-              <a href="tel:+919876543210" className="flex items-center justify-center gap-2">
+              <a href={companyInfo.phoneHref} className="flex items-center justify-center gap-2">
                 <Phone className="w-4 h-4" />
                 Call Now
               </a>
@@ -163,7 +157,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           </motion.div>
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button variant="secondary" className="w-full flex items-center justify-center gap-2 font-candara py-3" asChild>
-              <a href="mailto:info@shivammachines.in" className="flex items-center justify-center gap-2">
+              <a href={`mailto:${companyInfo.primaryEmail}`} className="flex items-center justify-center gap-2">
                 <Mail className="w-4 h-4" />
                 Email Us
               </a>
@@ -176,4 +170,3 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     </div>
   );
 }
-

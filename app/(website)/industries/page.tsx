@@ -1,8 +1,5 @@
 "use client";
 
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
-import WhatsAppButton from "@/components/ui/whatsapp-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Car, Building2, Wrench, Plane, Ship, Zap } from "lucide-react";
 
@@ -60,7 +57,6 @@ export default function Industries() {
 
   return (
     <main className="min-h-screen">
-      <Navbar />
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 py-12">
@@ -215,9 +211,6 @@ export default function Industries() {
           </div>
         </div>
       </section>
-
-      <Footer />
-      <WhatsAppButton />
     </main>
   );
 }

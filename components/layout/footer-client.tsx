@@ -13,6 +13,7 @@ import {
   Linkedin,
   Instagram,
 } from "lucide-react";
+import { companyInfo } from "@/lib/company";
 import type { Footer } from "@/lib/sanity/types";
 
 interface FooterClientProps {
@@ -71,9 +72,9 @@ const FooterClient = ({ data }: FooterClientProps) => {
   const description =
     data?.description ||
     "Leading supplier of premium used machine tools since 1997. We deliver precision, reliability, and innovation to industries across India with our extensive inventory and expert service.";
-  const phone = data?.phone || "+91-9824080055";
-  const email = data?.email || "shivamenterprise@yahoo.com";
-  const address = data?.address || "Ahmedabad, Gujarat, India";
+  const phone = data?.phone || companyInfo.phone;
+  const email = data?.email || companyInfo.primaryEmail;
+  const address = data?.address || companyInfo.shortAddress;
 
   const footerLinks = {
     company: data?.companyLinks || defaultFooterLinks.company,

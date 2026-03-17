@@ -1,21 +1,19 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Settings, Wrench, Cog, Gauge, Filter, X, ChevronDown, ChevronUp, Tag, SlidersHorizontal, RotateCcw, Grid, LayoutGrid } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import WhatsAppButton from "@/components/ui/whatsapp-button";
 import { urlFor } from "@/lib/sanity/image";
-import type { Product } from "@/lib/sanity/types";
+import type { Product, MachineToolCategory } from "@/lib/sanity/types";
 
 interface ProductsListingClientProps {
   products: Product[];
+  categories: MachineToolCategory[];
 }
 
 const categoryIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -29,13 +27,35 @@ const categoryIconMap: Record<string, React.ComponentType<{ className?: string }
   others: Cog,
 };
 
-function ProductsContent({ products }: ProductsListingClientProps) {
+function ProductsContent({ products, categories: sanityCategories }: ProductsListingClientProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  
   const initialCategory = searchParams.get("category") || "all";
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 
-  // Dynamic Specification Filters State Map
+  // Sync state with URL when search params change (e.g. back button)
+  React.useEffect(() => {
+    const cat = searchParams.get("category") || "all";
+    if (cat !== selectedCategory) {
+      setSelectedCategory(cat);
+    }
+  }, [searchParams, selectedCategory]);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    const params = new URLSearchParams(searchParams.toString());
+    if (category === "all") {
+      params.delete("category");
+    } else {
+      params.set("category", category);
+    }
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  // Specification Filters State
   const [specFilters, setSpecFilters] = useState<Record<string, string>>({});
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -54,14 +74,6 @@ function ProductsContent({ products }: ProductsListingClientProps) {
     }));
   };
 
-  // Format date consistently to avoid hydration errors
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${month}/${day}/${year}`;
-  };
 
   // Get unique dynamically available numeric specifications
   const availableSpecKeys = useMemo(() => {
@@ -80,13 +92,41 @@ function ProductsContent({ products }: ProductsListingClientProps) {
     });
     return Array.from(keys).sort(); // Alphabetical sort
   }, [products]);
+  // Helper to extract category ID consistently
+  const getCategoryId = useCallback((cat: MachineToolCategory) => {
+    if (cat.href && cat.href.includes("category=")) {
+      return cat.href.split("category=")[1];
+    }
+    return cat.slug?.current || cat.name.toLowerCase();
+  }, []);
 
+  // Combined product filtering and sorting
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
 
     // Category filter
     if (selectedCategory !== "all") {
-      filtered = filtered.filter((product) => product.category === selectedCategory);
+      filtered = filtered.filter((product) => {
+        if (!product.category) return false;
+        
+        // Find the category object that matches the selected ID
+        const matchedCat = (sanityCategories || []).find(
+          c => getCategoryId(c) === selectedCategory
+        );
+        
+        if (matchedCat) {
+          // Robust check: match against ID, Name, or Slug
+          const prodCat = product.category.toLowerCase();
+          return (
+            prodCat === getCategoryId(matchedCat) ||
+            prodCat === matchedCat.name.toLowerCase() ||
+            prodCat === matchedCat.slug?.current.toLowerCase()
+          );
+        }
+        
+        // Fallback
+        return product.category.toLowerCase() === selectedCategory.toLowerCase();
+      });
     }
 
     // Dynamic Specification filters
@@ -125,31 +165,27 @@ function ProductsContent({ products }: ProductsListingClientProps) {
     });
 
     return filtered;
-  }, [products, selectedCategory, specFilters]);
+  }, [products, selectedCategory, specFilters, sanityCategories, getCategoryId]);
 
-  // Get unique categories from products
+  // Get unique categories from products, but prioritized/mapped by sanityCategories
   const categories = useMemo(() => {
-    const cats = new Set(products.map((p) => p.category));
     return [
       { id: "all", name: "All Categories" },
-      ...Array.from(cats)
-        .filter(Boolean)
-        .map((cat) => ({
-          id: cat,
-          name: cat.charAt(0).toUpperCase() + cat.slice(1).replace(/-/g, " "),
-        })),
+      ...(sanityCategories || []).map(cat => ({
+        id: getCategoryId(cat),
+        name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1)
+      }))
     ];
-  }, [products]);
+  }, [sanityCategories, getCategoryId]);
 
   // Derived state to check if ANY spec filter is active
   const hasActiveSpecFilters = Object.values(specFilters).some(v => v !== "");
 
   return (
     <main className="min-h-screen">
-      <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 pt-24 pb-12">
+      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 pt-12 pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-bold text-brand-darkBlue mb-6 font-montserrat">
@@ -251,7 +287,7 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                     </span>
                     <button
                       onClick={() => {
-                        setSelectedCategory("all");
+                        handleCategoryChange("all");
                         setSpecFilters({});
                       }}
                       className="text-xs text-brand-orange hover:text-brand-darkBlue font-nunito flex items-center gap-1 transition-colors"
@@ -294,7 +330,7 @@ function ProductsContent({ products }: ProductsListingClientProps) {
                         <div className="px-4 pb-4">
                           <select
                             value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
+                            onChange={(e) => handleCategoryChange(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent font-nunito text-sm bg-white"
                           >
                             {categories.map((cat) => (
@@ -589,15 +625,13 @@ function ProductsContent({ products }: ProductsListingClientProps) {
         </div>
       </div>
 
-      <Footer />
-      <WhatsAppButton />
     </main>
   );
 }
 
-export default function ProductsListingClient({ products }: ProductsListingClientProps) {
+export default function ProductsListingClient({ products, categories }: ProductsListingClientProps) {
   return (
-    <ProductsContent products={products} />
+    <ProductsContent products={products} categories={categories} />
   );
 }
 

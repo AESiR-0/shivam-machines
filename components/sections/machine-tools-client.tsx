@@ -25,84 +25,22 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
-  // Default categories if none from Sanity
-  const defaultCategories = [
-    {
-      name: "Boring Machines",
-      description: "Horizontal and floor type boring machines for precision manufacturing",
-      count: "25+ Machines",
-      href: "/products?category=boring",
-      color: "from-blue-500 to-blue-600",
-      icon: "Wrench",
-    },
-    {
-      name: "Grinding Machines",
-      description: "Cylindrical, surface, and roll grinders for superior finish",
-      count: "30+ Machines",
-      href: "/products?category=grinding",
-      color: "from-green-500 to-green-600",
-      icon: "Settings",
-    },
-    {
-      name: "Lathe Machines",
-      description: "Vertical and horizontal lathes for turning operations",
-      count: "20+ Machines",
-      href: "/products?category=lathe",
-      color: "from-orange-500 to-orange-600",
-      icon: "Gauge",
-    },
-    {
-      name: "CNC Machines",
-      description: "CNC machining centers and turning centers",
-      count: "15+ Machines",
-      href: "/products?category=cnc",
-      color: "from-purple-500 to-purple-600",
-      icon: "Cog",
-    },
-    {
-      name: "Milling Machines",
-      description: "Plano millers and vertical milling machines",
-      count: "18+ Machines",
-      href: "/products?category=milling",
-      color: "from-red-500 to-red-600",
-      icon: "Drill",
-    },
-    {
-      name: "Gear Machines",
-      description: "Gear cutting and finishing machines",
-      count: "12+ Machines",
-      href: "/products?category=gear",
-      color: "from-indigo-500 to-indigo-600",
-      icon: "Layers",
-    },
-    {
-      name: "Drill Machines",
-      description: "Radial drills and precision drilling equipment",
-      count: "10+ Machines",
-      href: "/products?category=drill",
-      color: "from-cyan-500 to-cyan-600",
-      icon: "Drill",
-    },
-    {
-      name: "Others",
-      description: "Planning machines and specialized equipment",
-      count: "15+ Machines",
-      href: "/products?category=others",
-      color: "from-gray-500 to-gray-600",
-      icon: "Factory",
-    },
-  ];
+  // Extract category ID from href or fallback to slug
+  const getCategoryId = (cat: MachineToolCategory) => {
+    if (cat.href && cat.href.includes("category=")) {
+      return cat.href.split("category=")[1];
+    }
+    return cat.slug?.current || cat.name.toLowerCase();
+  };
 
-  const displayCategories = categories.length > 0 
-    ? categories.map(cat => ({
-        name: cat.name,
-        description: cat.description || "",
-        count: cat.count || "0 Machines",
-        href: cat.href || `/products?category=${cat.slug?.current || cat.name.toLowerCase()}`,
-        color: cat.color || "from-gray-500 to-gray-600",
-        icon: cat.icon || "Settings",
-      }))
-    : defaultCategories;
+  const displayCategories = categories.map(cat => ({
+    name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
+    description: cat.description || "",
+    count: cat.count || "0 Machines",
+    href: cat.href || `/products?category=${getCategoryId(cat)}`,
+    color: cat.color || "from-gray-500 to-gray-600",
+    icon: cat.icon || "Settings",
+  }));
 
   return (
     <section className="py-12 bg-gradient-to-br from-brand-lightGray to-white">
@@ -122,12 +60,16 @@ const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
             Click on any category to view available machines with detailed specifications.
           </p>
         </motion.div>
-
+ 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {displayCategories.map((group, index) => {
             const IconComponent = iconMap[group.icon] || Settings;
             // Get image from Sanity category if available
-            const categoryData = categories.find(cat => cat.name === group.name || cat.slug?.current === group.href.split('category=')[1]);
+            const categoryData = categories.find(cat => 
+              cat.name === group.name || 
+              cat.slug?.current === group.href.split('category=')[1] ||
+              getCategoryId(cat) === group.href.split('category=')[1]
+            );
             const imageUrl = categoryData?.image
               ? urlFor(categoryData.image).width(600).height(400).url()
               : null;

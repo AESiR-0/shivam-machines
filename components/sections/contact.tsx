@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
+import { companyInfo } from "@/lib/company";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -36,19 +38,19 @@ const Contact = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+91 98765 43210", "+91 98765 43211"],
+      details: [companyInfo.phone, companyInfo.contactPerson],
       color: "from-blue-500 to-blue-600",
     },
     {
       icon: Mail,
       title: "Email",
-      details: ["info@shivammachines.in", "sales@shivammachines.in"],
+      details: [companyInfo.primaryEmail, companyInfo.secondaryEmail],
       color: "from-green-500 to-green-600",
     },
     {
       icon: MapPin,
       title: "Address",
-      details: ["123 Industrial Area", "Mumbai, Maharashtra 400001", "India"],
+      details: [...companyInfo.addressLines],
       color: "from-red-500 to-red-600",
     },
     {
@@ -93,8 +95,8 @@ const Contact = () => {
                 Contact Information
               </h3>
               <div className="grid gap-6">
-                {contactInfo.map((info, index) => (
-                  <Card key={index} className="border-0 shadow-industrial-lg">
+                {contactInfo.map((info) => (
+                  <Card key={info.title} className="border-0 shadow-industrial-lg">
                     <CardContent className="p-6">
                       <div className="flex items-start space-x-4">
                         <div className={`w-12 h-12 bg-gradient-to-br ${info.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
@@ -105,8 +107,8 @@ const Contact = () => {
                             {info.title}
                           </h4>
                           <div className="space-y-1">
-                            {info.details.map((detail, detailIndex) => (
-                              <p key={detailIndex} className="text-steel-600 text-sm">
+                            {info.details.map((detail) => (
+                              <p key={detail} className="text-steel-600 text-sm">
                                 {detail}
                               </p>
                             ))}
@@ -267,4 +269,3 @@ const Contact = () => {
 };
 
 export default Contact;
-

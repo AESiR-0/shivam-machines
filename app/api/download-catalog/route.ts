@@ -1,48 +1,45 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { createImageUrlBuilder } from "@sanity/image-url";
+import { productsQuery } from "@/lib/sanity/queries";
+import { dataset, projectId } from "@/lib/sanity/env";
+import { serverClient } from "@/lib/sanity/server";
+import type { Product } from "@/lib/sanity/types";
 
-// Brand colors
-const brandColors = {
-  darkBlue: '#0a192f',
-  orange: '#f9a826',
-  gray: '#464646',
-  lightGray: '#f5f5f5',
-  steel: '#475569',
-};
+export const dynamic = "force-dynamic";
+
+const imageBuilder = createImageUrlBuilder({
+  projectId,
+  dataset,
+});
 
 export async function GET() {
   try {
-    // In production, we'll use a library like jsPDF on the client side
-    // For server-side, we can use puppeteer or similar
-    // For now, return a JSON response that the client can use
-    
-    const catalogData = {
-      title: "Shivam Enterprise - Machine Tools Catalog",
-      company: "Shivam Enterprise",
-      contact: {
-        phone: "+91-9824080055",
-        email: "shivamenterprise@yahoo.com",
-        address: "6- Ganpat Colony, Opp, Civil Hospital, Shahibaug, Ahmedabad, Gujarat - 380016"
-      },
-      machines: [
-        { name: "Horizontal Boring Machine - Table Type", specs: "X-2200, Y-2000 | Table: 1500 x 1800 | Spindle: 125" },
-        { name: "Cylindrical Grinding Machine", specs: "Max Length: 1000mm | Max Swing: 400mm" },
-        { name: "Vertical Lathe Machine", specs: "Max Turning: 1500mm | Max Swing: 500mm" },
-        { name: "CNC Machining Centers", specs: "Work Envelope: 1000x800x600mm | Spindle: 8000 RPM" },
-        { name: "Gear Machines", specs: "Max Gear Diameter: 800mm | Module Range: 1-20" },
-        { name: "Milling Machines", specs: "Various configurations available" },
-        { name: "Surface Grinders", specs: "High precision surface grinding" },
-        { name: "Drill Machines", specs: "Radial and precision drilling" },
-      ]
-    };
+    const products = await serverClient.fetch<Product[]>(productsQuery);
 
-    // Return data for client-side PDF generation
-    return NextResponse.json({ 
-      message: "Please use the client-side PDF generator",
-      data: catalogData 
+    const catalogProducts = products.map((product) => ({
+      id: product._id,
+      title: product.title,
+      category: product.category,
+      imageUrl: product.images?.[0]
+        ? imageBuilder.image(product.images[0]).width(1200).height(900).fit("max").auto("format").url()
+        : undefined,
+      specifications: product.specifications,
+      description: product.description,
+      features: product.features,
+      technicalSpecs: product.technicalSpecs,
+      price: product.price,
+      manufacturer: product.manufacturer,
+      year: product.year,
+      condition: product.condition,
+      isInStock: product.isInStock,
+    }));
+
+    return NextResponse.json({
+      products: catalogProducts,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: 'Failed to generate catalog' },
+      { error: "Failed to load catalog products" },
       { status: 500 }
     );
   }

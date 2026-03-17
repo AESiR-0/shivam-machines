@@ -1,32 +1,30 @@
 "use client";
 
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
-import WhatsAppButton from "@/components/ui/whatsapp-button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { companyInfo } from "@/lib/company";
+import { Clock, Mail, MapPin, Phone, Send } from "lucide-react";
 
 export default function Contact() {
   const contactInfo = [
     {
       icon: Phone,
       title: "Phone",
-      details: ["+91-9824080055", "Mr. Dinesh Soni"],
+      details: [companyInfo.phone, companyInfo.contactPerson],
       color: "from-blue-500 to-blue-600",
     },
     {
       icon: Mail,
       title: "Email",
-      details: ["shivamenterprise@yahoo.com"],
+      details: [companyInfo.primaryEmail, companyInfo.secondaryEmail],
       color: "from-green-500 to-green-600",
     },
     {
       icon: MapPin,
       title: "Address",
-      details: ["6- Ganpat Colony, Opp, Civil Hospital", "Shahibaug, Ahmedabad", "Gujarat (INDIA) – 380016"],
+      details: [...companyInfo.addressLines],
       color: "from-red-500 to-red-600",
     },
     {
@@ -39,10 +37,8 @@ export default function Contact() {
 
   return (
     <main className="min-h-screen">
-      <Navbar />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 pt-24 pb-12">
+      <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 pt-12 pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-bold text-brand-darkBlue mb-6 font-montserrat">
@@ -58,18 +54,19 @@ export default function Contact() {
 
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Information */}
           <div className="space-y-8">
             <div>
               <h2 className="text-3xl font-bold text-brand-darkBlue mb-6 font-montserrat">
                 Contact Information
               </h2>
               <div className="grid gap-6">
-                {contactInfo.map((info, index) => (
-                  <Card key={index} className="border-0 shadow-lg">
+                {contactInfo.map((info) => (
+                  <Card key={info.title} className="border-0 shadow-lg">
                     <CardContent className="p-6">
                       <div className="flex items-start space-x-4">
-                        <div className={`w-12 h-12 bg-gradient-to-br ${info.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                        <div
+                          className={`w-12 h-12 bg-gradient-to-br ${info.color} rounded-lg flex items-center justify-center flex-shrink-0`}
+                        >
                           <info.icon className="w-6 h-6 text-white" />
                         </div>
                         <div>
@@ -77,8 +74,8 @@ export default function Contact() {
                             {info.title}
                           </h4>
                           <div className="space-y-1">
-                            {info.details.map((detail, detailIndex) => (
-                              <p key={detailIndex} className="text-brand-gray text-sm font-nunito">
+                            {info.details.map((detail) => (
+                              <p key={detail} className="text-brand-gray text-sm font-nunito">
                                 {detail}
                               </p>
                             ))}
@@ -91,33 +88,9 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Quick Stats */}
-            <Card className="bg-brand-darkBlue text-white border-0 shadow-xl">
-              <CardContent className="p-8">
-                <h4 className="text-xl font-bold mb-6 font-montserrat">Why Choose Us?</h4>
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-brand-orange font-montserrat">25+</div>
-                    <div className="text-sm text-gray-300 font-nunito">Years Experience</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-brand-orange font-montserrat">1000+</div>
-                    <div className="text-sm text-gray-300 font-nunito">Machines Supplied</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-brand-orange font-montserrat">500+</div>
-                    <div className="text-sm text-gray-300 font-nunito">Happy Clients</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-brand-orange font-montserrat">24/7</div>
-                    <div className="text-sm text-gray-300 font-nunito">Support</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+
           </div>
 
-          {/* Contact Form */}
           <div>
             <Card className="border-0 shadow-xl">
               <CardContent className="p-8">
@@ -226,7 +199,6 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Map Section */}
       <section className="py-12 bg-brand-lightGray">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
@@ -234,7 +206,7 @@ export default function Contact() {
               Visit Our Location
             </h2>
             <p className="text-xl text-brand-gray font-nunito">
-              Located in Ahmedabad, Gujarat - India's manufacturing hub
+              Located in Ahmedabad, Gujarat - India&apos;s manufacturing hub
             </p>
           </div>
 
@@ -243,17 +215,16 @@ export default function Contact() {
               <div className="text-center text-white">
                 <MapPin className="w-16 h-16 mx-auto mb-4 text-brand-orange" />
                 <h3 className="text-2xl font-bold mb-2 font-montserrat">Ahmedabad, Gujarat</h3>
-                <p className="text-gray-300 font-nunito">6- Ganpat Colony, Opp, Civil Hospital</p>
-                <p className="text-gray-300 font-nunito">Shahibaug, Ahmedabad - 380016</p>
-                <p className="text-gray-300 font-nunito">Gujarat, India</p>
+                {companyInfo.addressLines.map((line) => (
+                  <p key={line} className="text-gray-300 font-nunito">
+                    {line}
+                  </p>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      <Footer />
-      <WhatsAppButton />
     </main>
   );
 }

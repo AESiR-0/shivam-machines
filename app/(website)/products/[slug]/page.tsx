@@ -1,9 +1,6 @@
 import { notFound } from 'next/navigation'
 import { fetchSanityData } from '@/lib/sanity/fetch'
 import { productBySlugQuery } from '@/lib/sanity/queries'
-import Navbar from '@/components/layout/navbar'
-import Footer from '@/components/layout/footer'
-import WhatsAppButton from '@/components/ui/whatsapp-button'
 import ProductImageGallery from '@/components/products/product-image-gallery'
 import ProductInfo from '@/components/products/product-info'
 import ProductSpecifications from '@/components/products/product-specifications'
@@ -40,7 +37,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-white to-brand-lightGray">
-      <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
         {/* Breadcrumb */}
@@ -104,9 +100,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
         )}
       </div>
 
-      <Footer />
-      <WhatsAppButton />
     </main>
   )
 }
-
