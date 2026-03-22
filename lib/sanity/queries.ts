@@ -22,6 +22,7 @@ export const recentlyAddedQuery = groq`{
     slug,
     description,
     category,
+    subcategory,
     specifications,
     features,
     images,

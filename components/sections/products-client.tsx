@@ -95,60 +95,66 @@ const ProductsClient = ({ products, cta }: ProductsClientProps) => {
                   whileHover={{ y: -8, scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  <Card className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20">
-                    <CardHeader className="p-8">
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="w-12 h-12 bg-brand-orange/10 rounded-lg flex items-center justify-center">
-                          <IconComponent className="w-6 h-6 text-brand-orange" />
-                        </div>
-                        <span className="text-sm text-brand-gray font-nunito bg-brand-lightGray px-3 py-1 rounded-full capitalize">
-                          {product.category}
-                        </span>
-                      </div>
-                      
-                      <CardTitle className="text-xl font-semibold text-brand-darkBlue mb-3 font-inter">
-                        {product.title}
-                      </CardTitle>
-                      
-                      <CardDescription className="text-brand-gray font-nunito leading-relaxed mb-4">
-                        {product.description}
-                      </CardDescription>
+                  <Link
+                    href={`/products/${product.slug?.current || product._id}`}
+                    className="flex h-full"
+                  >
+                    <Card className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20 w-full overflow-hidden flex flex-col">
+                        <CardHeader className="p-8 flex-1">
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="w-12 h-12 bg-brand-orange/10 rounded-lg flex items-center justify-center">
+                              <IconComponent className="w-6 h-6 text-brand-orange" />
+                            </div>
+                            <span className="text-sm text-brand-gray font-nunito bg-brand-lightGray px-3 py-1 rounded-full capitalize">
+                              {product.category}
+                            </span>
+                          </div>
+                          
+                          <div className="mb-4">
+                            <CardTitle className="text-xl font-bold text-brand-darkBlue mb-1 font-inter group-hover:text-brand-blue transition-colors">
+                              {product.title}
+                            </CardTitle>
+                            {product.subcategory && (
+                              <div className="text-sm font-semibold text-brand-gray/80 font-nunito">
+                                {product.subcategory}
+                              </div>
+                            )}
+                          </div>
 
-                      <div className="space-y-3">
-                        {product.specifications && (
-                          <div className="text-sm text-brand-gray font-nunito">
-                            <strong>Specifications:</strong> {product.specifications}
+                          {/* Blue Divider */}
+                          <div className="w-full h-px bg-brand-blue/20 mb-4" />
+
+                          <div className="space-y-2">
+                            {product.technicalSpecs && Object.entries(product.technicalSpecs).length > 0 ? (
+                              <div className="grid grid-cols-1 gap-1.5">
+                                {Object.entries(product.technicalSpecs)
+                                  .filter(([_, value]) => value !== undefined && value !== null && value !== "")
+                                  .slice(0, 5)
+                                  .map(([key, value], idx) => (
+                                    <div key={idx} className="flex justify-between items-center text-xs font-inter border-b border-gray-50 pb-1">
+                                      <span className="text-brand-gray font-medium capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>
+                                      <span className="text-brand-darkBlue font-semibold text-right">{value}</span>
+                                    </div>
+                                  ))}
+                              </div>
+                            ) : (
+                              <CardDescription className="text-brand-gray font-nunito leading-relaxed line-clamp-3">
+                                {product.description}
+                              </CardDescription>
+                            )}
                           </div>
-                        )}
-                        
-                        {product.features && product.features.length > 0 && (
-                          <div className="flex flex-wrap gap-2">
-                            {product.features.map((feature, featureIndex) => (
-                              <span
-                                key={featureIndex}
-                                className="px-3 py-1 bg-brand-orange/10 text-brand-orange text-sm rounded-full font-nunito"
-                              >
-                                {feature}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="p-8 pt-0">
-                      <Button 
-                        variant="primary"
-                        className="w-full flex items-center justify-center gap-2 font-nunito"
-                        asChild
-                      >
-                        <Link href={`/products/${product.slug?.current || product._id}`} className="flex gap-2">
+                        </CardHeader>
+                      
+                      <CardContent className="p-8 pt-0 mt-auto border-t border-gray-50">
+                        <div
+                          className="w-full bg-brand-orange text-white text-center py-2.5 rounded-lg font-nunito font-medium transition-colors group-hover:bg-brand-darkBlue flex items-center justify-center gap-2"
+                        >
                           <span>View Details</span>
                           <ArrowRight className="w-4 h-4" />
-                        </Link>
-                      </Button>
-                    </CardContent>
-                  </Card>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </motion.div>
               );
             })}

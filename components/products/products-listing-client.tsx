@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Settings, Wrench, Cog, Gauge, Filter, X, ChevronDown, ChevronUp, Tag, SlidersHorizontal, RotateCcw, Grid, LayoutGrid } from "lucide-react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { urlFor } from "@/lib/sanity/image";
@@ -16,41 +15,52 @@ interface ProductsListingClientProps {
   categories: MachineToolCategory[];
 }
 
-const categoryIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  grinding: Settings,
-  boring: Wrench,
-  lathe: Gauge,
-  cnc: Cog,
-  gear: Settings,
-  milling: Wrench,
-  drill: Wrench,
-  others: Cog,
-};
-
 function ProductsContent({ products, categories: sanityCategories }: ProductsListingClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   
   const initialCategory = searchParams.get("category") || "all";
-
+  const initialSubcategory = searchParams.get("subcategory") || "all";
+ 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-
+  const [selectedSubcategory, setSelectedSubcategory] = useState(initialSubcategory);
+ 
   // Sync state with URL when search params change (e.g. back button)
   React.useEffect(() => {
     const cat = searchParams.get("category") || "all";
+    const subcat = searchParams.get("subcategory") || "all";
+    
     if (cat !== selectedCategory) {
       setSelectedCategory(cat);
     }
-  }, [searchParams, selectedCategory]);
+    if (subcat !== selectedSubcategory) {
+      setSelectedSubcategory(subcat);
+    }
+  }, [searchParams, selectedCategory, selectedSubcategory]);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
+    setSelectedSubcategory("all"); // Reset subcategory when category changes
+    
     const params = new URLSearchParams(searchParams.toString());
+    params.delete("subcategory"); // Clear subcategory param
+    
     if (category === "all") {
       params.delete("category");
     } else {
       params.set("category", category);
+    }
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const handleSubcategoryChange = (subcategory: string) => {
+    setSelectedSubcategory(subcategory);
+    const params = new URLSearchParams(searchParams.toString());
+    if (subcategory === "all") {
+      params.delete("subcategory");
+    } else {
+      params.set("subcategory", subcategory);
     }
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
@@ -60,10 +70,9 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [gridColumns, setGridColumns] = useState<3 | 4>(3);
-  const [mobileGridColumns, setMobileGridColumns] = useState<1 | 2>(1);
   const [expandedSections, setExpandedSections] = useState({
     category: true,
+    subcategory: true,
     specs: false,
   });
 
@@ -129,6 +138,13 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
       });
     }
 
+    // Subcategory filter
+    if (selectedSubcategory !== "all") {
+      filtered = filtered.filter(
+        (product) => product.subcategory?.toLowerCase() === selectedSubcategory.toLowerCase()
+      );
+    }
+
     // Dynamic Specification filters
     Object.entries(specFilters).forEach(([filterKey, filterVal]) => {
       if (filterVal) {
@@ -165,7 +181,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
     });
 
     return filtered;
-  }, [products, selectedCategory, specFilters, sanityCategories, getCategoryId]);
+  }, [products, selectedCategory, selectedSubcategory, specFilters, sanityCategories, getCategoryId]);
 
   // Get unique categories from products, but prioritized/mapped by sanityCategories
   const categories = useMemo(() => {
@@ -178,8 +194,38 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
     ];
   }, [sanityCategories, getCategoryId]);
 
+  // Derive unique subcategories based on current products and category
+  const subcategories = useMemo(() => {
+    const subSet = new Set<string>();
+    
+    // Use products filtered ONLY by category to show relevant subcategories
+    let categoryFiltered = products;
+    if (selectedCategory !== "all") {
+      categoryFiltered = categoryFiltered.filter(p => {
+        if (!p.category) return false;
+        const matchedCat = (sanityCategories || []).find(c => getCategoryId(c) === selectedCategory);
+        if (matchedCat) {
+          const prodCat = p.category.toLowerCase();
+          return prodCat === getCategoryId(matchedCat) || 
+                 prodCat === matchedCat.name.toLowerCase() || 
+                 prodCat === matchedCat.slug?.current.toLowerCase();
+        }
+        return p.category.toLowerCase() === selectedCategory.toLowerCase();
+      });
+    }
+
+    categoryFiltered.forEach(p => {
+      if (p.subcategory) subSet.add(p.subcategory);
+    });
+
+    return [
+      { id: "all", name: "All Subcategories" },
+      ...Array.from(subSet).sort().map(sub => ({ id: sub.toLowerCase(), name: sub }))
+    ];
+  }, [products, selectedCategory, sanityCategories, getCategoryId]);
+
   // Derived state to check if ANY spec filter is active
-  const hasActiveSpecFilters = Object.values(specFilters).some(v => v !== "");
+  const hasActiveSpecFilters = Object.values(specFilters).some(v => v !== "") || selectedSubcategory !== "all";
 
   return (
     <main className="min-h-screen">
@@ -208,7 +254,6 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="w-full flex items-center justify-center gap-2 font-candara"
           >
-            <Filter className="w-4 h-4" />
             {sidebarOpen ? "Hide Filters" : "Show Filters"}
           </Button>
         </div>
@@ -222,7 +267,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
               className="h-12 w-12 p-0 rounded-lg shadow-lg"
               title="Show Filters"
             >
-              <Filter className="w-5 h-5" />
+              Filter
             </Button>
           </div>
         )}
@@ -249,29 +294,22 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
         >
           {/* Header */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-            <h2 className={`text-xl font-bold text-brand-darkBlue font-candara flex items-center gap-2 ${sidebarCollapsed ? "lg:hidden" : ""}`}>
-              <div className="w-8 h-8 bg-gradient-to-br from-brand-orange to-brand-orange/80 rounded-lg flex items-center justify-center">
-                <Filter className="w-4 h-4 text-white" />
-              </div>
+            <h2 className={`text-xl font-bold text-brand-darkBlue font-candara ${sidebarCollapsed ? "lg:hidden" : ""}`}>
               Filters
             </h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                 className="hidden lg:flex text-brand-gray hover:text-brand-darkBlue transition-colors p-1.5 rounded-lg hover:bg-gray-100"
-                title={sidebarCollapsed ? "Expand Filters" : "Collapse Filters"}
+                title={sidebarCollapsed ? "Expand" : "Collapse"}
               >
-                {sidebarCollapsed ? (
-                  <Filter className="w-5 h-5" />
-                ) : (
-                  <X className="w-5 h-5" />
-                )}
+                {sidebarCollapsed ? "Filter" : "Close"}
               </button>
               <button
                 onClick={() => setSidebarOpen(false)}
                 className="lg:hidden text-brand-gray hover:text-brand-darkBlue transition-colors p-1 rounded-lg hover:bg-gray-100"
               >
-                <X className="w-5 h-5" />
+                Close
               </button>
             </div>
           </div>
@@ -288,11 +326,11 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                     <button
                       onClick={() => {
                         handleCategoryChange("all");
+                        handleSubcategoryChange("all");
                         setSpecFilters({});
                       }}
-                      className="text-xs text-brand-orange hover:text-brand-darkBlue font-nunito flex items-center gap-1 transition-colors"
+                      className="text-xs text-brand-orange hover:text-brand-darkBlue font-nunito transition-colors"
                     >
-                      <RotateCcw className="w-3 h-3" />
                       Clear All
                     </button>
                   </div>
@@ -306,17 +344,12 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                     onClick={() => toggleSection("category")}
                     className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
                   >
-                    <div className="flex items-center gap-2">
-                      <Tag className="w-4 h-4 text-brand-orange" />
-                      <span className="text-sm font-semibold text-brand-darkBlue font-inter">
-                        Category
-                      </span>
-                    </div>
-                    {expandedSections.category ? (
-                      <ChevronUp className="w-4 h-4 text-brand-gray" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-brand-gray" />
-                    )}
+                    <span className="text-sm font-semibold text-brand-darkBlue font-inter">
+                      Category
+                    </span>
+                    <span className="text-xs text-brand-gray">
+                      {expandedSections.category ? "Hide" : "Show"}
+                    </span>
                   </button>
                   <AnimatePresence>
                     {expandedSections.category && (
@@ -345,6 +378,48 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                   </AnimatePresence>
                 </div>
 
+                {/* Subcategory Filter - Collapsible */}
+                {subcategories.length > 1 && (
+                  <div className="bg-white/80 rounded-lg border border-gray-200/50 overflow-hidden shadow-sm">
+                    <button
+                      onClick={() => toggleSection("subcategory")}
+                      className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+                    >
+                      <span className="text-sm font-semibold text-brand-darkBlue font-inter">
+                        Subcategory
+                      </span>
+                      <span className="text-xs text-brand-gray">
+                        {expandedSections.subcategory ? "Hide" : "Show"}
+                      </span>
+                    </button>
+                    <AnimatePresence>
+                      {expandedSections.subcategory && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-4 pb-4">
+                            <select
+                              value={selectedSubcategory}
+                              onChange={(e) => handleSubcategoryChange(e.target.value)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-transparent font-nunito text-sm bg-white"
+                            >
+                              {subcategories.map((sub) => (
+                                <option key={sub.id} value={sub.id}>
+                                  {sub.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                )}
+
                 {/* Specification Filters - Collapsible */}
                 {availableSpecKeys.length > 0 && (
                   <div className="bg-white/80 rounded-lg border border-gray-200/50 overflow-hidden shadow-sm">
@@ -353,7 +428,6 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                       className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <SlidersHorizontal className="w-4 h-4 text-brand-orange" />
                         <span className="text-sm font-semibold text-brand-darkBlue font-inter">
                           Specifications
                         </span>
@@ -363,11 +437,9 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                           </span>
                         )}
                       </div>
-                      {expandedSections.specs ? (
-                        <ChevronUp className="w-4 h-4 text-brand-gray" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4 text-brand-gray" />
-                      )}
+                      <span className="text-xs text-brand-gray">
+                        {expandedSections.specs ? "Hide" : "Show"}
+                      </span>
                     </button>
                     <AnimatePresence>
                       {expandedSections.specs && (
@@ -444,179 +516,99 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
             </div>
           ) : (
             <>
-              {/* Products Header with Count and Grid Toggle */}
+              {/* Products Header with Count */}
               <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="text-sm text-brand-gray font-nunito">
                   Showing <span className="font-semibold text-brand-darkBlue">{filteredAndSortedProducts.length}</span> of <span className="font-semibold text-brand-darkBlue">{products.length}</span> products
                 </div>
-                <div className="flex items-center gap-4">
-                  {/* Mobile Grid Toggle (1 or 2 columns) */}
-                  <div className="flex items-center gap-2 lg:hidden">
-                    <span className="text-xs text-brand-gray font-nunito">Grid:</span>
-                    <div className="flex items-center gap-1 bg-white rounded-lg border border-gray-200 p-1">
-                      <button
-                        onClick={() => setMobileGridColumns(1)}
-                        className={`p-2 rounded transition-all ${mobileGridColumns === 1
-                          ? "bg-brand-orange text-white shadow-sm"
-                          : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
-                          }`}
-                        title="1 Column"
-                      >
-                        <Grid className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => setMobileGridColumns(2)}
-                        className={`p-2 rounded transition-all ${mobileGridColumns === 2
-                          ? "bg-brand-orange text-white shadow-sm"
-                          : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
-                          }`}
-                        title="2 Columns"
-                      >
-                        <LayoutGrid className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                  {/* Desktop Grid Toggle (3 or 4 columns) */}
-                  <div className="hidden lg:flex items-center gap-2">
-                    <span className="text-xs text-brand-gray font-nunito">Grid:</span>
-                    <div className="flex items-center gap-1 bg-white rounded-lg border border-gray-200 p-1">
-                      <button
-                        onClick={() => setGridColumns(3)}
-                        className={`p-2 rounded transition-all ${gridColumns === 3
-                          ? "bg-brand-orange text-white shadow-sm"
-                          : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
-                          }`}
-                        title="3 Columns"
-                      >
-                        <Grid className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => setGridColumns(4)}
-                        className={`p-2 rounded transition-all ${gridColumns === 4
-                          ? "bg-brand-orange text-white shadow-sm"
-                          : "text-brand-gray hover:text-brand-darkBlue hover:bg-gray-50"
-                          }`}
-                        title="4 Columns"
-                      >
-                        <LayoutGrid className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
-              <div className={`grid gap-8 ${mobileGridColumns === 1
-                ? "grid-cols-1"
-                : "grid-cols-2"
-                } md:grid-cols-2 ${gridColumns === 3
-                  ? "xl:grid-cols-3"
-                  : "xl:grid-cols-4"
-                }`}>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {filteredAndSortedProducts.map((product) => {
-                  const IconComponent =
-                    categoryIconMap[product.category] || Settings;
                   const imageUrl = product.images?.[0]
                     ? urlFor(product.images[0]).width(600).height(400).url()
                     : null;
 
                   return (
-                    <Card
+                    <Link
                       key={product._id}
-                      className="group hover:shadow-2xl transition-all duration-300 bg-white border border-gray-200 hover:border-brand-orange/40 flex flex-col h-full overflow-hidden"
+                      href={`/products/${product.slug?.current || product._id}`}
+                      className="flex"
                     >
-                      {/* Hero Image */}
-                      <div className="relative w-full h-56 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                        {imageUrl ? (
-                          <>
-                            <Image
-                              src={imageUrl}
-                              alt={product.title}
-                              fill
-                              className="object-cover group-hover:scale-110 transition-transform duration-500"
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              priority={false}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
-                          </>
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <IconComponent className="w-20 h-20 text-gray-300" />
-                          </div>
-                        )}
-
-                        {/* Category Badge Overlay */}
-                        <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-brand-darkBlue text-xs font-semibold rounded-full capitalize shadow-sm font-nunito">
-                            {product.category}
-                          </span>
-                        </div>
-
-                        {/* Icon Badge Overlay */}
-                        <div className="absolute top-4 right-4">
-                          <div className="w-10 h-10 bg-white/95 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm">
-                            <IconComponent className="w-5 h-5 text-brand-orange" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <CardHeader className="p-6 flex-1 flex flex-col">
-                        <CardTitle className="text-lg font-bold text-brand-darkBlue mb-2 font-inter line-clamp-2 group-hover:text-brand-orange transition-colors">
-                          {product.title}
-                        </CardTitle>
-
-                        <CardDescription className="text-sm text-brand-gray font-nunito leading-relaxed mb-4 line-clamp-2">
-                          {product.description}
-                        </CardDescription>
-
-                        <div className="space-y-3 flex-1">
-                          {product.specifications && (
-                            <div className="bg-brand-lightGray/50 rounded-lg p-3 border border-gray-100">
-                              <div className="text-xs font-semibold text-brand-darkBlue mb-1 font-inter uppercase tracking-wide">
-                                Specifications
-                              </div>
-                              <div className="text-xs text-brand-gray font-nunito line-clamp-2">
-                                {product.specifications}
-                              </div>
+                      <Card className="group hover:shadow-2xl transition-all duration-300 bg-white border border-gray-200 hover:border-brand-orange/40 flex flex-col h-full overflow-hidden w-full">
+                        {/* Hero Image */}
+                        <div className="relative w-full h-56 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                          {imageUrl ? (
+                            <>
+                              <Image
+                                src={imageUrl}
+                                alt={product.title}
+                                fill
+                                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                priority={false}
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
+                            </>
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center p-4 text-center text-gray-400 text-xs font-nunito">
+                              No Image Available
                             </div>
                           )}
 
-                          {product.features && product.features.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5">
-                              {product.features.slice(0, 3).map((feature, featureIndex) => (
-                                <span
-                                  key={featureIndex}
-                                  className="px-2.5 py-1 bg-brand-orange/10 text-brand-orange text-xs font-medium rounded-md font-nunito border border-brand-orange/20"
-                                >
-                                  {feature}
-                                </span>
-                              ))}
-                              {product.features.length > 3 && (
-                                <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-md font-nunito border border-gray-200">
-                                  +{product.features.length - 3}
-                                </span>
-                              )}
-                            </div>
-                          )}
-
-
+                          {/* Category Badge Overlay */}
+                          <div className="absolute top-4 left-4">
+                            <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-brand-darkBlue text-xs font-semibold rounded-full capitalize shadow-sm font-nunito">
+                              {product.category}
+                            </span>
+                          </div>
                         </div>
-                      </CardHeader>
 
-                      <CardContent className="p-6 pt-0 mt-auto border-t border-gray-100">
-                        <Button
-                          variant="primary"
-                          className="w-full flex items-center justify-center gap-2 font-candara text-sm"
-                          asChild
-                        >
-                          <Link
-                            href={`/products/${product.slug?.current || product._id}`}
-                            className="flex gap-2"
+                        <CardHeader className="p-6 flex-1 flex flex-col">
+                          <div className="mb-4">
+                            <CardTitle className="text-xl font-bold text-brand-darkBlue mb-1 font-inter line-clamp-2 group-hover:text-brand-blue transition-colors">
+                              {product.title}
+                            </CardTitle>
+                            {product.subcategory && (
+                              <div className="text-sm font-semibold text-brand-gray/80 font-nunito">
+                                {product.subcategory}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Blue Divider */}
+                          <div className="w-full h-px bg-brand-blue/20 mb-4" />
+
+                          <div className="space-y-2 flex-1">
+                            {product.technicalSpecs && Object.entries(product.technicalSpecs).length > 0 ? (
+                              <div className="grid grid-cols-1 gap-1.5">
+                                {Object.entries(product.technicalSpecs)
+                                  .filter(([_, value]) => value !== undefined && value !== null && value !== "")
+                                  .slice(0, 5)
+                                  .map(([key, value], idx) => (
+                                    <div key={idx} className="flex justify-between items-center text-xs font-nunito border-b border-gray-50 pb-1">
+                                      <span className="text-brand-gray font-medium capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>
+                                      <span className="text-brand-darkBlue font-semibold text-right">{value}</span>
+                                    </div>
+                                  ))}
+                              </div>
+                            ) : (
+                              <CardDescription className="text-sm text-brand-gray font-nunito leading-relaxed line-clamp-3">
+                                {product.description}
+                              </CardDescription>
+                            )}
+                          </div>
+                        </CardHeader>
+
+                        <CardContent className="p-6 pt-0 mt-auto border-t border-gray-100">
+                          <div
+                            className="w-full bg-brand-orange text-white text-center py-2.5 rounded-lg font-candara text-sm font-medium transition-colors group-hover:bg-brand-darkBlue"
                           >
-                            <span>View Details</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </Link>
-                        </Button>
-                      </CardContent>
-                    </Card>
+                            View Details
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   );
                 })}
               </div>

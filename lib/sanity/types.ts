@@ -24,6 +24,7 @@ export interface Product {
   slug: { current: string }
   description: string
   category: string
+  subcategory?: string
   specifications?: string
   features?: string[]
   images?: SanityImageSource[]

@@ -60,9 +60,16 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Title */}
-      <h1 className="text-3xl lg:text-4xl font-bold text-brand-darkBlue font-candara">
-        {product.title}
-      </h1>
+      <div className="space-y-1">
+        <h1 className="text-3xl lg:text-4xl font-bold text-brand-darkBlue font-candara">
+          {product.title}
+        </h1>
+        {product.subcategory && (
+          <p className="text-lg font-semibold text-brand-gray/80 font-nunito">
+            {product.subcategory}
+          </p>
+        )}
+      </div>
 
       {/* Stock Status */}
       {/* <div className="flex items-center py-4 border-y border-gray-200">

@@ -1,0 +1,111 @@
+﻿[dotenv@17.2.3] injecting env (7) from .env.local -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+[
+  {
+    "_id": "5yikWs4MCbSvuuwBjvMNrA",
+    "category": "boring",
+    "subcategory": "Table - diameter of spindle to 90 mm",
+    "title": "W 75"
+  },
+  {
+    "_id": "5yikWs4MCbSvuuwBjvMeag",
+    "category": "boring",
+    "subcategory": "H - floor type",
+    "title": "AFP 180"
+  },
+  {
+    "_id": "5yikWs4MCbSvuuwBjvOBL4",
+    "category": "lathe",
+    "subcategory": "Single Column",
+    "title": "DS 12 NC"
+  },
+  {
+    "_id": "5yikWs4MCbSvuuwBjvOTZ8",
+    "category": "lathe",
+    "subcategory": "Centre to diameter over 800 mm",
+    "title": "SR 2000x8"
+  },
+  {
+    "_id": "5yikWs4MCbSvuuwBjvOVbm",
+    "category": "lathe",
+    "subcategory": "Automatic",
+    "title": "SL-154SY"
+  },
+  {
+    "_id": "K5hr6JAXZXxpR4VtpsUhtH",
+    "category": "boring",
+    "subcategory": null,
+    "title": "Horizontal Boring Machine - Table Type"
+  },
+  {
+    "_id": "K5hr6JAXZXxpR4VtpsUiOj",
+    "category": "grinding",
+    "subcategory": null,
+    "title": "Cylindrical Grinding Machine"
+  },
+  {
+    "_id": "h7BuANLfQq977Y2qc881G2",
+    "category": "cnc",
+    "subcategory": "Vertical",
+    "title": "MA 600 H II"
+  },
+  {
+    "_id": "h7BuANLfQq977Y2qc883Pu",
+    "category": "boring",
+    "subcategory": "Table - diameter of spindle over 90 mm",
+    "title": "W 100 A"
+  },
+  {
+    "_id": "h7BuANLfQq977Y2qc88knN",
+    "category": "boring",
+    "subcategory": "Rotary Table",
+    "title": "DRTS3100"
+  },
+  {
+    "_id": "h7BuANLfQq977Y2qc88pVD",
+    "category": "lathe",
+    "subcategory": "Centre to diameter 800 mm",
+    "title": "SN 320/750"
+  },
+  {
+    "_id": "hTPvuZC2KTn8PDpfRXeieI",
+    "category": "lathe",
+    "subcategory": null,
+    "title": "Vertical Lathe Machine"
+  },
+  {
+    "_id": "hTPvuZC2KTn8PDpfRXeira",
+    "category": "cnc",
+    "subcategory": null,
+    "title": "CNC Machining Centre"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45QqUJE",
+    "category": "cnc",
+    "subcategory": "Horizontal",
+    "title": "H 40"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45QqxIZ",
+    "category": "lathe",
+    "subcategory": "Double Column",
+    "title": "1525 CNC"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45Qqxzy",
+    "category": "lathe",
+    "subcategory": "CNC - diameter up to 800 mm",
+    "title": "NEF  400"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45Qqyf9",
+    "category": "lathe",
+    "subcategory": "CNC - diameter over 800 mm",
+    "title": "SNG 1600x10000"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45Qqz85",
+    "category": "lathe",
+    "subcategory": "CNC multi axis",
+    "title": "GLS- 200Y"
+  }
+]

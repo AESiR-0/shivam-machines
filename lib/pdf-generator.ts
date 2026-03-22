@@ -215,6 +215,48 @@ async function loadOptimizedImageDataUrl(
   return imageCache.get(cacheKey)!;
 }
 
+async function addWatermark(doc: jsPDF, pageWidth: number, pageHeight: number) {
+  const logoDataUrl = await loadOptimizedImageDataUrl(companyInfo.pdfLogoPath, {
+    maxWidth: 200,
+    quality: 0.5,
+  });
+
+  if (!logoDataUrl) return;
+
+  // Use jspdf-extgstate for opacity
+  doc.saveGraphicsState();
+  
+  // @ts-ignore - GState is a plugin for jsPDF
+  const gState = new (doc as any).GState({ opacity: 0.05 });
+  doc.setGState(gState);
+
+  const logoWidth = 60;
+  const logoHeight = 40;
+  
+  // Draw tiled watermark across the page
+  const spacingX = 100;
+  const spacingY = 80;
+  
+  for (let y = -20; y < pageHeight + 40; y += spacingY) {
+    for (let x = -20; x < pageWidth + 40; x += spacingX) {
+      // Rotate 45 degrees
+      doc.addImage(
+        logoDataUrl, 
+        "JPEG", 
+        x, 
+        y, 
+        logoWidth, 
+        logoHeight, 
+        undefined, 
+        "NONE", 
+        -45
+      );
+    }
+  }
+
+  doc.restoreGraphicsState();
+}
+
 async function addLetterhead(doc: jsPDF, pageWidth: number) {
   const blue = hexToRgb(brandColors.darkBlue);
   const gray = hexToRgb(brandColors.gray);
@@ -347,7 +389,10 @@ async function renderCatalogProductPage(
   const gray = hexToRgb(brandColors.gray);
   const lightGray = hexToRgb(brandColors.lightGray);
   const border = hexToRgb(brandColors.border);
-
+ 
+  // Add background watermark
+  await addWatermark(doc, pageWidth, pageHeight);
+ 
   await addLetterhead(doc, pageWidth);
 
   let yPos = getContentStartY();

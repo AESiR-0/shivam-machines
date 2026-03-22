@@ -3,9 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Settings, Wrench, Cog, Gauge, Drill, Layers, Factory } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Settings } from "lucide-react";
 import Link from "next/link";
 import { urlFor } from "@/lib/sanity/image";
 import type { MachineToolCategory } from "@/lib/sanity/types";
@@ -16,34 +15,44 @@ interface MachineToolsClientProps {
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Settings,
-  Wrench,
-  Cog,
-  Gauge,
-  Drill,
-  Layers,
-  Factory,
 };
 
-const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
-  // Extract category ID from href or fallback to slug
-  const getCategoryId = (cat: MachineToolCategory) => {
-    if (cat.href && cat.href.includes("category=")) {
-      return cat.href.split("category=")[1];
-    }
-    return cat.slug?.current || cat.name.toLowerCase();
-  };
+const BG_SHADES = [
+  "bg-blue-50/40",
+  "bg-orange-50/40",
+  "bg-emerald-50/40",
+  "bg-purple-50/40",
+  "bg-cyan-50/40",
+  "bg-indigo-50/40",
+  "bg-pink-50/40",
+  "bg-teal-50/40",
+  "bg-sky-50/40",
+  "bg-amber-50/40",
+  "bg-rose-50/40",
+  "bg-violet-50/40",
+  "bg-lime-50/40",
+  "bg-yellow-50/40",
+  "bg-fuchsia-50/40",
+  "bg-slate-50/40",
+];
 
-  const displayCategories = categories.map(cat => ({
-    name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
-    description: cat.description || "",
-    count: cat.count || "0 Machines",
-    href: cat.href || `/products?category=${getCategoryId(cat)}`,
-    color: cat.color || "from-gray-500 to-gray-600",
+const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
+  // Sort categories by order field
+  const sortedCategories = [...(categories || [])].sort(
+    (a, b) => (a.order || 999) - (b.order || 999),
+  );
+
+  const displayCategories = sortedCategories.map((cat) => ({
+    name: cat.name,
+    href:
+      cat.href ||
+      `/products?category=${cat.slug?.current || cat.name.toLowerCase().replace(/\s+/g, "-")}`,
+    imageUrl: cat.image ? urlFor(cat.image).width(400).height(400).url() : null,
     icon: cat.icon || "Settings",
   }));
 
   return (
-    <section className="py-12 bg-gradient-to-br from-brand-lightGray to-white">
+    <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -52,106 +61,58 @@ const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-brand-darkBlue mb-6 font-montserrat">
+          <h2 className="text-4xl sm:text-5xl font-bold text-brand-darkBlue mb-6 font-montserrat tracking-tight">
             Machine <span className="text-brand-orange">Tools</span>
           </h2>
-          <p className="text-xl text-brand-gray max-w-4xl mx-auto font-nunito leading-relaxed">
-            Browse our comprehensive collection of machine tools organized by category. 
-            Click on any category to view available machines with detailed specifications.
-          </p>
         </motion.div>
- 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {displayCategories.map((group, index) => {
             const IconComponent = iconMap[group.icon] || Settings;
-            // Get image from Sanity category if available
-            const categoryData = categories.find(cat => 
-              cat.name === group.name || 
-              cat.slug?.current === group.href.split('category=')[1] ||
-              getCategoryId(cat) === group.href.split('category=')[1]
-            );
-            const imageUrl = categoryData?.image
-              ? urlFor(categoryData.image).width(600).height(400).url()
-              : null;
-            
+            const bgShade = BG_SHADES[index % BG_SHADES.length];
+            const innerBgShade = BG_SHADES[(index + 4) % BG_SHADES.length]; // Offset for contrast
+
             return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
               >
                 <Link href={group.href}>
-                  <motion.div
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  <Card
+                    className={`group transition-all duration-300 ${bgShade} border border-gray-100 shadow-sm hover:shadow-md cursor-pointer h-24 flex overflow-hidden rounded-xl hover:bg-blue-600 hover:border-blue-600`}
                   >
-                    <Card className="group transition-all duration-500 bg-white border-0 shadow-xl hover:shadow-2xl cursor-pointer h-full flex flex-col overflow-hidden rounded-3xl hover:-translate-y-1">
-                      {/* Hero Icon Section - More Compact */}
-                      <div className={`relative w-full h-40 overflow-hidden bg-gradient-to-br ${group.color} p-6 flex items-center justify-center`}>
-                        {imageUrl ? (
-                          <>
-                            <Image
-                              src={imageUrl}
-                              alt={group.name}
-                              fill
-                              className="object-cover group-hover:scale-110 transition-transform duration-700 opacity-10"
-                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                              priority={false}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-transparent" />
-                          </>
-                        ) : null}
-                        
-                        {/* Subtle animated gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/3 to-white/8 group-hover:from-white/5 group-hover:via-white/10 group-hover:to-white/15 transition-all duration-700"></div>
-                        
-                        {/* Icon with refined glassmorphism */}
-                        <div className="relative z-10">
-                          <motion.div
-                            className={`w-20 h-20 bg-white/30 backdrop-blur-2xl rounded-2xl flex items-center justify-center shadow-[0_4px_20px_0_rgba(0,0,0,0.25)] border border-white/50 group-hover:scale-105 group-hover:rotate-2 transition-all duration-300`}
-                            whileHover={{ scale: 1.1, rotate: 3 }}
-                          >
-                            <IconComponent className="w-10 h-10 text-white drop-shadow-lg" />
-                          </motion.div>
-                        </div>
-                        
-                        {/* Subtle decorative elements */}
-                        <div className="absolute top-3 right-3 w-12 h-12 bg-white/8 rounded-full blur-xl"></div>
-                        <div className="absolute bottom-3 left-3 w-10 h-10 bg-white/6 rounded-full blur-lg"></div>
+                    <div className="flex w-full h-full items-center p-3">
+                      {/* Image/Icon Area */}
+                      <div
+                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden relative flex items-center justify-center border border-white/40 group-hover:border-transparent transition-colors shadow-sm`}
+                      >
+                        {group.imageUrl ? (
+                          <Image
+                            src={group.imageUrl}
+                            alt={group.name}
+                            fill
+                            className="object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+                            sizes="80px"
+                            priority={false}
+                          />
+                        ) : (
+                          <IconComponent
+                            className={`w-8 h-8 text-gray-400 group-hover:text-white transition-colors  `}
+                          />
+                        )}
                       </div>
-                      
-                      <CardContent className="p-6 text-center flex flex-col flex-1 bg-white">
-                        <h3 className="text-lg font-bold text-brand-darkBlue mb-2.5 group-hover:text-brand-orange transition-colors duration-300 font-inter">
+
+                      {/* Content Area */}
+                      <div className="flex-1 ml-4 min-w-0">
+                        <h3 className="text-[15px] font-bold text-gray-900 group-hover:text-white transition-colors duration-300 font-inter line-clamp-2 leading-tight pr-2">
                           {group.name}
                         </h3>
-                        <p className="text-brand-gray text-sm mb-4 leading-relaxed font-nunito line-clamp-2 flex-1 min-h-[2.5rem]">
-                          {group.description}
-                        </p>
-
-                        <div className="flex items-center justify-center mb-5">
-                          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-orange/8 rounded-full border border-brand-orange/20 group-hover:bg-brand-orange/12 group-hover:border-brand-orange/30 transition-all">
-                            <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
-                            <span className="text-xs font-semibold text-brand-orange font-nunito">{group.count}</span>
-                          </div>
-                        </div>
-
-                        <div className="mt-auto pt-2">
-                          <Button
-                            variant="primary"
-                            className="w-full flex items-center justify-center gap-2 font-candara text-sm rounded-xl group-hover:shadow-lg transition-all"
-                            asChild
-                          >
-                            <Link href={group.href} className="flex gap-2">
-                              <span>View Category</span>
-                              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
+                      </div>
+                    </div>
+                  </Card>
                 </Link>
               </motion.div>
             );
@@ -163,4 +124,3 @@ const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
 };
 
 export default MachineToolsClient;
-

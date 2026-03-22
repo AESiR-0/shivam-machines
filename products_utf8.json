@@ -1,0 +1,93 @@
+﻿[dotenv@17.2.3] injecting env (7) from .env.local -- tip: ΓÜÖ∩╕Å  write to custom object with { processEnv: myObject }
+[
+  {
+    "_id": "5yikWs4MCbSvuuwBjvMNrA",
+    "category": "boring",
+    "title": "W 75"
+  },
+  {
+    "_id": "5yikWs4MCbSvuuwBjvMeag",
+    "category": "boring",
+    "title": "AFP 180"
+  },
+  {
+    "_id": "5yikWs4MCbSvuuwBjvOBL4",
+    "category": "lathe",
+    "title": "DS 12 NC"
+  },
+  {
+    "_id": "5yikWs4MCbSvuuwBjvOTZ8",
+    "category": "lathe",
+    "title": "SR 2000x8"
+  },
+  {
+    "_id": "5yikWs4MCbSvuuwBjvOVbm",
+    "category": "lathe",
+    "title": "SL-154SY"
+  },
+  {
+    "_id": "K5hr6JAXZXxpR4VtpsUhtH",
+    "category": "boring",
+    "title": "Horizontal Boring Machine - Table Type"
+  },
+  {
+    "_id": "K5hr6JAXZXxpR4VtpsUiOj",
+    "category": "grinding",
+    "title": "Cylindrical Grinding Machine"
+  },
+  {
+    "_id": "h7BuANLfQq977Y2qc881G2",
+    "category": "cnc",
+    "title": "MA 600 H II"
+  },
+  {
+    "_id": "h7BuANLfQq977Y2qc883Pu",
+    "category": "boring",
+    "title": "W 100 A"
+  },
+  {
+    "_id": "h7BuANLfQq977Y2qc88knN",
+    "category": "boring",
+    "title": "DRTS3100"
+  },
+  {
+    "_id": "h7BuANLfQq977Y2qc88pVD",
+    "category": "lathe",
+    "title": "SN 320/750"
+  },
+  {
+    "_id": "hTPvuZC2KTn8PDpfRXeieI",
+    "category": "lathe",
+    "title": "Vertical Lathe Machine"
+  },
+  {
+    "_id": "hTPvuZC2KTn8PDpfRXeira",
+    "category": "cnc",
+    "title": "CNC Machining Centre"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45QqUJE",
+    "category": "cnc",
+    "title": "H 40"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45QqxIZ",
+    "category": "lathe",
+    "title": "1525 CNC"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45Qqxzy",
+    "category": "lathe",
+    "title": "NEF  400"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45Qqyf9",
+    "category": "lathe",
+    "title": "SNG 1600x10000"
+  },
+  {
+    "_id": "s4zQ4gLO9FDug2F45Qqz85",
+    "category": "lathe",
+    "title": "GLS- 200Y"
+  }
+]

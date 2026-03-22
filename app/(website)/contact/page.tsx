@@ -30,14 +30,17 @@ export default function Contact() {
     {
       icon: Clock,
       title: "Business Hours",
-      details: ["Mon - Fri: 9:00 AM - 6:00 PM", "Sat: 9:00 AM - 2:00 PM", "Sun: Closed"],
+      details: [
+        "Mon - Fri: 9:00 AM - 6:00 PM",
+        "Sat: 9:00 AM - 2:00 PM",
+        "Sun: Closed",
+      ],
       color: "from-purple-500 to-purple-600",
     },
   ];
 
   return (
     <main className="min-h-screen">
-
       <section className="bg-gradient-to-br from-brand-lightGray via-white to-brand-steel/5 pt-12 pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
@@ -75,7 +78,10 @@ export default function Contact() {
                           </h4>
                           <div className="space-y-1">
                             {info.details.map((detail) => (
-                              <p key={detail} className="text-brand-gray text-sm font-nunito">
+                              <p
+                                key={detail}
+                                className="text-brand-gray text-sm font-nunito"
+                              >
                                 {detail}
                               </p>
                             ))}
@@ -87,8 +93,6 @@ export default function Contact() {
                 ))}
               </div>
             </div>
-
-
           </div>
 
           <div>
@@ -101,7 +105,10 @@ export default function Contact() {
                 <form className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter">
+                      <label
+                        htmlFor="name"
+                        className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+                      >
                         Full Name *
                       </label>
                       <Input
@@ -113,7 +120,10 @@ export default function Contact() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+                      >
                         Email Address *
                       </label>
                       <Input
@@ -129,7 +139,10 @@ export default function Contact() {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter">
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+                      >
                         Phone Number
                       </label>
                       <Input
@@ -140,7 +153,10 @@ export default function Contact() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="company" className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter">
+                      <label
+                        htmlFor="company"
+                        className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+                      >
                         Company Name
                       </label>
                       <Input
@@ -153,7 +169,10 @@ export default function Contact() {
                   </div>
 
                   <div>
-                    <label htmlFor="machine-type" className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter">
+                    <label
+                      htmlFor="machine-type"
+                      className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+                    >
                       Machine Type Interest
                     </label>
                     <select
@@ -162,7 +181,9 @@ export default function Contact() {
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange"
                     >
                       <option value="">Select machine type</option>
-                      <option value="cylindrical-grinding">Cylindrical Grinding Machines</option>
+                      <option value="cylindrical-grinding">
+                        Cylindrical Grinding Machines
+                      </option>
                       <option value="boring-machines">Boring Machines</option>
                       <option value="lathe-machines">Lathe Machines</option>
                       <option value="cnc-machines">CNC Machines</option>
@@ -172,7 +193,10 @@ export default function Contact() {
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter">
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+                    >
                       Message *
                     </label>
                     <Textarea
@@ -198,33 +222,6 @@ export default function Contact() {
           </div>
         </div>
       </div>
-
-      <section className="py-12 bg-brand-lightGray">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-brand-darkBlue mb-6 font-montserrat">
-              Visit Our Location
-            </h2>
-            <p className="text-xl text-brand-gray font-nunito">
-              Located in Ahmedabad, Gujarat - India&apos;s manufacturing hub
-            </p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div className="h-96 bg-brand-darkBlue flex items-center justify-center">
-              <div className="text-center text-white">
-                <MapPin className="w-16 h-16 mx-auto mb-4 text-brand-orange" />
-                <h3 className="text-2xl font-bold mb-2 font-montserrat">Ahmedabad, Gujarat</h3>
-                {companyInfo.addressLines.map((line) => (
-                  <p key={line} className="text-gray-300 font-nunito">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }

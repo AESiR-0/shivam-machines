@@ -120,108 +120,101 @@ const RecentlyAddedClient = ({ data }: RecentlyAddedClientProps) => {
                       key={machine._id} 
                       className="min-w-0 flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 px-3"
                     >
-                      <Card
-                          className="group hover:shadow-lg transition-all duration-300 bg-white border border-gray-200 hover:border-brand-orange/40 flex flex-col h-full overflow-hidden"
-                        >
-                          {/* Hero Image */}
-                          <div className="relative w-full h-56 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                            {imageUrl ? (
-                              <>
-                                <Image
-                                  src={imageUrl}
-                                  alt={machine.title}
-                                  fill
-                                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                                  priority={index < 4}
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
-                              </>
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <IconComponent className="w-20 h-20 text-gray-300" />
+                      <Link
+                        href={`/products/${machine.slug?.current || machine._id}`}
+                        className="flex h-full"
+                      >
+                        <Card
+                            className="group hover:shadow-lg transition-all duration-300 bg-white border border-gray-200 hover:border-brand-orange/40 flex flex-col h-full overflow-hidden w-full"
+                          >
+                            {/* Hero Image */}
+                            <div className="relative w-full h-56 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                              {imageUrl ? (
+                                <>
+                                  <Image
+                                    src={imageUrl}
+                                    alt={machine.title}
+                                    fill
+                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                    priority={index < 4}
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
+                                </>
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <IconComponent className="w-20 h-20 text-gray-300" />
+                                </div>
+                              )}
+                              
+                              {/* Category Badge Overlay */}
+                              <div className="absolute top-4 left-4">
+                                <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-brand-darkBlue text-xs font-semibold rounded-full capitalize shadow-sm font-nunito">
+                                  {machine.category}
+                                </span>
                               </div>
-                            )}
-                            
-                            {/* Category Badge Overlay */}
-                            <div className="absolute top-4 left-4">
-                              <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-brand-darkBlue text-xs font-semibold rounded-full capitalize shadow-sm font-nunito">
-                                {machine.category}
-                              </span>
-                            </div>
-                            
-                            {/* Icon Badge Overlay */}
-                            <div className="absolute top-4 right-4">
-                              <div className="w-10 h-10 bg-white/95 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm">
-                                <IconComponent className="w-5 h-5 text-brand-orange" />
+                              
+                              {/* Icon Badge Overlay */}
+                              <div className="absolute top-4 right-4">
+                                <div className="w-10 h-10 bg-white/95 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm">
+                                  <IconComponent className="w-5 h-5 text-brand-orange" />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          
-                          <CardHeader className="p-6 flex-1 flex flex-col">
-                            <CardTitle className="text-lg font-bold text-brand-darkBlue mb-2 font-inter line-clamp-2 group-hover:text-brand-orange transition-colors">
-                              {machine.title}
-                            </CardTitle>
-
-                            <CardDescription className="text-sm text-brand-gray font-nunito leading-relaxed mb-4 line-clamp-2">
-                              {machine.description}
-                            </CardDescription>
-
-                            <div className="space-y-3 flex-1">
-                              {machine.specifications && (
-                                <div className="bg-brand-lightGray/50 rounded-lg p-3 border border-gray-100">
-                                  <div className="text-xs font-semibold text-brand-darkBlue mb-1 font-inter uppercase tracking-wide">
-                                    Specifications
+                            
+                            <CardHeader className="p-6 flex-1 flex flex-col">
+                              <div className="mb-4">
+                                <CardTitle className="text-xl font-bold text-brand-darkBlue mb-1 font-inter line-clamp-2 group-hover:text-brand-blue transition-colors">
+                                  {machine.title}
+                                </CardTitle>
+                                {machine.subcategory && (
+                                  <div className="text-sm font-semibold text-brand-gray/80 font-nunito">
+                                    {machine.subcategory}
                                   </div>
-                                  <div className="text-xs text-brand-gray font-nunito line-clamp-2">
-                                    {machine.specifications}
+                                )}
+                              </div>
+
+                              {/* Blue Divider */}
+                              <div className="w-full h-px bg-brand-blue/20 mb-4" />
+
+                              <div className="space-y-2 flex-1">
+                                {machine.technicalSpecs && Object.entries(machine.technicalSpecs).length > 0 ? (
+                                  <div className="grid grid-cols-1 gap-1.5">
+                                    {Object.entries(machine.technicalSpecs)
+                                      .filter(([_, value]) => value !== undefined && value !== null && value !== "")
+                                      .slice(0, 5)
+                                      .map(([key, value], idx) => (
+                                        <div key={idx} className="flex justify-between items-center text-xs font-nunito border-b border-gray-50 pb-1">
+                                          <span className="text-brand-gray font-medium capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>
+                                          <span className="text-brand-darkBlue font-semibold text-right">{value}</span>
+                                        </div>
+                                      ))}
                                   </div>
-                                </div>
-                              )}
+                                ) : (
+                                  <CardDescription className="text-sm text-brand-gray font-nunito leading-relaxed mb-4 line-clamp-2">
+                                    {machine.description}
+                                  </CardDescription>
+                                )}
 
-                              {machine.features && machine.features.length > 0 && (
-                                <div className="flex flex-wrap gap-1.5">
-                                  {machine.features.slice(0, 3).map((feature: string, featureIndex: number) => (
-                                    <span
-                                      key={featureIndex}
-                                      className="px-2.5 py-1 bg-brand-orange/10 text-brand-orange text-xs font-medium rounded-md font-nunito border border-brand-orange/20"
-                                    >
-                                      {feature}
-                                    </span>
-                                  ))}
-                                  {machine.features.length > 3 && (
-                                    <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-md font-nunito border border-gray-200">
-                                      +{machine.features.length - 3}
-                                    </span>
-                                  )}
-                                </div>
-                              )}
+                                {machine.dateAdded && (
+                                  <div className="text-[10px] text-gray-400 font-nunito pt-2 flex items-center gap-1 opacity-70">
+                                    <Calendar className="w-2.5 h-2.5" />
+                                    <span>Added {formatDate(machine.dateAdded)}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </CardHeader>
 
-                              {machine.dateAdded && (
-                                <div className="text-xs text-gray-500 font-nunito pt-3 border-t border-gray-100 mt-auto flex items-center gap-1">
-                                  <Calendar className="w-3 h-3" />
-                                  <span>Added {formatDate(machine.dateAdded)}</span>
-                                </div>
-                              )}
-                            </div>
-                          </CardHeader>
-
-                          <CardContent className="p-6 pt-0 mt-auto border-t border-gray-100">
-                            <Button
-                              variant="primary"
-                              className="w-full flex items-center justify-center gap-2 font-candara text-sm"
-                              asChild
-                            >
-                              <Link
-                                href={`/products/${machine.slug?.current || machine._id}`}
-                                className="flex gap-2"
+                            <CardContent className="p-6 pt-0 mt-auto border-t border-gray-100">
+                              <div
+                                className="w-full bg-brand-orange text-white text-center py-2.5 rounded-lg font-candara text-sm font-medium transition-colors group-hover:bg-brand-darkBlue flex items-center justify-center gap-2"
                               >
                                 <span>View Details</span>
                                 <ArrowRight className="w-4 h-4" />
-                              </Link>
-                            </Button>
-                          </CardContent>
-                        </Card>
+                              </div>
+                            </CardContent>
+                          </Card>
+                      </Link>
                     </div>
                   );
                 })}
