@@ -35,6 +35,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       await generateProductPDF({
         title: product.title,
         imageUrl: product.images?.[0] ? urlFor(product.images[0]).width(1200).height(900).fit("max").url() : undefined,
+        imageUrls: product.images?.map(img => urlFor(img).width(1200).height(900).fit("max").url()) || [],
         description: product.description,
         category: product.category,
         specifications: product.specifications,

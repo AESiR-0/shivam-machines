@@ -21,6 +21,7 @@ export interface CatalogPdfProduct {
   title: string;
   category?: string;
   imageUrl?: string;
+  imageUrls?: string[]; // Added support for multiple images
   specifications?: string;
   description?: string;
   features?: string[];
@@ -158,67 +159,89 @@ async function loadOptimizedImageDataUrl(
   imageUrl: string,
   options?: { maxWidth?: number; quality?: number }
 ) {
-  const cacheKey = `${imageUrl}|${options?.maxWidth || 0}|${options?.quality || 0}`;
-
-  if (!imageCache.has(cacheKey)) {
-    imageCache.set(
-      cacheKey,
-      fetch(imageUrl)
-        .then(async (response) => {
-          if (!response.ok) {
-            throw new Error(`Failed to load image: ${response.status}`);
-          }
-
-          const blob = await response.blob();
-
-          return await new Promise<string>((resolve, reject) => {
-            const objectUrl = URL.createObjectURL(blob);
-            const image = new Image();
-
-            image.onload = () => {
-              const maxWidth = options?.maxWidth || 640;
-              const quality = options?.quality || 0.72;
-              const scale = Math.min(1, maxWidth / image.width);
-              const canvas = document.createElement("canvas");
-              const context = canvas.getContext("2d");
-
-              canvas.width = Math.max(1, Math.round(image.width * scale));
-              canvas.height = Math.max(1, Math.round(image.height * scale));
-
-              if (!context) {
-                URL.revokeObjectURL(objectUrl);
-                reject(new Error("Unable to optimize image"));
-                return;
-              }
-
-              context.fillStyle = "#ffffff";
-              context.fillRect(0, 0, canvas.width, canvas.height);
-              context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-              const optimizedDataUrl = canvas.toDataURL("image/jpeg", quality);
-              URL.revokeObjectURL(objectUrl);
-              resolve(optimizedDataUrl);
-            };
-
-            image.onerror = () => {
-              URL.revokeObjectURL(objectUrl);
-              reject(new Error("Unable to load image"));
-            };
-
-            image.src = objectUrl;
-          });
-        })
-        .catch(() => null)
-    );
+  // Resolve URLs and apply proxy for external images
+  let resolvedUrl = imageUrl;
+  if (typeof window !== "undefined") {
+    if (imageUrl.startsWith("/")) {
+      resolvedUrl = window.location.origin + imageUrl;
+    } else if (imageUrl.startsWith("http") && !imageUrl.includes(window.location.host)) {
+      // Use proxy for external Sanity images to bypass CORS
+      resolvedUrl = `${window.location.origin}/api/proxy-image?url=${encodeURIComponent(imageUrl)}`;
+    }
   }
 
-  return imageCache.get(cacheKey)!;
+  const cacheKey = `${resolvedUrl}|${options?.maxWidth || 0}|${options?.quality || 0}`;
+
+  if (imageCache.has(cacheKey)) {
+    return imageCache.get(cacheKey)!;
+  }
+
+  const promise = (async () => {
+    try {
+      console.log(`[PDF Meta] Fetching: ${resolvedUrl}`);
+      const response = await fetch(resolvedUrl);
+      if (!response.ok) {
+        console.error(`[PDF Meta] Fetch failed: ${resolvedUrl} (${response.status})`);
+        return null;
+      }
+
+      const blob = await response.blob();
+      const dataUrl = await new Promise<string | null>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(blob);
+      });
+
+      if (!dataUrl) return null;
+
+      // If no optimization needed, return original data URL
+      if (!options?.maxWidth) return dataUrl;
+
+      // Optimization step
+      return await new Promise<string | null>((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxWidth = options.maxWidth || 800;
+          const quality = options.quality || 0.75;
+          const scale = Math.min(1, maxWidth / img.width);
+          
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            resolve(dataUrl); // Fallback to unoptimized
+            return;
+          }
+
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = () => {
+          console.warn(`[PDF Meta] Optimization failed for ${resolvedUrl}, using original`);
+          resolve(dataUrl);
+        };
+        img.src = dataUrl;
+      });
+    } catch (error) {
+      console.error(`[PDF Meta] Error loading ${resolvedUrl}:`, error);
+      return null;
+    }
+  })();
+
+  imageCache.set(cacheKey, promise);
+  return promise;
 }
 
 async function addWatermark(doc: jsPDF, pageWidth: number, pageHeight: number) {
   const logoDataUrl = await loadOptimizedImageDataUrl(companyInfo.pdfLogoPath, {
-    maxWidth: 200,
-    quality: 0.5,
+    maxWidth: 800,
+    quality: 0.8,
   });
 
   if (!logoDataUrl) return;
@@ -227,32 +250,27 @@ async function addWatermark(doc: jsPDF, pageWidth: number, pageHeight: number) {
   doc.saveGraphicsState();
   
   // @ts-ignore - GState is a plugin for jsPDF
-  const gState = new (doc as any).GState({ opacity: 0.05 });
+  const gState = new (doc as any).GState({ opacity: 0.25 });
   doc.setGState(gState);
 
-  const logoWidth = 60;
-  const logoHeight = 40;
+  // Large diagonal logo across the page
+  const logoWidth = pageWidth * 0.8;
+  const logoHeight = (logoWidth * 32) / 48; // Keep aspect ratio from addLetterhead (48/32)
   
-  // Draw tiled watermark across the page
-  const spacingX = 100;
-  const spacingY = 80;
-  
-  for (let y = -20; y < pageHeight + 40; y += spacingY) {
-    for (let x = -20; x < pageWidth + 40; x += spacingX) {
-      // Rotate 45 degrees
-      doc.addImage(
-        logoDataUrl, 
-        "JPEG", 
-        x, 
-        y, 
-        logoWidth, 
-        logoHeight, 
-        undefined, 
-        "NONE", 
-        -45
-      );
-    }
-  }
+  const centerX = pageWidth / 2;
+  const centerY = pageHeight / 2;
+
+  doc.addImage(
+    logoDataUrl, 
+    "JPEG", 
+    centerX - logoWidth / 2, 
+    centerY - logoHeight / 2, 
+    logoWidth, 
+    logoHeight, 
+    undefined, 
+    "NONE", 
+    0 // 0 degree rotation as requested
+  );
 
   doc.restoreGraphicsState();
 }
@@ -390,9 +408,6 @@ async function renderCatalogProductPage(
   const lightGray = hexToRgb(brandColors.lightGray);
   const border = hexToRgb(brandColors.border);
  
-  // Add background watermark
-  await addWatermark(doc, pageWidth, pageHeight);
- 
   await addLetterhead(doc, pageWidth);
 
   let yPos = getContentStartY();
@@ -458,11 +473,10 @@ async function renderCatalogProductPage(
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
 
-  const summaryRows = [
-    ["Manufacturer", product.manufacturer || "Available on request"],
-    ["Year", product.year ? String(product.year) : "Available on request"],
-    ["Price", product.price || "Price on request"],
-  ];
+  const summaryRows: [string, string][] = [];
+  if (product.manufacturer) summaryRows.push(["Manufacturer", product.manufacturer]);
+  if (product.year) summaryRows.push(["Year", String(product.year)]);
+  if (product.price) summaryRows.push(["Price", product.price]);
 
   let metaY = imageY + 4;
   for (const [label, value] of summaryRows) {
@@ -554,15 +568,56 @@ async function renderCatalogProductPage(
       doc.text(spec.label, leftX + 3, yPos);
 
       doc.setTextColor(gray.r, gray.g, gray.b);
-      doc.setFont("helvetica", "normal");
-      doc.text(doc.splitTextToSize(spec.value, rowWidth - leftWidth - 8), leftX + leftWidth, yPos);
+       doc.setFont("helvetica", "normal");
+       doc.text(doc.splitTextToSize(spec.value, rowWidth - leftWidth - 8), leftX + leftWidth, yPos);
+ 
+       yPos += rowHeight;
+     }
+   }
+ 
+  // Add Image Gallery for additional images
+  if (product.imageUrls && product.imageUrls.length > 1) {
+    if (yPos > pageHeight - 40) {
+      doc.addPage();
+      await addLetterhead(doc, pageWidth);
+      yPos = getContentStartY();
+    }
 
-      yPos += rowHeight;
+    yPos += 6;
+    drawSectionTitle(doc, "Image Gallery", yPos);
+    yPos += 12;
+
+    const galleryImageWidth = (pageWidth - PAGE_MARGIN * 3) / 2;
+    const galleryImageHeight = (galleryImageWidth * 3) / 4;
+
+    // Start from index 1 as index 0 is used as main image
+    for (let i = 1; i < product.imageUrls.length; i++) {
+      const col = (i - 1) % 2;
+
+      // Check if we need a new page for the next row
+      if (col === 0 && yPos > pageHeight - galleryImageHeight - 25) {
+        doc.addPage();
+        await addLetterhead(doc, pageWidth);
+        yPos = getContentStartY() + 8;
+      }
+
+      const imgUrl = product.imageUrls[i];
+      const imgData = await loadOptimizedImageDataUrl(imgUrl, { maxWidth: 800 });
+
+      if (imgData) {
+        const x = PAGE_MARGIN + col * (galleryImageWidth + PAGE_MARGIN);
+        doc.addImage(imgData, "JPEG", x, yPos, galleryImageWidth, galleryImageHeight);
+
+        // Move to next row after current row is full or it's the last image
+        if (col === 1 || i === product.imageUrls.length - 1) {
+          yPos += galleryImageHeight + 10;
+        }
+      }
     }
   }
 
-  addFooter(doc, pageWidth, pageHeight);
-}
+   addFooter(doc, pageWidth, pageHeight);
+ }
 
 export async function generateCatalogPDF(products: CatalogPdfProduct[] = []) {
   const doc = new jsPDF();
@@ -584,7 +639,14 @@ export async function generateCatalogPDF(products: CatalogPdfProduct[] = []) {
   for (let index = 0; index < products.length; index += 1) {
     await renderCatalogProductPage(doc, products[index], index === 0);
   }
-
+ 
+  // Add watermark as overlay to ALL pages
+  const totalPages = (doc.internal as any).getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    await addWatermark(doc, pageWidth, pageHeight);
+  }
+ 
   doc.save("Shivam_Enterprise_Catalog.pdf");
 }
 
@@ -595,6 +657,16 @@ export async function generateProductPDF(
 ) {
   const doc = new jsPDF();
   await renderCatalogProductPage(doc, product, true);
+  
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const totalPages = (doc.internal as any).getNumberOfPages();
+  
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    await addWatermark(doc, pageWidth, pageHeight);
+  }
+
   const fileName = product.title.replace(/[^a-z0-9]/gi, "_").toLowerCase();
   doc.save(`${fileName}_details.pdf`);
 }
