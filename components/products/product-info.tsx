@@ -55,9 +55,16 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
   return (
     <div className="space-y-6">
-      {/* Category Badge */}
-      <div className="inline-block px-3 py-1 bg-brand-orange/10 text-brand-orange rounded-full text-sm font-medium capitalize">
-        {product.category}
+      {/* Badges */}
+      <div className="flex flex-wrap gap-2">
+        <div className="inline-block px-3 py-1 bg-brand-orange/10 text-brand-orange rounded-full text-sm font-medium capitalize">
+          {product.category}
+        </div>
+        {product.condition && (
+          <div className={`px-3 py-1 rounded-full text-sm font-medium ${conditionBadge.color}`}>
+            {conditionBadge.label}
+          </div>
+        )}
       </div>
 
       {/* Title */}
@@ -111,28 +118,15 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             </div>
           </div>
         )}
-        {product.condition && (
-          <div className="flex items-center space-x-2">
-            <Tag className="w-5 h-5 text-brand-gray" />
-            <div>
-              <div className="text-xs text-brand-gray font-nunito">Condition</div>
-              <span
-                className={`inline-block px-2 py-1 rounded text-xs font-semibold ${conditionBadge.color}`}
-              >
-                {conditionBadge.label}
-              </span>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-3 pt-4">
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+      <div className="space-y-2 pt-2">
+        <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
           <Button
             variant="primary"
-            size="xl"
-            className="w-full flex items-center justify-center gap-2 font-candara py-4 text-base"
+            size="lg"
+            className="w-full flex items-center justify-center gap-2 font-candara py-2.5 text-base"
             asChild
           >
             <Link href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
@@ -142,32 +136,32 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           </Button>
         </motion.div>
 
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Button
-            variant="secondary"
-            size="lg"
-            className="w-full flex items-center justify-center gap-2 font-candara"
-            onClick={handleDownloadProductDetails}
-          >
-            <Download className="w-4 h-4" />
-            Download Product Details
-          </Button>
-        </motion.div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-2 font-candara py-3" asChild>
-              <a href={companyInfo.phoneHref} className="flex items-center justify-center gap-2">
+        <div className="grid grid-cols-3 gap-2">
+          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+            <Button 
+              variant="secondary" 
+              className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1" 
+              onClick={handleDownloadProductDetails}
+            >
+              <Download className="w-4 h-4" />
+              <span className="text-[10px] sm:text-xs">PDF Details</span>
+            </Button>
+          </motion.div>
+          
+          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+            <Button variant="secondary" className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1" asChild>
+              <a href={companyInfo.phoneHref} className="flex flex-col items-center justify-center gap-1">
                 <Phone className="w-4 h-4" />
-                Call Now
+                <span className="text-[10px] sm:text-xs">Call Now</span>
               </a>
             </Button>
           </motion.div>
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button variant="secondary" className="w-full flex items-center justify-center gap-2 font-candara py-3" asChild>
-              <a href={`mailto:${companyInfo.primaryEmail}`} className="flex items-center justify-center gap-2">
+
+          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+            <Button variant="secondary" className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1" asChild>
+              <a href={`mailto:${companyInfo.primaryEmail}`} className="flex flex-col items-center justify-center gap-1">
                 <Mail className="w-4 h-4" />
-                Email Us
+                <span className="text-[10px] sm:text-xs">Email Us</span>
               </a>
             </Button>
           </motion.div>

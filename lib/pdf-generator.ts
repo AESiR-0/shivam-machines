@@ -159,16 +159,10 @@ async function loadOptimizedImageDataUrl(
   imageUrl: string,
   options?: { maxWidth?: number; quality?: number }
 ) {
-  // Resolve URLs and apply proxy for external images
-  let resolvedUrl = imageUrl;
-  if (typeof window !== "undefined") {
-    if (imageUrl.startsWith("/")) {
-      resolvedUrl = window.location.origin + imageUrl;
-    } else if (imageUrl.startsWith("http") && !imageUrl.includes(window.location.host)) {
-      // Use proxy for external Sanity images to bypass CORS
-      resolvedUrl = `${window.location.origin}/api/proxy-image?url=${encodeURIComponent(imageUrl)}`;
-    }
-  }
+  // Resolve relative URLs for browser environment
+  const resolvedUrl = (imageUrl.startsWith("/") && typeof window !== "undefined")
+    ? window.location.origin + imageUrl
+    : imageUrl;
 
   const cacheKey = `${resolvedUrl}|${options?.maxWidth || 0}|${options?.quality || 0}`;
 
