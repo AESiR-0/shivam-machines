@@ -33,41 +33,6 @@ const socialIconMap: Record<
 const FooterClient = ({ data }: FooterClientProps) => {
   const currentYear = new Date().getFullYear();
 
-  // Fallback data
-  const defaultFooterLinks = {
-    company: [
-      { name: "About Us", href: "/about" },
-      { name: "Our Team", href: "/team" },
-      { name: "Careers", href: "/careers" },
-      { name: "News", href: "/news" },
-    ],
-    products: [
-      { name: "Boring Machines", href: "/products/boring" },
-      { name: "Lathe Machines", href: "/products/lathe" },
-      { name: "Gear Machines", href: "/products/gear" },
-      { name: "CNC Machines", href: "/products/cnc" },
-    ],
-    services: [
-      { name: "Machine Installation", href: "/services/installation" },
-      { name: "Maintenance", href: "/services/maintenance" },
-      { name: "Training", href: "/services/training" },
-      { name: "Support", href: "/services/support" },
-    ],
-    support: [
-      { name: "Contact Us", href: "/contact" },
-      { name: "FAQ", href: "/faq" },
-      { name: "Documentation", href: "/docs" },
-      { name: "Privacy Policy", href: "/privacy" },
-    ],
-  };
-
-  const defaultSocialLinks = [
-    { platform: "Facebook", url: "#" },
-    { platform: "Twitter", url: "#" },
-    { platform: "LinkedIn", url: "#" },
-    { platform: "Instagram", url: "#" },
-  ];
-
   const companyName = data?.companyName || "Shivam Enterprise";
   const description =
     data?.description ||
@@ -76,136 +41,90 @@ const FooterClient = ({ data }: FooterClientProps) => {
   const email = data?.email || companyInfo.primaryEmail;
   const address = data?.address || companyInfo.shortAddress;
 
-  const footerLinks = {
-    company: data?.companyLinks || defaultFooterLinks.company,
-    products: data?.productLinks || defaultFooterLinks.products,
-    services: data?.serviceLinks || defaultFooterLinks.services,
-    support: data?.supportLinks || defaultFooterLinks.support,
-  };
-
-  const socialLinks = data?.socialLinks || defaultSocialLinks;
-
   return (
-    <footer className="bg-steel-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid lg:grid-cols-5 gap-8">
-          {/* Company Info */}
+    <footer className="bg-steel-950 text-white border-t border-steel-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
+          {/* Company Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-2"
+            className="lg:col-span-6 space-y-8"
           >
-            <div className="flex items-center space-x-2 mb-6">
-              <div className="w-24 h-24 relative">
-                <Image
-                  src="/static/logo_1.png"
-                  alt="Shivam Enterprise logo"
-                  fill
-                  className="object-contain"
-                  priority
-                  sizes="64px"
-                />
-              </div>
+            <div className="w-52 h-52 relative">
+              <Image
+                src="/static/logo_1.png"
+                alt="Shivam Enterprise logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <p className="text-steel-300 mb-6 leading-relaxed">{description}</p>
-
-            {/* Contact Info */}
-            <div className="space-y-3">
-              {phone && (
-                <div className="flex items-center space-x-3">
-                  <Phone className="w-5 h-5 text-accent-400" />
-                  <a
-                    href={`tel:${phone}`}
-                    className="text-steel-300 hover:text-accent-400 transition-colors"
-                  >
-                    {phone}
-                  </a>
-                </div>
-              )}
-              {email && (
-                <div className="flex items-center space-x-3">
-                  <Mail className="w-5 h-5 text-accent-400" />
-                  <a
-                    href={`mailto:${email}`}
-                    className="text-steel-300 hover:text-accent-400 transition-colors"
-                  >
-                    {email}
-                  </a>
-                </div>
-              )}
-              {address && (
-                <div className="flex items-center space-x-3">
-                  <MapPin className="w-5 h-5 text-accent-400" />
-                  <span className="text-steel-300">{address}</span>
-                </div>
-              )}
-            </div>
+            <p className="text-steel-300 text-lg leading-relaxed md:-mt-10 max-w-2xl">
+              {description}
+            </p>
           </motion.div>
 
-          {/* Quick Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <h3 className="text-lg font-semibold mb-4">Company</h3>
-            <ul className="space-y-2">
-              {footerLinks.company.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    href={link.href}
-                    className="text-steel-300 hover:text-accent-400 transition-colors duration-200"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
+          {/* Contact Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:col-span-6 flex flex-col justify-center"
           >
-            <h3 className="text-lg font-semibold mb-4">Products</h3>
-            <ul className="space-y-2">
-              {footerLinks.products.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    href={link.href}
-                    className="text-steel-300 hover:text-accent-400 transition-colors duration-200"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <ul className="space-y-2">
-              {footerLinks.support.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    href={link.href}
-                    className="text-steel-300 hover:text-accent-400 transition-colors duration-200"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="bg-steel-900/50 p-8 rounded-2xl border border-steel-800 space-y-6">
+              <h3 className="text-xl font-semibold text-white mb-4">Get in Touch</h3>
+              <div className="space-y-5">
+                {phone && (
+                  <div className="flex items-start space-x-4 group">
+                    <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-steel-800 flex items-center justify-center text-accent-400 group-hover:bg-accent-600 group-hover:text-white transition-all duration-300">
+                      <Phone className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0 pt-0.5">
+                      <p className="text-xs text-steel-500 uppercase font-bold tracking-wider mb-0.5">Call Us</p>
+                      <a
+                        href={`tel:${phone}`}
+                        className="text-steel-200 hover:text-accent-400 text-lg transition-colors block truncate md:whitespace-normal"
+                      >
+                        {phone}
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {email && (
+                  <div className="flex items-start space-x-4 group">
+                    <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-steel-800 flex items-center justify-center text-accent-400 group-hover:bg-accent-600 group-hover:text-white transition-all duration-300">
+                      <Mail className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0 pt-0.5">
+                      <p className="text-xs text-steel-500 uppercase font-bold tracking-wider mb-0.5">Email Us</p>
+                      <a
+                        href={`mailto:${email}`}
+                        className="text-steel-200 hover:text-accent-400 text-lg transition-colors block truncate md:whitespace-normal"
+                      >
+                        {email}
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {address && (
+                  <div className="flex items-start space-x-4 group">
+                    <div className="w-12 h-12 flex-shrink-0 rounded-xl bg-steel-800 flex items-center justify-center text-accent-400 group-hover:bg-accent-600 group-hover:text-white transition-all duration-300">
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0 pt-0.5">
+                      <p className="text-xs text-steel-500 uppercase font-bold tracking-wider mb-0.5">Visit Us</p>
+                      <span className="text-steel-200 text-lg leading-tight block break-words">
+                        {address}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </motion.div>
         </div>
 
@@ -217,29 +136,9 @@ const FooterClient = ({ data }: FooterClientProps) => {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-12 pt-8 border-t border-steel-800"
         >
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-steel-400 text-sm">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-steel-400 text-sm">
+            <div>
               © {currentYear} {companyName}. All rights reserved.
-            </div>
-
-            {/* Social Links */}
-            <div className="flex space-x-4">
-              {socialLinks.map((social, index) => {
-                const IconComponent =
-                  socialIconMap[social.platform] || Facebook;
-                return (
-                  <motion.a
-                    key={index}
-                    href={social.url}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 bg-steel-800 rounded-lg flex items-center justify-center text-steel-400 transition-colors duration-200 hover:text-accent-400"
-                    aria-label={social.platform}
-                  >
-                    <IconComponent className="w-5 h-5" />
-                  </motion.a>
-                );
-              })}
             </div>
           </div>
         </motion.div>

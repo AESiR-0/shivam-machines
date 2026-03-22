@@ -51,14 +51,13 @@ const Footer = () => {
             className="lg:col-span-2"
           >
             <div className="flex items-start justify-start space-x-3">
-              <div className="w-64 h-32 relative">
+              <div className="w-64 h-64 relative">
                 <Image
                   src="/static/logo_1.png"
                   alt="Shivam Enterprise logo"
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   priority
-                  sizes="256px"
                 />
               </div>
             </div>
@@ -96,7 +95,9 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h3 className="text-xl font-semibold mb-6 tracking-wide">Company</h3>
+            <h3 className="text-xl font-semibold mb-6 tracking-wide">
+              Company
+            </h3>
             <ul className="space-y-4">
               {footerLinks.company.map((link, index) => (
                 <li key={index}>
@@ -117,7 +118,9 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h3 className="text-xl font-semibold mb-6 tracking-wide">Products</h3>
+            <h3 className="text-xl font-semibold mb-6 tracking-wide">
+              Products
+            </h3>
             <ul className="space-y-4">
               {footerLinks.products.map((link, index) => (
                 <li key={index}>
