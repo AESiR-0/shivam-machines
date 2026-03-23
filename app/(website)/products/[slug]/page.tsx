@@ -59,7 +59,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="bg-white rounded-lg shadow-lg mb-8">
           <div className="grid lg:grid-cols-2 gap-8 p-6 lg:p-8">
             {/* Image Gallery (Sticky) */}
-            <div className="lg:sticky lg:top-28 lg:self-start h-fit">
+            <div className="lg:sticky lg:top-28 lg:self-start h-fit min-w-0">
               <ProductImageGallery
                 images={product.images || []}
                 title={product.title}
@@ -67,12 +67,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Product Info & Specifications */}
-            <div className="space-y-8">
+            <div className="space-y-8 min-w-0">
               <ProductInfo product={product} />
 
               {/* Relocated Technical Specifications */}
               {(product.technicalSpecs || product.specifications) && (
-                <div className="pt-8 border-t border-gray-100">
+                <div className="md:pt-8 pt-2  border-t border-gray-100">
                   {product.technicalSpecs && (
                     <ProductSpecsTable
                       technicalSpecs={product.technicalSpecs}

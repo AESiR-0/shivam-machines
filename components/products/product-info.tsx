@@ -1,7 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Building2, Calendar, Download, Mail, MessageCircle, Phone, Tag } from "lucide-react";
+import {
+  Building2,
+  Calendar,
+  Download,
+  Mail,
+  MessageCircle,
+  Phone,
+  Tag,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { companyInfo } from "@/lib/company";
@@ -21,12 +29,17 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       good: { label: "Good", color: "bg-yellow-100 text-yellow-800" },
       fair: { label: "Fair", color: "bg-orange-100 text-orange-800" },
     };
-    return conditions[condition || ""] || { label: "N/A", color: "bg-gray-100 text-gray-800" };
+    return (
+      conditions[condition || ""] || {
+        label: "N/A",
+        color: "bg-gray-100 text-gray-800",
+      }
+    );
   };
 
   const conditionBadge = getConditionBadge(product.condition);
   const whatsappMessage = encodeURIComponent(
-    `Hi, I'm interested in ${product.title}. Can you provide more details?`
+    `Hi, I'm interested in ${product.title}. Can you provide more details?`,
   );
   const whatsappUrl = `${companyInfo.whatsappHref}?text=${whatsappMessage}`;
 
@@ -34,8 +47,13 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     try {
       await generateProductPDF({
         title: product.title,
-        imageUrl: product.images?.[0] ? urlFor(product.images[0]).width(1200).height(900).fit("max").url() : undefined,
-        imageUrls: product.images?.map(img => urlFor(img).width(1200).height(900).fit("max").url()) || [],
+        imageUrl: product.images?.[0]
+          ? urlFor(product.images[0]).width(1200).height(900).fit("max").url()
+          : undefined,
+        imageUrls:
+          product.images?.map((img) =>
+            urlFor(img).width(1200).height(900).fit("max").url(),
+          ) || [],
         description: product.description,
         category: product.category,
         specifications: product.specifications,
@@ -61,7 +79,9 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           {product.category}
         </div>
         {product.condition && (
-          <div className={`px-3 py-1 rounded-full text-sm font-medium ${conditionBadge.color}`}>
+          <div
+            className={`px-3 py-1 rounded-full text-sm font-medium ${conditionBadge.color}`}
+          >
             {conditionBadge.label}
           </div>
         )}
@@ -97,12 +117,14 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </div> */}
 
       {/* Product Details Grid */}
-      <div className="grid grid-cols-2 gap-4 py-4">
+      <div className="grid grid-cols-2 gap-4 py-1 md:py-4">
         {product.manufacturer && (
           <div className="flex items-center space-x-2">
             <Building2 className="w-5 h-5 text-brand-gray" />
             <div>
-              <div className="text-xs text-brand-gray font-nunito">Manufacturer</div>
+              <div className="text-xs text-brand-gray font-nunito">
+                Manufacturer
+              </div>
               <div className="font-semibold text-brand-darkBlue font-nunito">
                 {product.manufacturer}
               </div>
@@ -114,14 +136,16 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <Calendar className="w-5 h-5 text-brand-gray" />
             <div>
               <div className="text-xs text-brand-gray font-nunito">Year</div>
-              <div className="font-semibold text-brand-darkBlue font-nunito">{product.year}</div>
+              <div className="font-semibold text-brand-darkBlue font-nunito">
+                {product.year}
+              </div>
             </div>
           </div>
         )}
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-2 pt-2">
+      <div className="space-y-2 pt-0 md:pt-2">
         <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
           <Button
             variant="primary"
@@ -129,7 +153,12 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             className="w-full flex items-center justify-center gap-2 font-candara py-2.5 text-base"
             asChild
           >
-            <Link href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+            <Link
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2"
+            >
               <MessageCircle className="w-5 h-5" />
               Quick Inquiry via WhatsApp
             </Link>
@@ -138,19 +167,26 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
         <div className="grid grid-cols-3 gap-2">
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-            <Button 
-              variant="secondary" 
-              className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1" 
+            <Button
+              variant="secondary"
+              className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1"
               onClick={handleDownloadProductDetails}
             >
               <Download className="w-4 h-4" />
               <span className="text-[10px] sm:text-xs">PDF Details</span>
             </Button>
           </motion.div>
-          
+
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-            <Button variant="secondary" className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1" asChild>
-              <a href={companyInfo.phoneHref} className="flex flex-col items-center justify-center gap-1">
+            <Button
+              variant="secondary"
+              className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1"
+              asChild
+            >
+              <a
+                href={companyInfo.phoneHref}
+                className="flex flex-col items-center justify-center gap-1"
+              >
                 <Phone className="w-4 h-4" />
                 <span className="text-[10px] sm:text-xs">Call Now</span>
               </a>
@@ -158,8 +194,15 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-            <Button variant="secondary" className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1" asChild>
-              <a href={`mailto:${companyInfo.primaryEmail}`} className="flex flex-col items-center justify-center gap-1">
+            <Button
+              variant="secondary"
+              className="w-full flex flex-col items-center justify-center gap-1 font-candara h-auto py-2 px-1"
+              asChild
+            >
+              <a
+                href={`mailto:${companyInfo.primaryEmail}`}
+                className="flex flex-col items-center justify-center gap-1"
+              >
                 <Mail className="w-4 h-4" />
                 <span className="text-[10px] sm:text-xs">Email Us</span>
               </a>
@@ -167,8 +210,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           </motion.div>
         </div>
       </div>
-
-
     </div>
   );
 }

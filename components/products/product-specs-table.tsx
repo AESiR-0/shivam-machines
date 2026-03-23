@@ -94,8 +94,8 @@ export default function ProductSpecsTable({ technicalSpecs }: ProductSpecsTableP
                 <span className="w-1.5 h-8 bg-brand-darkBlue rounded-full"></span>
                 Technical Specifications
             </h2>
-            <div className="overflow-hidden rounded-xl border border-brand-darkBlue/10 shadow-sm bg-white">
-                <table className="w-full text-left border-separate border-spacing-0">
+            <div className="overflow-x-auto rounded-xl border border-brand-darkBlue/10 shadow-sm bg-white">
+                <table className="w-full text-left border-separate border-spacing-0 whitespace-nowrap md:whitespace-normal">
                     <thead>
                         <tr className="bg-brand-darkBlue text-white">
                             <th className="px-6 py-4 font-semibold text-sm uppercase tracking-wider border-b border-brand-darkBlue/20">Parameter</th>

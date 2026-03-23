@@ -1,0 +1,100 @@
+{
+  "mappedCategories": [
+    {
+      "name": "Grinding Machines",
+      "slug": "grinding-machines",
+      "href": "/products?category=grinding"
+    },
+    {
+      "name": "Milling Machines",
+      "slug": "milling-machines",
+      "href": "/products?category=milling"
+    },
+    {
+      "name": "Accessories to machines",
+      "slug": "accessories-to-machines",
+      "href": "/products?category=accessories-to-machines"
+    },
+    {
+      "name": "Bending machines",
+      "slug": "bending-machines",
+      "href": "/products?category=bending-machines"
+    },
+    {
+      "name": "Bending roll machines",
+      "slug": "bending-roll-machines",
+      "href": "/products?category=bending-roll-machines"
+    },
+    {
+      "name": "Borers horizontal",
+      "slug": "borers-horizontal",
+      "href": "/products?category=borers-horizontal"
+    },
+    {
+      "name": "Boring and drilling machines",
+      "slug": "boring-and-drilling-machines",
+      "href": "/products?category=boring-and-drilling-machines"
+    },
+    {
+      "name": "Cutting equipments",
+      "slug": "cutting-equipments",
+      "href": "/products?category=cutting-equipments"
+    },
+    {
+      "name": "Gear machinery",
+      "slug": "gear-machinery",
+      "href": "/products?category=gear-machinery"
+    },
+    {
+      "name": "Grinding machines",
+      "slug": "grinding-machines",
+      "href": "/products?category=grinding-machines"
+    },
+    {
+      "name": "Lathes",
+      "slug": "lathes",
+      "href": "/products?category=lathes"
+    },
+    {
+      "name": "Machining centres",
+      "slug": "machining-centres",
+      "href": "/products?category=machining-centres"
+    },
+    {
+      "name": "Milling machines",
+      "slug": "milling-machines",
+      "href": "/products?category=milling-machines"
+    },
+    {
+      "name": "Miscellaneous",
+      "slug": "miscellaneous",
+      "href": "/products?category=miscellaneous"
+    },
+    {
+      "name": "Press",
+      "slug": "press",
+      "href": "/products?category=press"
+    },
+    {
+      "name": "Press brakes",
+      "slug": "press-brakes",
+      "href": "/products?category=press-brakes"
+    },
+    {
+      "name": "Shears",
+      "slug": "shears",
+      "href": "/products?category=shears"
+    },
+    {
+      "name": "Vertical Lathes",
+      "slug": "vertical-lathes",
+      "href": "/products?category=vertical-lathes"
+    }
+  ],
+  "uniquePCats": [
+    "boring",
+    "lathe",
+    "grinding",
+    "cnc"
+  ]
+}

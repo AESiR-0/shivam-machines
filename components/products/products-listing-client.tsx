@@ -109,33 +109,39 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
     return cat.slug?.current || cat.name.toLowerCase();
   }, []);
 
+  const isProductInCategory = useCallback((product: Product, selectedCatId: string) => {
+    if (!product.category) return false;
+    
+    const prodCat = product.category.toLowerCase().trim();
+    const selCat = selectedCatId.toLowerCase().trim();
+
+    const matchedCat = (sanityCategories || []).find(c => getCategoryId(c).toLowerCase() === selCat);
+    if (matchedCat) {
+      const matchId = getCategoryId(matchedCat).toLowerCase();
+      const matchName = matchedCat.name.toLowerCase();
+      const matchSlug = matchedCat.slug?.current.toLowerCase() || "";
+      
+      return (
+        prodCat === matchId || 
+        prodCat === matchName || 
+        prodCat === matchSlug ||
+        matchId.includes(prodCat) ||
+        matchName.includes(prodCat) ||
+        matchSlug.includes(prodCat) ||
+        prodCat.includes(matchId) ||
+        prodCat.includes(matchName)
+      );
+    }
+    return prodCat === selCat || prodCat.includes(selCat) || selCat.includes(prodCat);
+  }, [sanityCategories, getCategoryId]);
+
   // Combined product filtering and sorting
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
 
     // Category filter
     if (selectedCategory !== "all") {
-      filtered = filtered.filter((product) => {
-        if (!product.category) return false;
-        
-        // Find the category object that matches the selected ID
-        const matchedCat = (sanityCategories || []).find(
-          c => getCategoryId(c) === selectedCategory
-        );
-        
-        if (matchedCat) {
-          // Robust check: match against ID, Name, or Slug
-          const prodCat = product.category.toLowerCase();
-          return (
-            prodCat === getCategoryId(matchedCat) ||
-            prodCat === matchedCat.name.toLowerCase() ||
-            prodCat === matchedCat.slug?.current.toLowerCase()
-          );
-        }
-        
-        // Fallback
-        return product.category.toLowerCase() === selectedCategory.toLowerCase();
-      });
+      filtered = filtered.filter((product) => isProductInCategory(product, selectedCategory));
     }
 
     // Subcategory filter
@@ -169,7 +175,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
 
               if (!rawSpecVal) return false;
 
-              const numericMatch = rawSpecVal.match(/(\d+(?:\.\d+)?)/);
+              const numericMatch = String(rawSpecVal).match(/(\d+(?:\.\d+)?)/);
               if (!numericMatch) return false;
 
               const prodSpecVal = parseFloat(numericMatch[1]);
@@ -185,14 +191,46 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
 
   // Get unique categories from products, but prioritized/mapped by sanityCategories
   const categories = useMemo(() => {
+    const fromSanity = (sanityCategories || []).map(cat => ({
+      id: getCategoryId(cat),
+      name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
+      original: cat
+    }));
+
+    // Optionally add product categories that don't match any sanity category (fuzzy match)
+    const productCats = new Set<string>();
+    products.forEach(p => {
+      if (p.category) {
+        const prodCat = p.category.toLowerCase().trim();
+        const hasMatch = fromSanity.some(sc => {
+          const matchId = sc.id.toLowerCase();
+          const matchName = sc.name.toLowerCase();
+          const matchSlug = sc.original.slug?.current.toLowerCase() || "";
+          
+          return prodCat === matchId || 
+                 prodCat === matchName || 
+                 prodCat === matchSlug ||
+                 matchId.includes(prodCat) ||
+                 matchName.includes(prodCat) ||
+                 matchSlug.includes(prodCat) ||
+                 prodCat.includes(matchId) ||
+                 prodCat.includes(matchName);
+        });
+        if (!hasMatch) {
+          productCats.add(p.category);
+        }
+      }
+    });
+
     return [
       { id: "all", name: "All Categories" },
-      ...(sanityCategories || []).map(cat => ({
-        id: getCategoryId(cat),
-        name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1)
+      ...fromSanity.map(({ id, name }) => ({ id, name })),
+      ...Array.from(productCats).map(c => ({
+        id: c.toLowerCase(),
+        name: c.charAt(0).toUpperCase() + c.slice(1)
       }))
     ];
-  }, [sanityCategories, getCategoryId]);
+  }, [sanityCategories, getCategoryId, products]);
 
   // Derive unique subcategories based on current products and category
   const subcategories = useMemo(() => {
@@ -201,17 +239,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
     // Use products filtered ONLY by category to show relevant subcategories
     let categoryFiltered = products;
     if (selectedCategory !== "all") {
-      categoryFiltered = categoryFiltered.filter(p => {
-        if (!p.category) return false;
-        const matchedCat = (sanityCategories || []).find(c => getCategoryId(c) === selectedCategory);
-        if (matchedCat) {
-          const prodCat = p.category.toLowerCase();
-          return prodCat === getCategoryId(matchedCat) || 
-                 prodCat === matchedCat.name.toLowerCase() || 
-                 prodCat === matchedCat.slug?.current.toLowerCase();
-        }
-        return p.category.toLowerCase() === selectedCategory.toLowerCase();
-      });
+      categoryFiltered = categoryFiltered.filter(p => isProductInCategory(p, selectedCategory));
     }
 
     categoryFiltered.forEach(p => {
@@ -225,7 +253,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
   }, [products, selectedCategory, sanityCategories, getCategoryId]);
 
   // Derived state to check if ANY spec filter is active
-  const hasActiveSpecFilters = Object.values(specFilters).some(v => v !== "") || selectedSubcategory !== "all";
+  const hasActiveSpecFilters = Object.values(specFilters).some(v => v !== "");
 
   return (
     <main className="min-h-screen">
@@ -317,7 +345,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
           {/* Active Filters Count */}
           {!sidebarCollapsed && (
             <>
-              {(selectedCategory !== "all" || hasActiveSpecFilters) && (
+              {(selectedCategory !== "all" || selectedSubcategory !== "all" || hasActiveSpecFilters) && (
                 <div className="mb-4 p-3 bg-brand-orange/10 rounded-lg border border-brand-orange/20">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-brand-darkBlue font-nunito">
@@ -325,9 +353,13 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                     </span>
                     <button
                       onClick={() => {
-                        handleCategoryChange("all");
-                        handleSubcategoryChange("all");
+                        setSelectedCategory("all");
+                        setSelectedSubcategory("all");
                         setSpecFilters({});
+                        const params = new URLSearchParams(searchParams.toString());
+                        params.delete("category");
+                        params.delete("subcategory");
+                        router.push(`${pathname}?${params.toString()}`, { scroll: false });
                       }}
                       className="text-xs text-brand-orange hover:text-brand-darkBlue font-nunito transition-colors"
                     >
