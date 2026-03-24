@@ -34,6 +34,7 @@ export interface CatalogPdfProduct {
 }
 
 const specMapping: Record<string, string> = {
+  manufacturer: "Manufacturer",
   controlSystem: "Control system",
   workingSpindleDiameter: "Working spindle diameter",
   travelX: "Travel X-axis",

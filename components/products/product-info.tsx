@@ -55,12 +55,11 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             urlFor(img).width(1200).height(900).fit("max").url(),
           ) || [],
         description: product.description,
-        category: product.category,
-        specifications: product.specifications,
+        category: product.category.name,
         features: product.features,
         technicalSpecs: product.technicalSpecs,
         price: product.price,
-        manufacturer: product.manufacturer,
+        manufacturer: product.technicalSpecs?.manufacturer as string | undefined,
         year: product.year,
         condition: product.condition,
         isInStock: product.isInStock,
@@ -76,7 +75,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       {/* Badges */}
       <div className="flex flex-wrap gap-2">
         <div className="inline-block px-3 py-1 bg-brand-orange/10 text-brand-orange rounded-full text-sm font-medium capitalize">
-          {product.category}
+          {product.category.name}
         </div>
         {product.condition && (
           <div
@@ -96,51 +95,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           <p className="text-lg font-semibold text-brand-gray/80 font-nunito">
             {product.subcategory}
           </p>
-        )}
-      </div>
-
-      {/* Stock Status */}
-      {/* <div className="flex items-center py-4 border-y border-gray-200">
-        <div className="flex items-center space-x-2">
-          {product.isInStock ? (
-            <>
-              <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="text-green-600 font-semibold font-nunito">In Stock</span>
-            </>
-          ) : (
-            <>
-              <XCircle className="w-5 h-5 text-red-600" />
-              <span className="text-red-600 font-semibold font-nunito">Out of Stock</span>
-            </>
-          )}
-        </div>
-      </div> */}
-
-      {/* Product Details Grid */}
-      <div className="grid grid-cols-2 gap-4 py-1 md:py-4">
-        {product.manufacturer && (
-          <div className="flex items-center space-x-2">
-            <Building2 className="w-5 h-5 text-brand-gray" />
-            <div>
-              <div className="text-xs text-brand-gray font-nunito">
-                Manufacturer
-              </div>
-              <div className="font-semibold text-brand-darkBlue font-nunito">
-                {product.manufacturer}
-              </div>
-            </div>
-          </div>
-        )}
-        {product.year && (
-          <div className="flex items-center space-x-2">
-            <Calendar className="w-5 h-5 text-brand-gray" />
-            <div>
-              <div className="text-xs text-brand-gray font-nunito">Year</div>
-              <div className="font-semibold text-brand-darkBlue font-nunito">
-                {product.year}
-              </div>
-            </div>
-          </div>
         )}
       </div>
 

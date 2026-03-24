@@ -9,6 +9,7 @@ interface ProductSpecsTableProps {
 }
 
 const specMapping: { [key: string]: string } = {
+    manufacturer: 'Manufacturer',
     controlSystem: 'Control system',
     workingSpindleDiameter: 'Diameter of working spindle',
     travelX: 'Travel X-axis',

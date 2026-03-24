@@ -1,10 +1,10 @@
 import { groq } from 'next-sanity'
 
 export const heroQuery = groq`*[_type == "hero"][0]{..., _id}`
-export const productsQuery = groq`*[_type == "product"] | order(dateAdded desc){..., _id}`
-export const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0]{..., _id}`
-export const relatedProductsQuery = groq`*[_type == "product" && category == $category && slug.current != $currentSlug] | order(dateAdded desc)[0...4]{..., _id}`
-export const productsByCategoryQuery = groq`*[_type == "product" && category == $category] | order(dateAdded desc)`
+export const productsQuery = groq`*[_type == "product"] | order(dateAdded desc){..., _id, category->{name, "slug": slug.current}}`
+export const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0]{..., _id, category->{name, "slug": slug.current}}`
+export const relatedProductsQuery = groq`*[_type == "product" && category->slug.current == $category && slug.current != $currentSlug] | order(dateAdded desc)[0...4]{..., _id, category->{name, "slug": slug.current}}`
+export const productsByCategoryQuery = groq`*[_type == "product" && category->slug.current == $category] | order(dateAdded desc){..., _id, category->{name, "slug": slug.current}}`
 export const aboutQuery = groq`*[_type == "about"][0]{..., _id}`
 export const footerQuery = groq`*[_type == "footer"][0]{..., _id}`
 export const contactQuery = groq`*[_type == "contact"][0]{..., _id}`
@@ -21,7 +21,7 @@ export const recentlyAddedQuery = groq`{
     title,
     slug,
     description,
-    category,
+    "category": category->{name, "slug": slug.current},
     subcategory,
     specifications,
     features,

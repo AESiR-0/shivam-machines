@@ -71,20 +71,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <ProductInfo product={product} />
 
               {/* Relocated Technical Specifications */}
-              {(product.technicalSpecs || product.specifications) && (
+              {product.technicalSpecs && (
                 <div className="md:pt-8 pt-2  border-t border-gray-100">
-                  {product.technicalSpecs && (
-                    <ProductSpecsTable
-                      technicalSpecs={product.technicalSpecs}
-                    />
-                  )}
-                  {product.specifications && (
-                    <div className="mt-4">
-                      <ProductSpecifications
-                        specifications={product.specifications}
-                      />
-                    </div>
-                  )}
+                  <ProductSpecsTable technicalSpecs={product.technicalSpecs} />
                 </div>
               )}
             </div>

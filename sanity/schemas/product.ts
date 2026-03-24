@@ -30,9 +30,10 @@ export default defineType({
     defineField({
       name: 'category',
       title: 'Category',
-      type: 'string',
+      type: 'reference',
+      to: [{ type: 'machineToolCategory' }],
       validation: (Rule) => Rule.required(),
-      description: 'Enter category name (e.g. boring, grinding). This will automatically appear in the filter.',
+      description: 'Select or create a category for this machine.',
     }),
     defineField({
       name: 'specifications',
@@ -78,11 +79,6 @@ export default defineType({
       description: 'Price or price range',
     }),
     defineField({
-      name: 'manufacturer',
-      title: 'Manufacturer',
-      type: 'string',
-    }),
-    defineField({
       name: 'year',
       title: 'Year',
       type: 'number',
@@ -105,6 +101,7 @@ export default defineType({
       title: 'Technical Specifications',
       type: 'object',
       fields: [
+        { name: 'manufacturer', title: 'Manufacturer', type: 'string' },
         { name: 'controlSystem', title: 'Control system', type: 'string' },
         { name: 'workingSpindleDiameter', title: 'Diameter of working spindle', type: 'string' },
         { name: 'travelX', title: 'Travel X-axis', type: 'string' },
@@ -187,7 +184,7 @@ export default defineType({
     prepare({ title, category, media }) {
       return {
         title,
-        subtitle: category,
+        subtitle: category ? `Category Document` : 'No Category',
         media,
       }
     },

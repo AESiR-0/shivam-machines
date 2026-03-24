@@ -23,15 +23,17 @@ export interface Product {
   title: string
   slug: { current: string }
   description: string
-  category: string
-  subcategory?: string
   specifications?: string
+  category: {
+    name: string
+    slug: string
+  }
+  subcategory?: string
   features?: string[]
   images?: SanityImageSource[]
   isInStock?: boolean
   dateAdded?: string
   price?: string
-  manufacturer?: string
   year?: number
   condition?: string
   technicalSpecs?: {

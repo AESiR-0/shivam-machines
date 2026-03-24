@@ -112,7 +112,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
   const isProductInCategory = useCallback((product: Product, selectedCatId: string) => {
     if (!product.category) return false;
     
-    const prodCat = product.category.toLowerCase().trim();
+    const prodCat = product.category.name.toLowerCase().trim();
     const selCat = selectedCatId.toLowerCase().trim();
 
     const matchedCat = (sanityCategories || []).find(c => getCategoryId(c).toLowerCase() === selCat);
@@ -159,7 +159,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
             const techSpecs = (product.technicalSpecs as Record<string, string>) || {};
             const oldSpecs = product.specifications || "";
             const title = product.title || "";
-            const cat = product.category || "";
+            const cat = product.category.name || "";
 
             return techSpecs.controlSystem?.toLowerCase().includes("cnc") ||
               oldSpecs.toLowerCase().includes("cnc") ||
@@ -201,7 +201,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
     const productCats = new Set<string>();
     products.forEach(p => {
       if (p.category) {
-        const prodCat = p.category.toLowerCase().trim();
+        const prodCat = p.category.name.toLowerCase().trim();
         const hasMatch = fromSanity.some(sc => {
           const matchId = sc.id.toLowerCase();
           const matchName = sc.name.toLowerCase();
@@ -217,7 +217,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                  prodCat.includes(matchName);
         });
         if (!hasMatch) {
-          productCats.add(p.category);
+          productCats.add(p.category.name);
         }
       }
     });
@@ -591,7 +591,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                           {/* Category Badge Overlay */}
                           <div className="absolute top-4 left-4">
                             <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-brand-darkBlue text-xs font-semibold rounded-full capitalize shadow-sm font-nunito">
-                              {product.category}
+                              {product.category.name}
                             </span>
                           </div>
                         </div>
