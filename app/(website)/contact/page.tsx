@@ -18,7 +18,7 @@ export default function Contact() {
     {
       icon: Mail,
       title: "Email",
-      details: [companyInfo.primaryEmail, companyInfo.secondaryEmail],
+      details: [companyInfo.primaryEmail],
       color: "from-green-500 to-green-600",
     },
     {
