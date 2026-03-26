@@ -36,17 +36,16 @@ export default defineType({
       description: 'Select or create a category for this machine.',
     }),
     defineField({
-      name: 'specifications',
-      title: 'Specifications',
-      type: 'text',
-      description: 'Technical specifications',
+      name : 'subcategory',
+      title: 'Subcategory',
+      type: 'string',
     }),
-    defineField({
-      name: 'features',
-      title: 'Features',
-      type: 'array',
-      of: [{ type: 'string' }],
-    }),
+    // defineField({
+    //   name: 'features',
+    //   title: 'Features',
+    //   type: 'array',
+    //   of: [{ type: 'string' }],
+    // }),
     defineField({
       name: 'images',
       title: 'Images',

@@ -42,8 +42,20 @@ export interface Product {
 }
 
 export interface About {
-  title?: string
-  titleHighlight?: string
+  heroBadge?: string
+  heroTitle?: string
+  heroDescription?: string
+  highlights?: Array<{
+    value: string
+    label: string
+  }>
+  journeyTitle?: string
+  journeySubtitle?: string
+  timeline?: Array<{
+    title: string
+    body: string
+  }>
+  aboutSectionTitle?: string
   description?: string
   stats?: Array<{
     icon?: string
@@ -72,9 +84,9 @@ export interface Footer {
 }
 
 export interface Contact {
+  heroTitle?: string
+  heroDescription?: string
   title?: string
-  titleHighlight?: string
-  description?: string
   contactInfo?: Array<{
     type: string
     title: string
@@ -124,6 +136,8 @@ export interface Industry {
   slug: { current: string }
   description?: string
   image?: SanityImageSource
+  stats?: string
+  applications?: string[]
   machines?: Product[]
 }
 

@@ -35,6 +35,17 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'stats',
+      title: 'Statistics (e.g. 200+ Machines)',
+      type: 'string',
+    }),
+    defineField({
+      name: 'applications',
+      title: 'Key Applications',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
       name: 'machines',
       title: 'Related Machines',
       type: 'array',

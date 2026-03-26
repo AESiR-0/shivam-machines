@@ -20,6 +20,10 @@ import {
   generateCatalogPDF,
   type CatalogPdfProduct,
 } from "@/lib/pdf-generator";
+import {
+  getMachineCategoryDisplayName,
+  getMachineCategoryId,
+} from "@/lib/category-utils";
 import { cn } from "@/lib/utils";
 import type { MachineToolCategory } from "@/lib/sanity/types";
 
@@ -43,17 +47,17 @@ const Navbar = ({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Extract category ID from href (e.g., "boring" from "/products?category=boring") or fallback to slug
-  const getCategoryId = (cat: MachineToolCategory) => {
-    if (cat.href && cat.href.includes("category=")) {
-      return cat.href.split("category=")[1];
+  const uniqueCategoriesMap = new Map();
+  categories.forEach((cat) => {
+    const key = getMachineCategoryId(cat);
+    if (!uniqueCategoriesMap.has(key)) {
+      uniqueCategoriesMap.set(key, cat);
     }
-    return cat.slug?.current || cat.name.toLowerCase();
-  };
+  });
 
-  const displayCategories = categories.map((cat) => ({
-    name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
-    href: `/products?category=${getCategoryId(cat)}`,
+  const displayCategories = Array.from(uniqueCategoriesMap.values()).map((cat) => ({
+    name: getMachineCategoryDisplayName(cat),
+    href: `/products?category=${getMachineCategoryId(cat)}`,
   }));
 
   const mainCategories = displayCategories.slice(0, 8);

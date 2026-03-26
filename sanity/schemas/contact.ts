@@ -6,21 +6,22 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
-      name: 'title',
-      title: 'Section Title',
+      name: 'heroTitle',
+      title: 'Hero Title',
       type: 'string',
       initialValue: 'Get In Touch',
     }),
     defineField({
-      name: 'titleHighlight',
-      title: 'Title Highlight',
-      type: 'string',
-      initialValue: 'Touch',
+      name: 'heroDescription',
+      title: 'Hero Description',
+      type: 'text',
+      initialValue: 'Ready to find the perfect machinery solution for your business? Contact our experts today for personalized assistance and quotes.',
     }),
     defineField({
-      name: 'description',
-      title: 'Description',
-      type: 'text',
+      name: 'title',
+      title: 'Contact Section Title',
+      type: 'string',
+      initialValue: 'Contact Information',
     }),
     defineField({
       name: 'contactInfo',

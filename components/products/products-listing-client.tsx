@@ -7,6 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import {
+  getMachineCategoryDisplayName,
+  getMachineCategoryId,
+  getProductCategoryKey,
+  getProductCategoryName,
+} from "@/lib/category-utils";
 import { urlFor } from "@/lib/sanity/image";
 import type { Product, MachineToolCategory } from "@/lib/sanity/types";
 
@@ -101,39 +107,26 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
     });
     return Array.from(keys).sort(); // Alphabetical sort
   }, [products]);
-  // Helper to extract category ID consistently
-  const getCategoryId = useCallback((cat: MachineToolCategory) => {
-    if (cat.href && cat.href.includes("category=")) {
-      return cat.href.split("category=")[1];
-    }
-    return cat.slug?.current || cat.name.toLowerCase();
-  }, []);
-
   const isProductInCategory = useCallback((product: Product, selectedCatId: string) => {
     if (!product.category) return false;
-    
-    const prodCat = product.category.name.toLowerCase().trim();
+
+    const prodCat = getProductCategoryKey(product.category);
     const selCat = selectedCatId.toLowerCase().trim();
 
-    const matchedCat = (sanityCategories || []).find(c => getCategoryId(c).toLowerCase() === selCat);
-    if (matchedCat) {
-      const matchId = getCategoryId(matchedCat).toLowerCase();
-      const matchName = matchedCat.name.toLowerCase();
-      const matchSlug = matchedCat.slug?.current.toLowerCase() || "";
-      
-      return (
-        prodCat === matchId || 
-        prodCat === matchName || 
-        prodCat === matchSlug ||
-        matchId.includes(prodCat) ||
-        matchName.includes(prodCat) ||
-        matchSlug.includes(prodCat) ||
-        prodCat.includes(matchId) ||
-        prodCat.includes(matchName)
-      );
+    if (!prodCat || !selCat) {
+      return false;
     }
-    return prodCat === selCat || prodCat.includes(selCat) || selCat.includes(prodCat);
-  }, [sanityCategories, getCategoryId]);
+
+    const matchedCat = (sanityCategories || []).find(
+      (category) => getMachineCategoryId(category) === selCat,
+    );
+
+    if (matchedCat) {
+      return prodCat === getMachineCategoryId(matchedCat);
+    }
+
+    return prodCat === selCat;
+  }, [sanityCategories]);
 
   // Combined product filtering and sorting
   const filteredAndSortedProducts = useMemo(() => {
@@ -168,7 +161,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
           });
         } else {
           const filterNum = parseFloat(filterVal);
-          if (!isNaN(filterNum)) {
+          if (!Number.isNaN(filterNum)) {
             filtered = filtered.filter((product) => {
               const techSpecs = (product.technicalSpecs as Record<string, string>) || {};
               const rawSpecVal = techSpecs[filterKey];
@@ -179,7 +172,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
               if (!numericMatch) return false;
 
               const prodSpecVal = parseFloat(numericMatch[1]);
-              return !isNaN(prodSpecVal) && prodSpecVal >= filterNum;
+              return !Number.isNaN(prodSpecVal) && prodSpecVal >= filterNum;
             });
           }
         }
@@ -187,50 +180,29 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
     });
 
     return filtered;
-  }, [products, selectedCategory, selectedSubcategory, specFilters, sanityCategories, getCategoryId]);
+  }, [products, selectedCategory, selectedSubcategory, specFilters, isProductInCategory]);
 
-  // Get unique categories from products, but prioritized/mapped by sanityCategories
+  // Show categories from Sanity only
   const categories = useMemo(() => {
-    const fromSanity = (sanityCategories || []).map(cat => ({
-      id: getCategoryId(cat),
-      name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
-      original: cat
-    }));
-
-    // Optionally add product categories that don't match any sanity category (fuzzy match)
-    const productCats = new Set<string>();
-    products.forEach(p => {
-      if (p.category) {
-        const prodCat = p.category.name.toLowerCase().trim();
-        const hasMatch = fromSanity.some(sc => {
-          const matchId = sc.id.toLowerCase();
-          const matchName = sc.name.toLowerCase();
-          const matchSlug = sc.original.slug?.current.toLowerCase() || "";
-          
-          return prodCat === matchId || 
-                 prodCat === matchName || 
-                 prodCat === matchSlug ||
-                 matchId.includes(prodCat) ||
-                 matchName.includes(prodCat) ||
-                 matchSlug.includes(prodCat) ||
-                 prodCat.includes(matchId) ||
-                 prodCat.includes(matchName);
-        });
-        if (!hasMatch) {
-          productCats.add(p.category.name);
-        }
+    const uniqueSanityMap = new Map();
+    (sanityCategories || []).forEach(cat => {
+      const key = getMachineCategoryId(cat);
+      if (!uniqueSanityMap.has(key)) {
+        uniqueSanityMap.set(key, cat);
       }
     });
+
+    const fromSanity = Array.from(uniqueSanityMap.values()).map((cat) => ({
+      id: getMachineCategoryId(cat),
+      name: getMachineCategoryDisplayName(cat),
+      original: cat
+    }));
 
     return [
       { id: "all", name: "All Categories" },
       ...fromSanity.map(({ id, name }) => ({ id, name })),
-      ...Array.from(productCats).map(c => ({
-        id: c.toLowerCase(),
-        name: c.charAt(0).toUpperCase() + c.slice(1)
-      }))
     ];
-  }, [sanityCategories, getCategoryId, products]);
+  }, [sanityCategories]);
 
   // Derive unique subcategories based on current products and category
   const subcategories = useMemo(() => {
@@ -250,7 +222,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
       { id: "all", name: "All Subcategories" },
       ...Array.from(subSet).sort().map(sub => ({ id: sub.toLowerCase(), name: sub }))
     ];
-  }, [products, selectedCategory, sanityCategories, getCategoryId]);
+  }, [products, selectedCategory, isProductInCategory]);
 
   // Derived state to check if ANY spec filter is active
   const hasActiveSpecFilters = Object.values(specFilters).some(v => v !== "");
@@ -591,7 +563,7 @@ function ProductsContent({ products, categories: sanityCategories }: ProductsLis
                           {/* Category Badge Overlay */}
                           <div className="absolute top-4 left-4">
                             <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-brand-darkBlue text-xs font-semibold rounded-full capitalize shadow-sm font-nunito">
-                              {product.category.name}
+                              {getProductCategoryName(product.category)}
                             </span>
                           </div>
                         </div>

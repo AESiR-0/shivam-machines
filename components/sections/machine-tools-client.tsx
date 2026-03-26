@@ -6,6 +6,10 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Settings } from "lucide-react";
 import Link from "next/link";
+import {
+  getMachineCategoryDisplayName,
+  getMachineCategoryId,
+} from "@/lib/category-utils";
 import { urlFor } from "@/lib/sanity/image";
 import type { MachineToolCategory } from "@/lib/sanity/types";
 
@@ -38,15 +42,21 @@ const BG_SHADES = [
 
 const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
   // Sort categories by order field
-  const sortedCategories = [...(categories || [])].sort(
+  const uniqueCategories = Array.from(
+    new Map(
+      (categories || []).map((category) => [getMachineCategoryId(category), category]),
+    ).values(),
+  );
+
+  const sortedCategories = [...uniqueCategories].sort(
     (a, b) => (a.order || 999) - (b.order || 999),
   );
 
   const displayCategories = sortedCategories.map((cat) => ({
-    name: cat.name,
+    name: getMachineCategoryDisplayName(cat),
     href:
       cat.href ||
-      `/products?category=${cat.slug?.current || cat.name.toLowerCase().replace(/\s+/g, "-")}`,
+      `/products?category=${getMachineCategoryId(cat)}`,
     imageUrl: cat.image ? urlFor(cat.image).width(400).height(400).url() : null,
     icon: cat.icon || "Settings",
   }));
@@ -70,8 +80,6 @@ const MachineToolsClient = ({ categories }: MachineToolsClientProps) => {
           {displayCategories.map((group, index) => {
             const IconComponent = iconMap[group.icon] || Settings;
             const bgShade = BG_SHADES[index % BG_SHADES.length];
-            const innerBgShade = BG_SHADES[(index + 4) % BG_SHADES.length]; // Offset for contrast
-
             return (
               <motion.div
                 key={index}

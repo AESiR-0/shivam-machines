@@ -1,59 +1,20 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
-import { Car, Building2, Wrench, Plane, Ship, Zap } from "lucide-react";
+import { Car, Building2, Wrench, Plane, Ship, Zap, LucideIcon } from "lucide-react";
+import { fetchSanityData } from "@/lib/sanity/fetch";
+import { industriesQuery } from "@/lib/sanity/queries";
+import type { Industry } from "@/lib/sanity/types";
 
-export default function Industries() {
-  const industries = [
-    {
-      name: "Automotive",
-      description: "Precision machining for automotive components and assembly lines. Our machines support the production of engine parts, transmission components, and chassis elements.",
-      icon: Car,
-      color: "from-blue-500 to-blue-600",
-      stats: "200+ Machines",
-      applications: ["Engine Components", "Transmission Parts", "Chassis Elements", "Brake Systems"]
-    },
-    {
-      name: "Construction",
-      description: "Heavy-duty equipment for construction and infrastructure projects. We supply machinery for structural components and construction equipment manufacturing.",
-      icon: Building2,
-      color: "from-orange-500 to-orange-600",
-      stats: "150+ Machines",
-      applications: ["Structural Components", "Heavy Equipment", "Infrastructure Parts", "Construction Tools"]
-    },
-    {
-      name: "Manufacturing",
-      description: "Industrial machinery for large-scale manufacturing operations. Our machines support various manufacturing processes across different sectors.",
-      icon: Wrench,
-      color: "from-green-500 to-green-600",
-      stats: "300+ Machines",
-      applications: ["Production Lines", "Assembly Operations", "Quality Control", "Process Manufacturing"]
-    },
-    {
-      name: "Aerospace",
-      description: "High-precision equipment for aerospace and defense applications. Our machines meet the stringent requirements of aerospace manufacturing.",
-      icon: Plane,
-      color: "from-purple-500 to-purple-600",
-      stats: "100+ Machines",
-      applications: ["Aircraft Components", "Engine Parts", "Defense Equipment", "Precision Parts"]
-    },
-    {
-      name: "Marine",
-      description: "Specialized machinery for shipbuilding and marine engineering. We provide equipment for marine component manufacturing and ship construction.",
-      icon: Ship,
-      color: "from-cyan-500 to-cyan-600",
-      stats: "80+ Machines",
-      applications: ["Ship Components", "Marine Engines", "Propeller Systems", "Marine Equipment"]
-    },
-    {
-      name: "Energy",
-      description: "Equipment for power generation and renewable energy sectors. Our machines support the manufacturing of energy infrastructure components.",
-      icon: Zap,
-      color: "from-yellow-500 to-yellow-600",
-      stats: "120+ Machines",
-      applications: ["Power Generation", "Wind Energy", "Solar Equipment", "Energy Infrastructure"]
-    },
-  ];
+const ICON_MAP: Record<string, LucideIcon> = {
+  Car,
+  Building2,
+  Wrench,
+  Plane,
+  Ship,
+  Zap,
+};
+
+export default async function Industries() {
+  const industries = await fetchSanityData<Industry[]>(industriesQuery);
 
   return (
     <main className="min-h-screen">
@@ -77,45 +38,52 @@ export default function Industries() {
       <section className="py-12 bg-gradient-to-br from-white to-brand-lightGray">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {industries.map((industry, index) => (
-              <Card key={index} className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20 hover:-translate-y-1">
-                <CardContent className="p-8">
-                  {/* Icon */}
-                  <div className={`w-16 h-16 bg-gradient-to-br ${industry.color} rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                    <industry.icon className="w-8 h-8 text-white" />
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="text-xl font-semibold text-brand-darkBlue mb-3 group-hover:text-brand-orange transition-colors font-inter">
-                    {industry.name}
-                  </h3>
-                  <p className="text-brand-gray mb-4 leading-relaxed font-nunito">
-                    {industry.description}
-                  </p>
-
-                  {/* Applications */}
-                  <div className="mb-4">
-                    <h4 className="text-sm font-semibold text-brand-darkBlue mb-2 font-inter">Key Applications:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {industry.applications.map((app, appIndex) => (
-                        <span
-                          key={appIndex}
-                          className="px-2 py-1 bg-brand-lightGray text-brand-gray text-xs rounded-full font-nunito"
-                        >
-                          {app}
-                        </span>
-                      ))}
+            {industries?.map((industry, index) => {
+              const IconComponent = ICON_MAP[industry.name] || Wrench;
+              return (
+                <Card key={index} className="group hover:shadow-xl transition-all duration-300 bg-white border border-gray-100 hover:border-brand-orange/20 hover:-translate-y-1">
+                  <CardContent className="p-8">
+                    {/* Icon */}
+                    <div className="w-16 h-16 bg-gradient-to-br from-brand-darkBlue to-brand-steel rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="w-8 h-8 text-white" />
                     </div>
-                  </div>
 
-                  {/* Stats */}
-                  <div className="flex items-center justify-center space-x-2 text-sm text-brand-orange font-nunito">
-                    <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
-                    <span className="font-medium">{industry.stats}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    {/* Content */}
+                    <h3 className="text-xl font-semibold text-brand-darkBlue mb-3 group-hover:text-brand-orange transition-colors font-inter text-center">
+                      {industry.name}
+                    </h3>
+                    <p className="text-brand-gray mb-4 leading-relaxed font-nunito text-center">
+                      {industry.description}
+                    </p>
+
+                    {/* Applications */}
+                    {industry.applications && industry.applications.length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="text-sm font-semibold text-brand-darkBlue mb-2 font-inter text-center">Key Applications:</h4>
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {industry.applications.map((app, appIndex) => (
+                            <span
+                              key={appIndex}
+                              className="px-2 py-1 bg-brand-lightGray text-brand-gray text-xs rounded-full font-nunito"
+                            >
+                              {app}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Stats */}
+                    {industry.stats && (
+                      <div className="flex items-center justify-center space-x-2 text-sm text-brand-orange font-nunito">
+                        <div className="w-2 h-2 bg-brand-orange rounded-full"></div>
+                        <span className="font-medium">{industry.stats}</span>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
