@@ -87,7 +87,7 @@ const ProductsClient = ({ products, cta }: ProductsClientProps) => {
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {displayProducts.map((product) => {
-              const IconComponent = categoryIconMap[product.category] || Settings;
+              const IconComponent = categoryIconMap[product.category.slug] || Settings;
               return (
                 <motion.div 
                   key={product._id} 
@@ -106,7 +106,7 @@ const ProductsClient = ({ products, cta }: ProductsClientProps) => {
                               <IconComponent className="w-6 h-6 text-brand-orange" />
                             </div>
                             <span className="text-sm text-brand-gray font-nunito bg-brand-lightGray px-3 py-1 rounded-full capitalize">
-                              {product.category}
+                              {product.category.name}
                             </span>
                           </div>
                           

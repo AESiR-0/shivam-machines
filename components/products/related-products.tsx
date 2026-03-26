@@ -80,29 +80,40 @@ export default function RelatedProducts({
                       <div className="w-full h-px bg-brand-blue/20 mb-3" />
 
                       <div className="space-y-1.5 flex-1">
-                        {product.technicalSpecs && Object.entries(product.technicalSpecs).length > 0 ? (
+                        {product.technicalSpecs &&
+                        Object.entries(product.technicalSpecs).length > 0 ? (
                           <div className="grid grid-cols-1 gap-1">
                             {Object.entries(product.technicalSpecs)
-                              .filter(([_, value]) => value !== undefined && value !== null && value !== "")
+                              .filter(
+                                ([_, value]) =>
+                                  value !== undefined &&
+                                  value !== null &&
+                                  value !== "",
+                              )
                               .slice(0, 3)
                               .map(([key, value], idx) => (
-                                <div key={idx} className="flex justify-between items-center text-[10px] font-inter border-b border-gray-50 pb-0.5">
-                                  <span className="text-brand-gray font-medium capitalize truncate mr-2">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>
-                                  <span className="text-brand-darkBlue font-semibold text-right truncate">{value}</span>
+                                <div
+                                  key={idx}
+                                  className="flex justify-between items-center text-[10px] font-inter border-b border-gray-50 pb-0.5"
+                                >
+                                  <span className="text-brand-gray font-medium capitalize truncate mr-2">
+                                    {key.replace(/([A-Z])/g, " $1").trim()}:
+                                  </span>
+                                  <span className="text-brand-darkBlue font-semibold text-right truncate">
+                                    {value}
+                                  </span>
                                 </div>
                               ))}
                           </div>
                         ) : (
                           <div className="text-[10px] text-brand-gray font-nunito line-clamp-2 opacity-70">
-                            {product.category}
+                            {product.category.name}
                           </div>
                         )}
                       </div>
                     </CardHeader>
                     <CardContent className="p-4 pt-0 mt-auto border-t border-gray-50">
-                      <div
-                        className="w-full bg-brand-orange text-white text-center py-2 rounded-lg font-nunito text-xs font-medium transition-colors group-hover:bg-brand-darkBlue"
-                      >
+                      <div className="w-full bg-brand-orange text-white text-center py-2 rounded-lg font-nunito text-xs font-medium transition-colors group-hover:bg-brand-darkBlue">
                         View Details
                       </div>
                     </CardContent>
@@ -116,4 +127,3 @@ export default function RelatedProducts({
     </div>
   );
 }
-

@@ -249,7 +249,7 @@ async function addWatermark(doc: jsPDF, pageWidth: number, pageHeight: number) {
   doc.setGState(gState);
 
   // Large diagonal logo across the page
-  const logoWidth = pageWidth * 0.8;
+  const logoWidth = pageWidth * 0.6;
   const logoHeight = (logoWidth * 32) / 48; // Keep aspect ratio from addLetterhead (48/32)
   
   const centerX = pageWidth / 2;
@@ -296,7 +296,6 @@ async function addLetterhead(doc: jsPDF, pageWidth: number) {
     `Mobile: ${companyInfo.phone}`,
     `Web: ${companyInfo.website}`,
     `E-mail: ${companyInfo.primaryEmail}`,
-    `       ${companyInfo.secondaryEmail}`,
     "Dealer and Consultant in Industrial Machinery",
   ];
 

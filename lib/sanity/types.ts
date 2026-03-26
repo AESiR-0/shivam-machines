@@ -49,6 +49,7 @@ export interface About {
     value: string
     label: string
   }>
+  industrialFocus?: string
   journeyTitle?: string
   journeySubtitle?: string
   timeline?: Array<{
@@ -123,6 +124,8 @@ export interface CTA {
   _id: string
   title?: string
   description?: string
+  icon?: string
+  secondaryIcon?: string
   primaryButtonText?: string
   primaryButtonLink?: string
   secondaryButtonText?: string

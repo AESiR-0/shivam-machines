@@ -28,7 +28,6 @@ export async function GET() {
       features: product.features,
       technicalSpecs: product.technicalSpecs,
       price: product.price,
-      manufacturer: product.manufacturer,
       year: product.year,
       condition: product.condition,
       isInStock: product.isInStock,

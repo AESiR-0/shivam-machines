@@ -2,7 +2,15 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Award, Users, Clock, Shield, CheckCircle2, TrendingUp, Sparkles } from "lucide-react";
+import {
+  Award,
+  Users,
+  Clock,
+  Shield,
+  CheckCircle2,
+  TrendingUp,
+  Sparkles,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { About } from "@/lib/sanity/types";
 
@@ -26,7 +34,7 @@ const AboutClient = ({ data }: AboutClientProps) => {
       description: "Decades of expertise in machine tool industry",
       value: "25+",
       color: "from-brand-darkBlue to-primary-700",
-      bgColor: "bg-primary-100"
+      bgColor: "bg-primary-100",
     },
     {
       icon: Users,
@@ -34,7 +42,7 @@ const AboutClient = ({ data }: AboutClientProps) => {
       description: "Satisfied customers across India",
       value: "500+",
       color: "from-brand-darkBlue to-primary-800",
-      bgColor: "bg-primary-100"
+      bgColor: "bg-primary-100",
     },
     {
       icon: Clock,
@@ -42,7 +50,7 @@ const AboutClient = ({ data }: AboutClientProps) => {
       description: "Round-the-clock customer service",
       value: "24/7",
       color: "from-brand-gray to-steel-700",
-      bgColor: "bg-brand-lightGray"
+      bgColor: "bg-brand-lightGray",
     },
     {
       icon: Shield,
@@ -50,7 +58,7 @@ const AboutClient = ({ data }: AboutClientProps) => {
       description: "All machines thoroughly tested",
       value: "100%",
       color: "from-brand-darkBlue to-primary-600",
-      bgColor: "bg-primary-100"
+      bgColor: "bg-primary-100",
     },
   ];
 
@@ -58,34 +66,39 @@ const AboutClient = ({ data }: AboutClientProps) => {
     {
       icon: CheckCircle2,
       title: "Premium Quality",
-      description: "All our used machine tools are carefully inspected and refurbished to ensure optimal performance and reliability.",
-      gradient: "from-brand-darkBlue to-primary-600"
+      description:
+        "All our used machine tools are carefully inspected and refurbished to ensure optimal performance and reliability.",
+      gradient: "from-brand-darkBlue to-primary-600",
     },
     {
       icon: TrendingUp,
       title: "Expert Service",
-      description: "Our experienced team provides comprehensive support from selection to installation and maintenance.",
-      gradient: "from-brand-darkBlue to-primary-700"
+      description:
+        "Our experienced team provides comprehensive support from selection to installation and maintenance.",
+      gradient: "from-brand-darkBlue to-primary-700",
     },
     {
       icon: Sparkles,
       title: "Wide Inventory",
-      description: "Extensive range of machine tools including grinding, boring, lathe, and CNC machines from top manufacturers.",
-      gradient: "from-brand-darkBlue to-primary-800"
+      description:
+        "Extensive range of machine tools including grinding, boring, lathe, and CNC machines from top manufacturers.",
+      gradient: "from-brand-darkBlue to-primary-800",
     },
     {
       icon: Award,
       title: "Competitive Pricing",
-      description: "Best value for money with competitive pricing on premium used machine tools without compromising quality.",
-      gradient: "from-brand-darkBlue to-primary-600"
-    }
+      description:
+        "Best value for money with competitive pricing on premium used machine tools without compromising quality.",
+      gradient: "from-brand-darkBlue to-primary-600",
+    },
   ];
 
-  const stats = data?.stats?.map(stat => ({
-    ...stat,
-    icon: typeof stat.icon === 'string' ? iconMap[stat.icon] || Award : Award,
-    bgColor: "bg-primary-100"
-  })) || defaultStats;
+  const stats =
+    data?.stats?.map((stat) => ({
+      ...stat,
+      icon: typeof stat.icon === "string" ? iconMap[stat.icon] || Award : Award,
+      bgColor: "bg-primary-100",
+    })) || defaultStats;
 
   // Map features to include icon and gradient, using defaults if not present
   const features = (data?.features || defaultFeatures).map((feature, index) => {
@@ -93,12 +106,12 @@ const AboutClient = ({ data }: AboutClientProps) => {
     return {
       ...feature,
       icon: (feature as any).icon || defaultFeature.icon,
-      gradient: (feature as any).gradient || defaultFeature.gradient
+      gradient: (feature as any).gradient || defaultFeature.gradient,
     };
   });
-  const title = data?.title || "About";
-  const titleHighlight = data?.titleHighlight || "Shivam Enterprise";
-  const description = data?.description || "Since 1997, we have been India's trusted supplier of premium used machine tools. Our commitment to quality, reliability, and customer satisfaction has made us a leading name in the industrial machinery sector.";
+  const description =
+    data?.description ||
+    "Since 1997, we have been India's trusted supplier of premium used machine tools. Our commitment to quality, reliability, and customer satisfaction has made us a leading name in the industrial machinery sector.";
 
   return (
     <section className="relative py-16 bg-gradient-to-br from-white via-brand-lightGray/20 to-white overflow-hidden">
@@ -148,18 +161,22 @@ const AboutClient = ({ data }: AboutClientProps) => {
                     className="w-32 h-32 mx-auto mb-6 bg-white/10 backdrop-blur-md rounded-3xl flex items-center justify-center border-2 border-white/20 shadow-2xl"
                     animate={{
                       scale: [1, 1.05, 1],
-                      rotate: [0, 5, -5, 0]
+                      rotate: [0, 5, -5, 0],
                     }}
                     transition={{
                       duration: 4,
                       repeat: Infinity,
-                      ease: "easeInOut"
+                      ease: "easeInOut",
                     }}
                   >
                     <Award className="w-16 h-16 text-white" />
                   </motion.div>
-                  <h3 className="text-2xl font-bold mb-2 font-montserrat">Industry Leaders</h3>
-                  <p className="text-white/80 font-nunito">Excellence in Every Machine</p>
+                  <h3 className="text-2xl font-bold mb-2 font-montserrat">
+                    Industry Leaders
+                  </h3>
+                  <p className="text-white/80 font-nunito">
+                    Excellence in Every Machine
+                  </p>
                 </div>
               </div>
               {/* Decorative circles */}
@@ -168,8 +185,6 @@ const AboutClient = ({ data }: AboutClientProps) => {
             </div>
           </motion.div>
         </div>
-
-
 
         {/* Features Grid - Enhanced Card Design */}
         <motion.div
@@ -193,7 +208,9 @@ const AboutClient = ({ data }: AboutClientProps) => {
               >
                 <Card className="relative bg-white border border-brand-lightGray hover:border-brand-darkBlue/30 hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden h-full">
                   {/* Gradient accent bar */}
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.gradient || 'from-brand-darkBlue to-primary-600'}`}></div>
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.gradient || "from-brand-darkBlue to-primary-600"}`}
+                  ></div>
 
                   {/* Decorative background */}
                   <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-brand-darkBlue/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -201,7 +218,7 @@ const AboutClient = ({ data }: AboutClientProps) => {
                   <CardContent className="p-8 relative z-10">
                     <div className="flex items-start gap-6">
                       <motion.div
-                        className={`w-16 h-16 bg-gradient-to-br ${feature.gradient || 'from-brand-darkBlue to-primary-600'} rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-xl transition-all duration-300`}
+                        className={`w-16 h-16 bg-gradient-to-br ${feature.gradient || "from-brand-darkBlue to-primary-600"} rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-xl transition-all duration-300`}
                         whileHover={{ scale: 1.1, rotate: [0, -10, 10, 0] }}
                         transition={{ duration: 0.3 }}
                       >
@@ -228,4 +245,3 @@ const AboutClient = ({ data }: AboutClientProps) => {
 };
 
 export default AboutClient;
-

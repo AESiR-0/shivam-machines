@@ -1,11 +1,164 @@
 "use client";
 
+import React, { Suspense, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { companyInfo } from "@/lib/company";
 import { Clock, Mail, MapPin, Phone, Send } from "lucide-react";
+
+function ContactForm() {
+  const searchParams = useSearchParams();
+  const intent = searchParams.get("intent");
+
+  const defaultMessage = useMemo(() => {
+    switch (intent) {
+      case "sell":
+        return "I am interested in selling my machinery. Here are some details about the equipment...";
+      case "quote":
+        return "I would like to request a quote for the following machines...";
+      case "buy":
+        return "I am interested in buying machinery. I am looking for...";
+      default:
+        return "";
+    }
+  }, [intent]);
+
+  const defaultMachineType = useMemo(() => {
+    // If we have a specific machine type in mind later, we can map it here
+    return "";
+  }, [intent]);
+
+  return (
+    <Card className="border-0 shadow-xl">
+      <CardContent className="p-8">
+        <h3 className="text-2xl font-bold text-brand-darkBlue mb-6 font-montserrat">
+          Send us a Message
+        </h3>
+
+        <form className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+              >
+                Full Name *
+              </label>
+              <Input
+                id="name"
+                name="name"
+                required
+                placeholder="Enter your full name"
+                className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+              >
+                Email Address *
+              </label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="Enter your email"
+                className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+              >
+                Phone Number
+              </label>
+              <Input
+                id="phone"
+                name="phone"
+                placeholder="Enter your phone number"
+                className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="company"
+                className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+              >
+                Company Name
+              </label>
+              <Input
+                id="company"
+                name="company"
+                placeholder="Enter your company name"
+                className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="machine-type"
+              className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+            >
+              Machine Type Interest
+            </label>
+            <select
+              id="machine-type"
+              name="machine-type"
+              defaultValue={defaultMachineType}
+              className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange"
+            >
+              <option value="">Select machine type</option>
+              <option value="cylindrical-grinding">
+                Cylindrical Grinding Machines
+              </option>
+              <option value="boring-machines">Boring Machines</option>
+              <option value="lathe-machines">Lathe Machines</option>
+              <option value="cnc-machines">CNC Machines</option>
+              <option value="gear-machines">Gear Machines</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="message"
+              className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
+            >
+              Message *
+            </label>
+            <Textarea
+              id="message"
+              name="message"
+              required
+              defaultValue={defaultMessage}
+              placeholder="Tell us about your requirements, specifications, or any questions you have..."
+              rows={5}
+              className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full bg-brand-orange hover:bg-red-700 text-white py-3 rounded-lg font-inter"
+          >
+            Send Message
+            <Send className="ml-2 w-5 h-5" />
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function Contact() {
   const contactInfo = [
@@ -96,129 +249,9 @@ export default function Contact() {
           </div>
 
           <div>
-            <Card className="border-0 shadow-xl">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-brand-darkBlue mb-6 font-montserrat">
-                  Send us a Message
-                </h3>
-
-                <form className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
-                      >
-                        Full Name *
-                      </label>
-                      <Input
-                        id="name"
-                        name="name"
-                        required
-                        placeholder="Enter your full name"
-                        className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
-                      >
-                        Email Address *
-                      </label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                        placeholder="Enter your email"
-                        className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
-                      >
-                        Phone Number
-                      </label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        placeholder="Enter your phone number"
-                        className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="company"
-                        className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
-                      >
-                        Company Name
-                      </label>
-                      <Input
-                        id="company"
-                        name="company"
-                        placeholder="Enter your company name"
-                        className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="machine-type"
-                      className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
-                    >
-                      Machine Type Interest
-                    </label>
-                    <select
-                      id="machine-type"
-                      name="machine-type"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange"
-                    >
-                      <option value="">Select machine type</option>
-                      <option value="cylindrical-grinding">
-                        Cylindrical Grinding Machines
-                      </option>
-                      <option value="boring-machines">Boring Machines</option>
-                      <option value="lathe-machines">Lathe Machines</option>
-                      <option value="cnc-machines">CNC Machines</option>
-                      <option value="gear-machines">Gear Machines</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-brand-darkBlue mb-2 font-inter"
-                    >
-                      Message *
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      required
-                      placeholder="Tell us about your requirements, specifications, or any questions you have..."
-                      rows={5}
-                      className="border-gray-200 focus:border-brand-orange focus:ring-brand-orange"
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full bg-brand-orange hover:bg-red-700 text-white py-3 rounded-lg font-inter"
-                  >
-                    Send Message
-                    <Send className="ml-2 w-5 h-5" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+            <Suspense fallback={<div>Loading form...</div>}>
+              <ContactForm />
+            </Suspense>
           </div>
         </div>
       </div>

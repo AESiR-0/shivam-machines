@@ -32,24 +32,14 @@ export default defineType({
       type: 'string',
       description: 'Lucide icon name (e.g., "Settings", "Wrench")',
     }),
-    defineField({
-      name: 'count',
-      title: 'Machine Count',
-      type: 'string',
-      description: 'Display count (e.g., "25+ Machines")',
-    }),
+   
     defineField({
       name: 'href',
       title: 'Link',
       type: 'string',
       description: 'URL path for this category',
     }),
-    defineField({
-      name: 'color',
-      title: 'Color Gradient',
-      type: 'string',
-      description: 'Tailwind gradient classes (e.g., "from-blue-500 to-blue-600")',
-    }),
+  
     defineField({
       name: 'order',
       title: 'Display Order',
@@ -69,14 +59,8 @@ export default defineType({
   preview: {
     select: {
       title: 'name',
-      count: 'count',
     },
-    prepare({ title, count }) {
-      return {
-        title,
-        subtitle: count,
-      }
-    },
+    
   },
   orderings: [
     {

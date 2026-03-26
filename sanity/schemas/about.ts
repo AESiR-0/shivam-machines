@@ -21,12 +21,17 @@ export default defineType({
       name: 'heroDescription',
       title: 'Hero Description',
       type: 'text',
-      initialValue: 'Shivam Enterprise has been serving Indian manufacturers since 1997 with dependable used machine tools, direct advice, and a clear focus on value.',
+      initialValue: 'Shivam Enterprise has been serving Indian manufacturers since 1997 with dependable used machine tools, direct advice, and a clear focus on value. We help businesses buy with confidence, whether they need a listed machine or want us to source one specifically for their production needs.',
     }),
     defineField({
       name: 'highlights',
       title: 'Highlights (Stats Box)',
       type: 'array',
+      initialValue: [
+        { value: '1997', label: 'Serving Indian industry since' },
+        { value: '25+', label: 'Years of machine tool experience' },
+        { value: 'Pan India', label: 'Customer support and supply network' },
+      ],
       of: [
         {
           type: 'object',
@@ -36,6 +41,12 @@ export default defineType({
           ],
         },
       ],
+    }),
+    defineField({
+      name: 'industrialFocus',
+      title: 'Industrial Focus Description',
+      type: 'text',
+      initialValue: 'Horizontal borers, vertical lathes, grinders, milling machines, radial drills, gear machinery, roll grinders, and other industrial equipment selected for practical production use.',
     }),
     defineField({
       name: 'journeyTitle',
@@ -53,6 +64,20 @@ export default defineType({
       name: 'timeline',
       title: 'Timeline/Journey Points',
       type: 'array',
+      initialValue: [
+        {
+          title: 'Started with trust',
+          body: 'Shivam Enterprise was built around a simple promise: offer reliable used industrial machinery with honest guidance and fair pricing.',
+        },
+        {
+          title: 'Expanded through relationships',
+          body: 'Over the years, repeat buyers, referrals, and long-term partnerships helped us grow into a trusted name in machine tools.',
+        },
+        {
+          title: 'Focused on practical value',
+          body: 'Today we continue to support manufacturers looking for capable machines, transparent advice, and responsive service.',
+        },
+      ],
       of: [
         {
           type: 'object',

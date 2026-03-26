@@ -18,14 +18,7 @@ export const structure: StructureResolver = (S) =>
                   S.list()
                     .title('Home Page Content')
                     .items([
-                      S.listItem()
-                        .title('Hero Section')
-                        .id('hero')
-                        .child(S.document().schemaType('hero').documentId('hero')),
-                      S.listItem()
-                        .title('Recently Added Section')
-                        .id('recentlyAdded')
-                        .child(S.document().schemaType('recentlyAdded').documentId('recentlyAdded')),
+                      S.documentTypeListItem('machineToolCategory').title('Category Page'),
                       S.documentTypeListItem('cta').title('Calls to Action'),
                     ])
                 ),
@@ -40,8 +33,6 @@ export const structure: StructureResolver = (S) =>
                 .title('Contact Page')
                 .id('contact')
                 .child(S.document().schemaType('contact').documentId('contact')),
-              // Industries Page
-              S.documentTypeListItem('industry').title('Industries Page'),
             ])
         ),
       S.divider(),

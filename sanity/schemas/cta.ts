@@ -16,6 +16,18 @@ export default defineType({
       type: 'text',
     }),
     defineField({
+      name: 'icon',
+      title: 'Icon Name',
+      type: 'string',
+      description: 'Lucide icon name (e.g., "Search", "ShoppingCart", "DollarSign", "Phone")',
+    }),
+    defineField({
+      name: 'secondaryIcon',
+      title: 'Secondary Icon Name',
+      type: 'string',
+      description: 'Optional second icon (e.g., for the Buy/Sell card)',
+    }),
+    defineField({
       name: 'primaryButtonText',
       title: 'Primary Button Text',
       type: 'string',
@@ -41,6 +53,9 @@ export default defineType({
       type: 'number',
     }),
   ],
+  initialValue: {
+    order: 0,
+  },
   preview: {
     select: {
       title: 'title',
